@@ -1,0 +1,175 @@
+:root {
+    --alivio-primary: #2a9d8f;
+    --alivio-dark: #174e4a;
+    --alivio-light: #eaf7f5;
+    --alivio-gray: #f6f8f8;
+}
+
+
+/* ============================= */
+/* GENERAL */
+/* ============================= */
+
+body {
+    font-family: Arial, sans-serif;
+    color: #243333;
+}
+
+
+/* ============================= */
+/* NAVBAR */
+/* ============================= */
+
+.navbar-brand {
+    color: var(--alivio-primary);
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    color: #334444;
+}
+
+.nav-link:hover {
+    color: var(--alivio-primary);
+}
+
+
+/* ============================= */
+/* BOTONES */
+/* ============================= */
+
+.btn-alivio {
+    background-color: var(--alivio-primary);
+    color: white;
+    border: none;
+}
+
+.btn-alivio:hover {
+    background-color: var(--alivio-dark);
+    color: white;
+}
+
+.btn-outline-alivio {
+    color: var(--alivio-primary);
+    border: 1px solid var(--alivio-primary);
+}
+
+.btn-outline-alivio:hover {
+    background-color: var(--alivio-primary);
+    color: white;
+}
+
+
+/* ============================= */
+/* HERO */
+/* ============================= */
+
+.hero {
+    background-color: var(--alivio-light);
+    padding: 100px 0;
+}
+
+.hero-etiqueta,
+.seccion-etiqueta {
+    color: var(--alivio-primary);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.hero h1 {
+    color: var(--alivio-dark);
+}
+
+.hero-imagen {
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.placeholder-imagen {
+    min-height: 400px;
+    background-color: #d8ece9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--alivio-dark);
+    font-weight: bold;
+}
+
+
+/* ============================= */
+/* SERVICIOS */
+/* ============================= */
+
+.servicio-card {
+    transition: transform 0.3s ease;
+}
+
+.servicio-card:hover {
+    transform: translateY(-5px);
+}
+
+.icono-servicio {
+    font-size: 3rem;
+}
+
+
+/* ============================= */
+/* PRODUCTOS */
+/* ============================= */
+
+.productos {
+    background-color: var(--alivio-gray);
+}
+
+.producto-imagen {
+    height: 200px;
+    background-color: #dce9e8;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #57706e;
+}
+
+
+/* ============================= */
+/* BENEFICIOS */
+/* ============================= */
+
+.beneficio {
+    background-color: var(--alivio-light);
+    padding: 25px;
+    border-radius: 15px;
+    height: 100%;
+}
+
+.beneficio strong {
+    color: var(--alivio-primary);
+    font-size: 1.5rem;
+}
+
+
+/* ============================= */
+/* CTA */
+/* ============================= */
+
+.cta {
+    background-color: var(--alivio-dark);
+    color: white;
+}
+
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+.footer {
+    background-color: #102f2d;
+    color: white;
+}
