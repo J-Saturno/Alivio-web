@@ -1,186 +1,574 @@
+/* ================================================= */
+/* VARIABLES */
+/* ================================================= */
+
 :root {
+
     --alivio-primary: #2a9d8f;
+
     --alivio-dark: #174e4a;
+
     --alivio-light: #eaf7f5;
+
     --alivio-gray: #f6f8f8;
+
+    --alivio-text: #243333;
+
 }
 
 
-/* ============================= */
+
+/* ================================================= */
 /* GENERAL */
-/* ============================= */
+/* ================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
 
 body {
-    font-family: "Inter", sans-serif;
-    color: #243333;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    color: var(--alivio-text);
+
 }
 
 
-/* ============================= */
+
+/* ================================================= */
 /* NAVBAR */
-/* ============================= */
+/* ================================================= */
+
+.navbar {
+
+    min-height: 75px;
+
+}
+
 
 .navbar-brand {
-    color: var(--alivio-primary);
-    font-size: 1.6rem;
-    letter-spacing: 1px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    line-height: 1;
+
 }
+
+
+.logo-alivio {
+
+    color: var(--alivio-primary);
+
+    font-size: 1.6rem;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+}
+
+
+.navbar-brand small {
+
+    color: #6c757d;
+
+    font-size: 0.65rem;
+
+    margin-top: 4px;
+
+}
+
 
 .nav-link {
+
     color: #334444;
+
+    font-weight: 500;
+
 }
+
 
 .nav-link:hover {
+
     color: var(--alivio-primary);
+
 }
 
 
-/* ============================= */
+
+/* ================================================= */
 /* BOTONES */
-/* ============================= */
+/* ================================================= */
 
 .btn-alivio {
-    background-color: var(--alivio-primary);
+
+    background-color:
+        var(--alivio-primary);
+
     color: white;
+
     border: none;
+
 }
+
 
 .btn-alivio:hover {
-    background-color: var(--alivio-dark);
+
+    background-color:
+        var(--alivio-dark);
+
     color: white;
+
 }
+
 
 .btn-outline-alivio {
-    color: var(--alivio-primary);
-    border: 1px solid var(--alivio-primary);
+
+    color:
+        var(--alivio-primary);
+
+    border:
+        1px solid var(--alivio-primary);
+
 }
+
 
 .btn-outline-alivio:hover {
-    background-color: var(--alivio-primary);
+
+    background-color:
+        var(--alivio-primary);
+
     color: white;
+
 }
 
 
-/* ============================= */
+
+/* ================================================= */
 /* HERO */
-/* ============================= */
+/* ================================================= */
 
 .hero {
-    background-color: var(--alivio-light);
-    padding: 100px 0;
+
+    background-color:
+        var(--alivio-light);
+
 }
+
+
+.min-vh-75 {
+
+    min-height: 75vh;
+
+}
+
 
 .hero-etiqueta,
 .seccion-etiqueta {
-    color: var(--alivio-primary);
-    font-weight: bold;
-    text-transform: uppercase;
+
+    color:
+        var(--alivio-primary);
+
+    font-weight: 700;
+
     font-size: 0.85rem;
+
     letter-spacing: 1px;
+
 }
+
 
 .hero h1 {
-    color: var(--alivio-dark);
+
+    color:
+        var(--alivio-dark);
+
 }
 
+
 .hero-imagen {
+
     border-radius: 25px;
+
     overflow: hidden;
+
 }
 
 
+.placeholder-imagen {
 
-.hero-imagen {
-    min-height: 400px;
-    background-color: #d8ece9;
+    min-height: 420px;
+
+    background-color:
+        #d8ece9;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    color: var(--alivio-dark);
-    font-weight: bold;
+    color:
+        var(--alivio-dark);
+
 }
 
-.hero-imagen img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-}
 
-/* ============================= */
+
+/* ================================================= */
 /* SERVICIOS */
-/* ============================= */
+/* ================================================= */
 
 .servicio-card {
-    transition: transform 0.3s ease;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
 }
+
 
 .servicio-card:hover {
-    transform: translateY(-5px);
+
+    transform:
+        translateY(-7px);
+
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.08) !important;
+
 }
+
 
 .icono-servicio {
-    font-size: 3rem;
-}
 
+    width: 70px;
 
-/* ============================= */
-/* PRODUCTOS */
-/* ============================= */
+    height: 70px;
 
-.productos {
-    background-color: var(--alivio-gray);
-}
+    margin: auto;
 
-.producto-imagen {
-    height: 200px;
-    background-color: #dce9e8;
+    border-radius: 50%;
+
+    background-color:
+        var(--alivio-light);
+
+    color:
+        var(--alivio-primary);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
-    color: #57706e;
+
+    font-size: 2rem;
+
 }
 
-.producto-imagen img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+
+
+/* ================================================= */
+/* PRODUCTOS */
+/* ================================================= */
+
+.productos {
+
+    background-color:
+        var(--alivio-gray);
+
 }
 
-/* ============================= */
+
+.producto-card {
+
+    transition:
+        transform 0.3s ease;
+
+}
+
+
+.producto-card:hover {
+
+    transform:
+        translateY(-5px);
+
+}
+
+
+.producto-imagen {
+
+    height: 200px;
+
+    background-color:
+        #dce9e8;
+
+    color:
+        var(--alivio-dark);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 4rem;
+
+}
+
+
+.categoria {
+
+    background-color:
+        var(--alivio-light);
+
+    color:
+        var(--alivio-dark);
+
+}
+
+
+
+/* ================================================= */
 /* BENEFICIOS */
-/* ============================= */
+/* ================================================= */
 
 .beneficio {
-    background-color: var(--alivio-light);
+
+    background-color:
+        var(--alivio-light);
+
     padding: 25px;
+
     border-radius: 15px;
+
     height: 100%;
-}
 
-.beneficio strong {
-    color: var(--alivio-primary);
-    font-size: 1.5rem;
 }
 
 
-/* ============================= */
+.beneficio i {
+
+    color:
+        var(--alivio-primary);
+
+    font-size: 1.7rem;
+
+}
+
+
+.beneficio p {
+
+    color: #687777;
+
+    margin-bottom: 0;
+
+}
+
+/* ================================================= */
+/* GESTIÓN DE SOLICITUDES */
+/* ================================================= */
+
+#gestionSolicitudes {
+
+    background-color: #ffffff;
+
+}
+
+
+.contador-solicitudes {
+
+    background-color:
+        var(--alivio-light);
+
+    color:
+        var(--alivio-dark);
+
+    padding:
+        10px 18px;
+
+    border-radius:
+        50px;
+
+    font-weight:
+        600;
+
+}
+
+
+#contadorSolicitudes {
+
+    font-size:
+        1.2rem;
+
+}
+
+
+#tablaSolicitudes tr {
+
+    vertical-align:
+        middle;
+
+}
+
+
+.estado-badge {
+
+    padding:
+        6px 10px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        600;
+
+}
+
+
+.estado-pendiente {
+
+    background-color:
+        #fff3cd;
+
+    color:
+        #856404;
+
+}
+
+
+.estado-confirmada {
+
+    background-color:
+        #d1e7dd;
+
+    color:
+        #0f5132;
+
+}
+
+
+.estado-finalizada {
+
+    background-color:
+        #d1ecf1;
+
+    color:
+        #055160;
+
+}
+
+
+.estado-cancelada {
+
+    background-color:
+        #f8d7da;
+
+    color:
+        #842029;
+
+}
+
+/* ================================================= */
 /* CTA */
-/* ============================= */
+/* ================================================= */
 
 .cta {
-    background-color: var(--alivio-dark);
+
+    background-color:
+        var(--alivio-dark);
+
     color: white;
+
 }
 
 
-/* ============================= */
+
+/* ================================================= */
 /* FOOTER */
-/* ============================= */
+/* ================================================= */
 
 .footer {
-    background-color: #102f2d;
+
+    background-color:
+        #102f2d;
+
     color: white;
+
+}
+
+
+
+/* ================================================= */
+/* MODAL DE ÉXITO */
+/* ================================================= */
+
+.icono-exito {
+
+    color: var(--alivio-primary);
+
+    font-size: 3rem;
+
+}
+
+
+.resumen-solicitud {
+
+    background-color: var(--alivio-light);
+
+    border-radius: 12px;
+
+    padding: 16px 18px;
+
+}
+
+.form-control:focus,
+.form-select:focus {
+
+    border-color:
+        var(--alivio-primary);
+
+    box-shadow:
+        0 0 0 0.25rem rgba(42, 157, 143, 0.15);
+
+}
+
+
+
+/* ================================================= */
+/* RESPONSIVE */
+/* ================================================= */
+
+@media (max-width: 768px) {
+
+    .hero {
+
+        padding-top: 60px;
+
+        padding-bottom: 60px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size: 2.3rem;
+
+    }
+
+
+    .placeholder-imagen {
+
+        min-height: 300px;
+
+    }
+
 }

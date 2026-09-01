@@ -2,291 +2,239 @@
 <html lang="es">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ALIVIO | Enfermeria a domicilio</title>
+    <meta name="description" content="ALIVIO - Servicios de enfermería y cuidado integral a domicilio.">
+
+    <title>ALIVIO | Enfermería y cuidado a domicilio</title>
+
+
+    <!-- Bootstrap CSS -->
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Nuestro CSS -->
-    <link rel="stylesheet" href="css/reset.css">
+
+    <!-- Bootstrap Icons -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- CSS propio -->
+
     <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 
 <body>
 
-    <!-- ===================================== -->
+
+    <!-- ================================================= -->
     <!-- NAVBAR -->
-    <!-- ===================================== -->
+    <!-- ================================================= -->
 
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <header>
 
-        <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm">
 
-            <a class="navbar-brand fw-bold" href="#">
-                ALIVIO
-            </a>
+            <div class="container">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+                <a class="navbar-brand" href="#">
 
-                <span class="navbar-toggler-icon"></span>
-
-            </button>
-
-            <div class="collapse navbar-collapse" id="menuPrincipal">
-
-                <ul class="navbar-nav ms-auto">
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            Inicio
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Servicios
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Productos
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Nosotros
-                        </a>
-                    </li>
-
-                    <li class="nav-item ms-lg-3">
-                        <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
-                            data-bs-target="#modalSolicitud">
-
-                            Solicitar atención
-
-                        </button>
-                    </li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-
-    <!-- ===================================== -->
-    <!-- HERO -->
-    <!-- ===================================== -->
-
-    <section class="hero">
-
-        <div class="container">
-
-            <div class="row align-items-center">
-
-                <div class="col-lg-6">
-
-                    <span class="hero-etiqueta">
-                        Cuidado profesional a domicilio
+                    <span class="logo-alivio">
+                        ALIVIO
                     </span>
 
-                    <h1 class="display-4 fw-bold mt-3">
-                        Cuidamos tu salud para que sigas viviendo
-                        los momentos que importan.
-                    </h1>
+                    <small>
+                        Enfermería a domicilio
+                    </small>
 
-                    <p class="lead mt-4">
-                        Servicios de enfermería y cuidado integral
-                        para adultos mayores, directamente en casa.
-                    </p>
-
-                    <div class="mt-4">
-
-                        <a href="#" class="btn btn-alivio btn-lg me-2">
-                            Solicitar atención
-                        </a>
-
-                        <a href="#servicios" class="btn btn-outline-secondary btn-lg">
-                            Ver servicios
-                        </a>
-
-                    </div>
-
-                </div>
+                </a>
 
 
-                <div class="col-lg-6 mt-5 mt-lg-0">
+                <!-- Botón responsive -->
 
-                    <div class="hero-imagen">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                    aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
 
-                            <img src="https://t3.ftcdn.net/jpg/09/37/91/52/360_F_937915266_9syVLdHYe2GIxxgMwK8wC8ZlZVIcU4ks.jpg" alt="">
+                    <span class="navbar-toggler-icon"></span>
 
-                    </div>
+                </button>
+
+
+                <!-- Menú -->
+
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                        <li class="nav-item">
+
+                            <a class="nav-link active" href="#inicio">
+
+                                Inicio
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="#servicios">
+
+                                Servicios
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="#productos">
+
+                                Productos
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="#nosotros">
+
+                                Nosotros
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="Gesolicitud.html">
+
+                                Solicitudes
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+
+                            <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitud">
+
+                                Solicitar atención
+
+                            </button>
+
+                        </li>
+
+                    </ul>
 
                 </div>
 
             </div>
 
-        </div>
+        </nav>
 
-    </section>
-
-
-    <!-- ===================================== -->
-    <!-- SERVICIOS -->
-    <!-- ===================================== -->
-
-    <section id="servicios" class="py-5">
-
-        <div class="container">
-
-            <div class="text-center mb-5">
-
-                <span class="seccion-etiqueta">
-                    Nuestros servicios
-                </span>
-
-                <h2 class="fw-bold mt-2">
-                    Cuidado pensado para cada necesidad
-                </h2>
-
-                <p class="text-muted">
-                    Atención profesional, responsable y humana.
-                </p>
-
-            </div>
+    </header>
 
 
-            <div class="row g-4">
+
+    <!-- ================================================= -->
+    <!-- MAIN -->
+    <!-- ================================================= -->
+
+    <main>
 
 
-                <!-- Servicio 1 -->
+        <!-- ================================================= -->
+        <!-- HERO -->
+        <!-- ================================================= -->
 
-                <div class="col-md-6 col-lg-3">
+        <section id="inicio" class="hero py-5">
 
-                    <div class="card servicio-card h-100 border-0 shadow-sm">
+            <div class="container">
 
-                        <div class="card-body text-center p-4">
+                <div class="row align-items-center min-vh-75">
 
-                            <div class="icono-servicio">
-                                👩‍⚕️
-                            </div>
 
-                            <h5 class="fw-bold mt-3">
-                                Enfermería a domicilio
-                            </h5>
+                    <!-- Texto -->
 
-                            <p class="text-muted">
-                                Atención profesional en la comodidad
-                                del hogar.
-                            </p>
+                    <div class="col-lg-6">
 
-                            <a href="#" class="btn btn-outline-alivio">
-                                Conocer más
+                        <span class="hero-etiqueta">
+
+                            CUIDADO PROFESIONAL A DOMICILIO
+
+                        </span>
+
+
+                        <h1 class="display-4 fw-bold mt-3">
+
+                            Cuidamos tu salud para que sigas viviendo
+                            los momentos que importan.
+
+                        </h1>
+
+
+                        <p class="lead mt-4">
+
+                            Servicios de enfermería y cuidado integral
+                            para adultos mayores, directamente en casa.
+
+                        </p>
+
+
+                        <div class="mt-4">
+
+                            <button type="button" class="btn btn-alivio btn-lg me-2" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitud">
+
+                                Solicitar atención
+
+                            </button>
+
+
+                            <a href="#servicios" class="btn btn-outline-alivio btn-lg">
+
+                                Ver servicios
+
                             </a>
 
                         </div>
 
                     </div>
 
-                </div>
 
 
-                <!-- Servicio 2 -->
+                    <!-- Imagen -->
 
-                <div class="col-md-6 col-lg-3">
+                    <div class="col-lg-6 mt-5 mt-lg-0">
 
-                    <div class="card servicio-card h-100 border-0 shadow-sm">
+                        <div class="hero-imagen">
 
-                        <div class="card-body text-center p-4">
+                            <div class="placeholder-imagen">
 
-                            <div class="icono-servicio">
-                                🧓
+                                <div class="text-center">
+
+                                    <i class="bi bi-heart-pulse display-1"></i>
+
+                                    <p class="mt-3 mb-0">
+                                        Atención y cuidado en el hogar
+                                    </p>
+
+                                </div>
+
                             </div>
-
-                            <h5 class="fw-bold mt-3">
-                                Cuidado del adulto mayor
-                            </h5>
-
-                            <p class="text-muted">
-                                Acompañamiento y apoyo para una mejor
-                                calidad de vida.
-                            </p>
-
-                            <a href="#" class="btn btn-outline-alivio">
-                                Conocer más
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Servicio 3 -->
-
-                <div class="col-md-6 col-lg-3">
-
-                    <div class="card servicio-card h-100 border-0 shadow-sm">
-
-                        <div class="card-body text-center p-4">
-
-                            <div class="icono-servicio">
-                                🩹
-                            </div>
-
-                            <h5 class="fw-bold mt-3">
-                                Curaciones
-                            </h5>
-
-                            <p class="text-muted">
-                                Cuidados y procedimientos realizados
-                                según la necesidad del paciente.
-                            </p>
-
-                            <a href="#" class="btn btn-outline-alivio">
-                                Conocer más
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Servicio 4 -->
-
-                <div class="col-md-6 col-lg-3">
-
-                    <div class="card servicio-card h-100 border-0 shadow-sm">
-
-                        <div class="card-body text-center p-4">
-
-                            <div class="icono-servicio">
-                                🤝
-                            </div>
-
-                            <h5 class="fw-bold mt-3">
-                                Acompañamiento
-                            </h5>
-
-                            <p class="text-muted">
-                                Apoyo durante citas, actividades y
-                                necesidades cotidianas.
-                            </p>
-
-                            <a href="#" class="btn btn-outline-alivio">
-                                Conocer más
-                            </a>
 
                         </div>
 
@@ -296,208 +244,568 @@
 
             </div>
 
-        </div>
-
-    </section>
+        </section>
 
 
-    <!-- ===================================== -->
-    <!-- PRODUCTOS -->
-    <!-- ===================================== -->
 
-    <section class="productos py-5">
+        <!-- ================================================= -->
+        <!-- SERVICIOS -->
+        <!-- ================================================= -->
 
-        <div class="container">
+        <section id="servicios" class="py-5">
 
-            <div class="d-flex justify-content-between align-items-end mb-4">
+            <div class="container">
 
-                <div>
+
+                <div class="text-center mb-5">
 
                     <span class="seccion-etiqueta">
-                        Equipamiento
+                        NUESTROS SERVICIOS
                     </span>
+
+
+                    <h2 class="fw-bold mt-2">
+                        Cuidado pensado para cada necesidad
+                    </h2>
+
+
+                    <p class="text-muted">
+                        Atención profesional, responsable y humana.
+                    </p>
+
+                </div>
+
+
+
+                <div class="row g-4">
+
+
+                    <!-- Servicio 1 -->
+
+                    <div class="col-md-6 col-lg-3">
+
+                        <article class="card servicio-card h-100 border-0 shadow-sm">
+
+                            <div class="card-body text-center p-4">
+
+                                <div class="icono-servicio">
+
+                                    <i class="bi bi-person-hearts"></i>
+
+                                </div>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+
+                                    Enfermería a domicilio
+
+                                </h3>
+
+
+                                <p class="text-muted">
+
+                                    Atención profesional en la comodidad
+                                    del hogar.
+
+                                </p>
+
+
+                                <button type="button" class="btn btn-outline-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
+                                    Solicitar
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+
+
+                    <!-- Servicio 2 -->
+
+                    <div class="col-md-6 col-lg-3">
+
+                        <article class="card servicio-card h-100 border-0 shadow-sm">
+
+                            <div class="card-body text-center p-4">
+
+                                <div class="icono-servicio">
+
+                                    <i class="bi bi-person-wheelchair"></i>
+
+                                </div>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+
+                                    Cuidado del adulto mayor
+
+                                </h3>
+
+
+                                <p class="text-muted">
+
+                                    Acompañamiento y apoyo para una mejor
+                                    calidad de vida.
+
+                                </p>
+
+
+                                <button type="button" class="btn btn-outline-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
+                                    Solicitar
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+
+
+                    <!-- Servicio 3 -->
+
+                    <div class="col-md-6 col-lg-3">
+
+                        <article class="card servicio-card h-100 border-0 shadow-sm">
+
+                            <div class="card-body text-center p-4">
+
+                                <div class="icono-servicio">
+
+                                    <i class="bi bi-bandaid"></i>
+
+                                </div>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+
+                                    Curaciones
+
+                                </h3>
+
+
+                                <p class="text-muted">
+
+                                    Cuidados y procedimientos según la
+                                    necesidad del paciente.
+
+                                </p>
+
+
+                                <button type="button" class="btn btn-outline-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
+                                    Solicitar
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+
+
+                    <!-- Servicio 4 -->
+
+                    <div class="col-md-6 col-lg-3">
+
+                        <article class="card servicio-card h-100 border-0 shadow-sm">
+
+                            <div class="card-body text-center p-4">
+
+                                <div class="icono-servicio">
+
+                                    <i class="bi bi-person-walking"></i>
+
+                                </div>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+
+                                    Acompañamiento
+
+                                </h3>
+
+
+                                <p class="text-muted">
+
+                                    Apoyo durante citas, actividades y
+                                    necesidades cotidianas.
+
+                                </p>
+
+
+                                <button type="button" class="btn btn-outline-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
+                                    Solicitar
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- PRODUCTOS -->
+        <!-- ================================================= -->
+
+        <section id="productos" class="productos py-5">
+
+            <div class="container">
+
+
+                <div class="text-center mb-5">
+
+                    <span class="seccion-etiqueta">
+                        EQUIPAMIENTO
+                    </span>
+
 
                     <h2 class="fw-bold mt-2">
                         Productos para el cuidado
                     </h2>
 
+
+                    <p class="text-muted">
+                        Opciones de compra y alquiler previa coordinación.
+                    </p>
+
                 </div>
 
-                <a href="#" class="btn btn-outline-alivio">
-                    Ver todos
-                </a>
-
-            </div>
 
 
-            <div class="row g-4">
+                <div class="row g-4">
 
 
-                <!-- Producto 1 -->
+                    <!-- Producto 1 -->
 
-                <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3">
 
-                    <div class="card producto-card border-0 shadow-sm h-100">
+                        <article class="card producto-card border-0 shadow-sm h-100">
 
-                        <div class="producto-imagen">
-                            <img src="https://i5.walmartimages.com.mx/mg/gm/3pp/asr/9c9a03b8-e56e-4dd5-bfb1-0b8b6b654eab.eb6f4fa6c73758ba353d2b44d65bd141.png?odnHeight=2000&odnWidth=2000&odnBg=ffffff" alt="">
-                        </div>
 
-                        <div class="card-body">
+                            <div class="producto-imagen">
 
-                            <small class="text-muted">
-                                Movilidad
-                            </small>
+                                <i class="bi bi-person-wheelchair"></i>
 
-                            <h5 class="fw-bold mt-2">
-                                Silla de ruedas
-                            </h5>
+                            </div>
 
-                            <p class="text-muted">
-                                Disponible para alquiler.
-                            </p>
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="card-body">
 
-                                <strong>
-                                    Consultar precio
-                                </strong>
+                                <span class="badge categoria">
+                                    Movilidad
+                                </span>
 
-                                <button class="btn btn-sm btn-alivio">
-                                    Ver
+
+                                <h3 class="h5 fw-bold mt-3">
+                                    Silla de ruedas
+                                </h3>
+
+
+                                <p class="text-muted">
+                                    Disponible para alquiler.
+                                </p>
+
+
+                                <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalProductoSilla">
+
+                                    Ver detalles
+
                                 </button>
 
                             </div>
 
-                        </div>
+                        </article>
 
                     </div>
 
-                </div>
 
 
-                <!-- Producto 2 -->
+                    <!-- Producto 2 -->
 
-                <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3">
 
-                    <div class="card producto-card border-0 shadow-sm h-100">
+                        <article class="card producto-card border-0 shadow-sm h-100">
 
-                        <div class="producto-imagen">
-                            <img src="https://globalmedical.cl/wp-content/uploads/2020/08/termometro-digital-infrarrojo-1536x1536.jpg" alt="">
-                        </div>
 
-                        <div class="card-body">
+                            <div class="producto-imagen">
 
-                            <small class="text-muted">
-                                Medición
-                            </small>
+                                <i class="bi bi-thermometer-half"></i>
 
-                            <h5 class="fw-bold mt-2">
-                                Termómetro digital
-                            </h5>
+                            </div>
 
-                            <p class="text-muted">
-                                Producto para uso domiciliario.
-                            </p>
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="card-body">
 
-                                <strong>
-                                    Consultar precio
-                                </strong>
+                                <span class="badge categoria">
+                                    Medición
+                                </span>
 
-                                <button class="btn btn-sm btn-alivio">
-                                    Ver
+
+                                <h3 class="h5 fw-bold mt-3">
+                                    Termómetro digital
+                                </h3>
+
+
+                                <p class="text-muted">
+                                    Producto para uso domiciliario.
+                                </p>
+
+
+                                <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalProductoTermometro">
+
+                                    Ver detalles
+
                                 </button>
 
                             </div>
 
-                        </div>
+                        </article>
 
                     </div>
 
-                </div>
 
 
-                <!-- Producto 3 -->
+                    <!-- Producto 3 -->
 
-                <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3">
 
-                    <div class="card producto-card border-0 shadow-sm h-100">
+                        <article class="card producto-card border-0 shadow-sm h-100">
 
-                        <div class="producto-imagen">
-                            <img src="https://respiramedical.com.pe/wp-content/uploads/2021/12/kit-oxigeno-685-ami.jpg" alt="">
-                        </div>
 
-                        <div class="card-body">
+                            <div class="producto-imagen">
 
-                            <small class="text-muted">
-                                Oxigenoterapia
-                            </small>
+                                <i class="bi bi-lungs"></i>
 
-                            <h5 class="fw-bold mt-2">
-                                Balón de oxígeno
-                            </h5>
+                            </div>
 
-                            <p class="text-muted">
-                                Disponible para alquiler previa coordinación.
-                            </p>
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="card-body">
 
-                                <strong>
+                                <span class="badge categoria">
+                                    Oxigenoterapia
+                                </span>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+                                    Balón de oxígeno
+                                </h3>
+
+
+                                <p class="text-muted">
+                                    Disponible para alquiler previa coordinación.
+                                </p>
+
+
+                                <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
                                     Consultar
-                                </strong>
 
-                                <button class="btn btn-sm btn-alivio">
-                                    Ver
                                 </button>
 
                             </div>
 
-                        </div>
+                        </article>
 
                     </div>
 
-                </div>
 
 
-                <!-- Producto 4 -->
+                    <!-- Producto 4 -->
 
-                <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3">
 
-                    <div class="card producto-card border-0 shadow-sm h-100">
+                        <article class="card producto-card border-0 shadow-sm h-100">
 
-                        <div class="producto-imagen">
-                            <img src="https://www.homecare.com.pe/wp-content/uploads/2024/10/aspirador-de-secreciones-portatil-30.jpg" alt="">
-                        </div>
 
-                        <div class="card-body">
+                            <div class="producto-imagen">
 
-                            <small class="text-muted">
-                                Equipamiento
-                            </small>
+                                <i class="bi bi-wind"></i>
 
-                            <h5 class="fw-bold mt-2">
-                                Aspirador de secreciones
-                            </h5>
+                            </div>
 
-                            <p class="text-muted">
-                                Equipo disponible previa coordinación.
-                            </p>
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="card-body">
 
-                                <strong>
+                                <span class="badge categoria">
+                                    Equipamiento
+                                </span>
+
+
+                                <h3 class="h5 fw-bold mt-3">
+                                    Aspirador de secreciones
+                                </h3>
+
+
+                                <p class="text-muted">
+                                    Equipo disponible previa coordinación.
+                                </p>
+
+
+                                <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+
                                     Consultar
-                                </strong>
 
-                                <button class="btn btn-sm btn-alivio">
-                                    Ver
                                 </button>
 
                             </div>
 
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- NOSOTROS -->
+        <!-- ================================================= -->
+
+        <section id="nosotros" class="py-5">
+
+            <div class="container">
+
+                <div class="row align-items-center">
+
+
+                    <div class="col-lg-6">
+
+                        <span class="seccion-etiqueta">
+                            ¿POR QUÉ ALIVIO?
+                        </span>
+
+
+                        <h2 class="fw-bold mt-2">
+
+                            Más que cuidado,
+                            tranquilidad para tu familia.
+
+                        </h2>
+
+
+                        <p class="text-muted mt-3">
+
+                            Sabemos que cuidar a un familiar es una
+                            responsabilidad importante. Por eso buscamos
+                            brindar un servicio profesional, cercano y humano.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="col-lg-6 mt-4 mt-lg-0">
+
+                        <div class="row g-3">
+
+
+                            <div class="col-6">
+
+                                <div class="beneficio">
+
+                                    <i class="bi bi-heart"></i>
+
+                                    <h3 class="h6 fw-bold mt-2">
+                                        Atención humana
+                                    </h3>
+
+                                    <p>
+                                        Trato respetuoso y cercano.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="beneficio">
+
+                                    <i class="bi bi-house-heart"></i>
+
+                                    <h3 class="h6 fw-bold mt-2">
+                                        Atención domiciliaria
+                                    </h3>
+
+                                    <p>
+                                        El cuidado llega a tu hogar.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="beneficio">
+
+                                    <i class="bi bi-person-check"></i>
+
+                                    <h3 class="h6 fw-bold mt-2">
+                                        Personal profesional
+                                    </h3>
+
+                                    <p>
+                                        Personal seleccionado por ALIVIO.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="beneficio">
+
+                                    <i class="bi bi-calendar-heart"></i>
+
+                                    <h3 class="h6 fw-bold mt-2">
+                                        Flexibilidad
+                                    </h3>
+
+                                    <p>
+                                        Servicios según tus necesidades.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
                         </div>
 
                     </div>
@@ -506,189 +814,66 @@
 
             </div>
 
-        </div>
+        </section>
 
-    </section>
+        <!-- ================================================= -->
+        <!-- CTA -->
+        <!-- ================================================= -->
 
+        <section class="cta py-5">
 
-    <!-- ===================================== -->
-    <!-- POR QUÉ ALIVIO -->
-    <!-- ===================================== -->
+            <div class="container text-center">
 
-    <section class="py-5">
+                <h2 class="fw-bold">
 
-        <div class="container">
+                    ¿Necesitas atención para un familiar?
 
-            <div class="row align-items-center">
-
-                <div class="col-lg-6">
-
-                    <span class="seccion-etiqueta">
-                        ¿Por qué ALIVIO?
-                    </span>
-
-                    <h2 class="fw-bold mt-2">
-                        Más que cuidado,
-                        tranquilidad para tu familia.
-                    </h2>
-
-                    <p class="text-muted mt-3">
-                        Sabemos que cuidar a un familiar es una
-                        responsabilidad importante. Por eso buscamos
-                        brindar un servicio profesional, cercano y
-                        humano.
-                    </p>
-
-                </div>
+                </h2>
 
 
-                <div class="col-lg-6 mt-4 mt-lg-0">
+                <p class="mt-3">
 
-                    <div class="row g-3">
+                    Cuéntanos qué necesitas y te ayudaremos
+                    a encontrar la mejor opción.
 
-                        <div class="col-6">
+                </p>
 
-                            <div class="beneficio">
-                                <strong>01</strong>
-                                <h5>Atención humana</h5>
-                                <p>
-                                    Trato respetuoso y cercano.
-                                </p>
-                            </div>
 
-                        </div>
+                <button type="button" class="btn btn-light btn-lg mt-3" data-bs-toggle="modal"
+                    data-bs-target="#modalSolicitud">
 
-                        <div class="col-6">
+                    Solicitar atención
 
-                            <div class="beneficio">
-                                <strong>02</strong>
-                                <h5>Atención domiciliaria</h5>
-                                <p>
-                                    El cuidado llega a tu hogar.
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div class="col-6">
-
-                            <div class="beneficio">
-                                <strong>03</strong>
-                                <h5>Personal profesional</h5>
-                                <p>
-                                    Personal seleccionado por ALIVIO.
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div class="col-6">
-
-                            <div class="beneficio">
-                                <strong>04</strong>
-                                <h5>Flexibilidad</h5>
-                                <p>
-                                    Servicios según tus necesidades.
-                                </p>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                </button>
 
             </div>
 
-        </div>
+        </section>
 
-    </section>
-
-
-    <!-- ===================================== -->
-    <!-- CTA -->
-    <!-- ===================================== -->
-
-    <section class="cta py-5">
-
-        <div class="container text-center">
-
-            <h2 class="fw-bold">
-                ¿Necesitas atención para un familiar?
-            </h2>
-
-            <p class="mt-3">
-                Cuéntanos qué necesitas y te ayudaremos a encontrar
-                la mejor opción.
-            </p>
-
-            <a href="#" class="btn btn-light btn-lg mt-3">
-                Solicitar atención
-            </a>
-
-        </div>
-
-    </section>
+    </main>
 
 
-    <!-- ===================================== -->
-    <!-- FOOTER -->
-    <!-- ===================================== -->
 
-    <footer class="footer py-4">
-
-        <div class="container">
-
-            <div class="row">
-
-                <div class="col-md-6">
-
-                    <h4 class="fw-bold">
-                        ALIVIO
-                    </h4>
-
-                    <p>
-                        Enfermería y cuidado a domicilio.
-                    </p>
-
-                </div>
-
-                <div class="col-md-6 text-md-end">
-
-                    <p class="mb-1">
-                        Atención y cuidado integral.
-                    </p>
-
-                    <p class="mb-0">
-                        © 2026 ALIVIO
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </footer>
-
-
-    <!-- ===================================== -->
-    <!-- MODAL SOLICITAR ATENCIÓN -->
-    <!-- ===================================== -->
+    <!-- ================================================= -->
+    <!-- MODAL DE SOLICITUD -->
+    <!-- ================================================= -->
 
     <div class="modal fade" id="modalSolicitud" tabindex="-1" aria-labelledby="modalSolicitudLabel" aria-hidden="true">
+
 
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content">
 
+
                 <div class="modal-header">
 
-                    <h5 class="modal-title" id="modalSolicitudLabel">
+                    <h2 class="modal-title fs-5" id="modalSolicitudLabel">
 
                         Solicitar atención
 
-                    </h5>
+                    </h2>
+
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
                     </button>
@@ -696,15 +881,23 @@
                 </div>
 
 
+
                 <div class="modal-body">
 
+
                     <p class="text-muted">
+
                         Cuéntanos qué necesitas y nos pondremos
                         en contacto contigo.
+
                     </p>
 
 
-                    <form id="formSolicitud">
+
+                    <form id="formSolicitud" novalidate>
+
+
+                        <!-- NOMBRE -->
 
                         <div class="mb-3">
 
@@ -714,15 +907,22 @@
 
                             </label>
 
+
                             <input type="text" class="form-control" id="nombre" name="nombre"
                                 placeholder="Ingresa tu nombre">
 
+
                             <div class="invalid-feedback">
+
                                 Por favor, ingresa tu nombre.
+
                             </div>
 
                         </div>
 
+
+
+                        <!-- TELÉFONO -->
 
                         <div class="mb-3">
 
@@ -732,19 +932,30 @@
 
                             </label>
 
+
                             <input type="tel" class="form-control" id="telefono" name="telefono"
                                 placeholder="Ej. 987654321">
+
+
                             <div class="invalid-feedback">
+
                                 Ingresa un número de teléfono válido.
+
                             </div>
 
                         </div>
 
 
+
+                        <!-- SERVICIO -->
+                        <!-- SERVICIO -->
+
                         <div class="mb-3">
 
                             <label for="servicio" class="form-label">
+
                                 ¿En qué podemos ayudarte?
+
                             </label>
 
                             <select class="form-select" id="servicio" name="servicio">
@@ -780,17 +991,328 @@
                             </select>
 
                             <div class="invalid-feedback">
+
                                 Selecciona una opción para poder ayudarte.
+
                             </div>
 
                         </div>
 
 
+                        <!-- ========================================= -->
+                        <!-- CAMPOS DINÁMICOS -->
+                        <!-- ========================================= -->
+
+                        <div id="camposDinamicos">
+
+
+                            <!-- ===================================== -->
+                            <!-- ADULTO MAYOR -->
+                            <!-- ===================================== -->
+
+                            <div id="camposAdultoMayor" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="edadPaciente" class="form-label">
+
+                                        Edad del paciente
+
+                                    </label>
+
+                                    <input type="number" class="form-control" id="edadPaciente" min="1" max="120"
+                                        placeholder="Ej. 78">
+
+                                    <div class="invalid-feedback">
+
+                                        Ingresa una edad válida.
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label for="tipoCuidado" class="form-label">
+
+                                        ¿Qué tipo de apoyo necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="tipoCuidado">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="cuidado-integral">
+                                            Cuidado integral
+                                        </option>
+
+                                        <option value="higiene">
+                                            Higiene y cuidado personal
+                                        </option>
+
+                                        <option value="alimentacion">
+                                            Apoyo en alimentación
+                                        </option>
+
+                                        <option value="movilidad">
+                                            Apoyo en movilidad
+                                        </option>
+
+                                        <option value="medicamentos">
+                                            Supervisión de medicamentos
+                                        </option>
+
+                                        <option value="acompanamiento">
+                                            Acompañamiento y compañía
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label for="duracion" class="form-label">
+
+                                        ¿Qué duración necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="duracion">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="6 horas">
+                                            6 horas
+                                        </option>
+
+                                        <option value="8 horas">
+                                            8 horas
+                                        </option>
+
+                                        <option value="12 horas">
+                                            12 horas
+                                        </option>
+
+                                        <option value="24 horas">
+                                            24 horas
+                                        </option>
+
+                                        <option value="interdiario">
+                                            Interdiario
+                                        </option>
+
+                                        <option value="fines de semana">
+                                            Fines de semana
+                                        </option>
+
+                                        <option value="por turnos">
+                                            Por turnos
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ===================================== -->
+                            <!-- ENFERMERÍA -->
+                            <!-- ===================================== -->
+
+                            <div id="camposEnfermeria" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoAtencion" class="form-label">
+
+                                        ¿Qué atención necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="tipoAtencion">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="atencion-domiciliaria">
+                                            Atención de enfermería a domicilio
+                                        </option>
+
+                                        <option value="signos-vitales">
+                                            Control de signos vitales
+                                        </option>
+
+                                        <option value="medicamentos">
+                                            Administración / supervisión de medicamentos
+                                        </option>
+
+                                        <option value="postoperatorio">
+                                            Cuidados postoperatorios
+                                        </option>
+
+                                        <option value="otro">
+                                            Otro tipo de atención
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ===================================== -->
+                            <!-- CURACIONES -->
+                            <!-- ===================================== -->
+
+                            <div id="camposCuracion" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoCuracion" class="form-label">
+
+                                        Cuéntanos qué necesita
+
+                                    </label>
+
+                                    <input type="text" class="form-control" id="tipoCuracion"
+                                        placeholder="Ej. Curación de herida">
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ===================================== -->
+                            <!-- ACOMPAÑAMIENTO -->
+                            <!-- ===================================== -->
+
+                            <div id="camposAcompanamiento" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoAcompanamiento" class="form-label">
+
+                                        ¿En qué necesita acompañamiento?
+
+                                    </label>
+
+                                    <select class="form-select" id="tipoAcompanamiento">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="citas-medicas">
+                                            Citas médicas
+                                        </option>
+
+                                        <option value="actividades">
+                                            Actividades cotidianas
+                                        </option>
+
+                                        <option value="compania">
+                                            Compañía y soporte
+                                        </option>
+
+                                        <option value="movilidad">
+                                            Apoyo para movilizarse
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ===================================== -->
+                            <!-- EQUIPAMIENTO -->
+                            <!-- ===================================== -->
+
+                            <div id="camposEquipamiento" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="producto" class="form-label">
+
+                                        ¿Qué equipo necesitas?
+
+                                    </label>
+
+                                    <select class="form-select" id="producto">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="silla-de-ruedas">
+                                            Silla de ruedas
+                                        </option>
+
+                                        <option value="balon-oxigeno">
+                                            Balón de oxígeno
+                                        </option>
+
+                                        <option value="aspirador">
+                                            Aspirador de secreciones
+                                        </option>
+
+                                        <option value="otro">
+                                            Otro equipo
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ===================================== -->
+                            <!-- ORIENTACIÓN -->
+                            <!-- ===================================== -->
+
+                            <div id="camposOrientacion" class="campos-servicio d-none">
+
+                                <div class="alert alert-info">
+
+                                    <i class="bi bi-info-circle"></i>
+
+                                    No te preocupes. Cuéntanos qué necesita
+                                    tu familiar y nuestro equipo te orientará.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DISTRITO -->
+
                         <div class="mb-3">
 
                             <label for="distrito" class="form-label">
+
                                 Distrito
+
                             </label>
+
 
                             <select class="form-select" id="distrito" name="distrito">
 
@@ -820,21 +1342,60 @@
 
                             </select>
 
+
                             <div class="invalid-feedback">
+
                                 Selecciona tu distrito.
+
                             </div>
 
                         </div>
 
-                        <div class="text-end">
+                        <!-- FECHA -->
 
-                            <button type="submit" class="btn btn-alivio">
+                        <div class="mb-3">
+
+                            <label for="fecha" class="form-label">
+
+                                ¿Desde cuándo requiere el servicio?
+
+                            </label>
+
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+
+                        </div>
+
+                        <!-- MENSAJE -->
+
+                        <div class="mb-3">
+
+                            <label for="mensaje" class="form-label">
+
+                                Cuéntanos un poco más
+                                <span class="text-muted">
+                                    (opcional)
+                                </span>
+
+                            </label>
+
+
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="3"
+                                placeholder="¿Hay algo más que debamos saber?"></textarea>
+
+                        </div>
+
+
+
+                        <div class="d-grid">
+
+                            <button type="submit" class="btn btn-alivio btn-lg">
 
                                 Continuar
 
                             </button>
 
                         </div>
+
 
                     </form>
 
@@ -846,14 +1407,278 @@
 
     </div>
 
-    <!-- Bootstrap JS -->
+
+
+    <!-- ================================================= -->
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <!-- ================================================= -->
+
+    <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header border-0 pb-0">
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+                </div>
+
+                <div class="modal-body text-center pt-0 pb-4 px-4">
+
+                    <div class="icono-exito mb-3">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                    </div>
+
+                    <h2 class="modal-title fs-4 fw-bold" id="modalExitoLabel">
+
+                        Solicitud registrada
+
+                    </h2>
+
+                    <p class="text-muted mt-2">
+
+                        Recibimos tu pedido. ALIVIO se pondrá en contacto contigo.
+
+                    </p>
+
+                    <div class="resumen-solicitud text-start mt-4">
+
+                        <p class="mb-2">
+                            <strong>Código:</strong>
+                            <span id="exitoCodigo"></span>
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Cliente:</strong>
+                            <span id="exitoCliente"></span>
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Servicio:</strong>
+                            <span id="exitoServicio"></span>
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Distrito:</strong>
+                            <span id="exitoDistrito"></span>
+                        </p>
+
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+
+                        <a href="Gesolicitud.html" class="btn btn-alivio">
+
+                            Ver mis solicitudes
+
+                        </a>
+
+                        <button type="button" class="btn btn-outline-alivio" data-bs-dismiss="modal">
+
+                            Cerrar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- MODAL PRODUCTO - SILLA -->
+    <!-- ================================================= -->
+
+    <div class="modal fade" id="modalProductoSilla" tabindex="-1" aria-labelledby="modalProductoSillaLabel"
+        aria-hidden="true">
+
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h2 class="modal-title fs-5" id="modalProductoSillaLabel">
+
+                        Silla de ruedas
+
+                    </h2>
+
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <p>
+                        Silla de ruedas para facilitar la movilidad
+                        y desplazamiento cotidiano.
+                    </p>
+
+
+                    <p class="mb-1">
+                        <strong>Modalidad:</strong>
+                        Alquiler
+                    </p>
+
+
+                    <p>
+                        <strong>Precio:</strong>
+                        Consultar disponibilidad
+                    </p>
+
+
+                    <button type="button" class="btn btn-alivio" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#modalSolicitud">
+
+                        Solicitar alquiler
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- MODAL PRODUCTO - TERMÓMETRO -->
+    <!-- ================================================= -->
+
+    <div class="modal fade" id="modalProductoTermometro" tabindex="-1" aria-labelledby="modalProductoTermometroLabel"
+        aria-hidden="true">
+
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h2 class="modal-title fs-5" id="modalProductoTermometroLabel">
+
+                        Termómetro digital
+
+                    </h2>
+
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <p>
+                        Termómetro digital para control de temperatura
+                        en el hogar.
+                    </p>
+
+
+                    <p>
+                        <strong>Modalidad:</strong>
+                        Venta
+                    </p>
+
+
+                    <button type="button" class="btn btn-alivio" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#modalSolicitud">
+
+                        Consultar producto
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- FOOTER -->
+    <!-- ================================================= -->
+
+    <footer class="footer py-5">
+
+        <div class="container">
+
+            <div class="row">
+
+
+                <div class="col-md-6">
+
+                    <h2 class="h4 fw-bold">
+                        ALIVIO
+                    </h2>
+
+
+                    <p>
+                        Enfermería y cuidado integral a domicilio.
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-6 text-md-end">
+
+                    <p class="mb-1">
+                        Atención profesional y humana.
+                    </p>
+
+
+                    <p class="mb-0">
+                        © 2026 ALIVIO
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ================================================= -->
+    <!-- BOOTSTRAP JS -->
+    <!-- ================================================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
-    <!-- Nuestro JavaScript -->
+
+    <!-- ================================================= -->
+    <!-- JAVASCRIPT PROPIO -->
+    <!-- ================================================= -->
 
     <script src="js/app.js"></script>
+
 
 </body>
 
