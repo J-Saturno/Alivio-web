@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIVIO | Productos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Nuestro CSS -->
+    <link rel="stylesheet" href="/CSS/reset.css">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="stylesheet" href="/CSS/encabezado.css">
+    <link rel="stylesheet" href="/CSS/productos.css">
+</head>
+
+<body>
+
+
+    <!-- ===================================== -->
+    <!-- Menu de navegacion -->
+    <!-- ===================================== -->
+
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                    <img src="/imagen/logoo.png" alt="Logo" width="48" height="48" class="me-2">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold brand-title">ALIVIO</span>
+                        <small class="brand-subtitle">Enfermería a domicilio</small>
+                    </div>
+            </a>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+
+                <ul class="navbar-nav ms-auto ">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/index.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/ayuda/index.html">Como ayudamos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/servicios/index.html">Servicios</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">Productos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/productos/index.html">Alquiler</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/productos/index.html">Venta</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/nosotros/index.html">
+                            Nosotros
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contacto/index.html">
+                            Contacto
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-3">
+                        <button type="button" class="btn btn-alivio" data-bs-toggle="modal"
+                            data-bs-target="#modalSolicitud">
+
+                            Solicitar atención
+
+                        </button>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- ===================================== -->
+    <!-- Productos -->
+    <!-- ===================================== -->
+
+    <div class="container my-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4 row-productos">
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://a-static.mlcdn.com.br/470x352/fralda-wellness-descartavel-geriatrica-tamanho-g-welness/dudubaby/254685/388712612f98f5d9a8456d02c13b7413.jpeg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Pañales Geriátricos (Paquete x 20 o 30 unidades)</h5>
+                            <p class="card-text">Diseñados con alta absorción y barreras antifugas, ideales para brindar
+                                comodidad, proteger la piel y facilitar la higiene diaria en casos de incontinencia
+                                moderada
+                                a
+                                severa.</p>
+                            <small>Precio estimado: S/ 35.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://www.adioffice.cl/cdn/shop/files/GUANILAXL01-CAJA-GUANTES-NITRILO-S-POLVO-AZUL-XL_2048x2048.jpg?v=1719413535"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Caja de Guantes de Nitrilo / Látex (x 100 unidades)</h5>
+                            <p class="card-text">Insumo descartable esencial para garantizar la bioseguridad, higiene y
+                                prevención de contagios durante el aseo, cambio de pañales o aplicación de tratamientos
+                                médicos
+                                en casa.</p>
+                            <small>Precio estimado: S/ 25.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://comofuncionaexplicado.com/wp-content/uploads/2023/09/colchon-antiescaras-descubre-como-funciona-y-protege-tu-salud.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Colchón Clínico Antiescaras (de aire con motor/compresor)</h5>
+                            <p class="card-text">Sistema de celdas de aire alternantes impulsadas por un motor continuo,
+                                diseñado para redistribuir la presión corporal y evitar la formación de úlceras por
+                                presión
+                                en
+                                pacientes encamados.</p>
+                            <small>Precio estimado: S/ 180.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://m.media-amazon.com/images/I/31WODRMP85L.jpg" class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Empapadores / Protectores de Cama Desechables (Paquete x 10 o 20)
+                            </h5>
+                            <p class="card-text">Sábanas clínicas descartables con base impermeable que protegen
+                                colchones y
+                                sábanas, facilitando el cambio rápido y manteniendo la cama limpia y seca.</p>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://superpapelera.mx/wp-content/uploads/2023/05/24409007-800x800.webp"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Kit de Curación Básico (Gasas estériles, vendas, solución antiséptica
+                                y
+                                micropore)</h5>
+                            <p class="card-text">Set completo de elementos estériles y de primera necesidad para
+                                realizar la
+                                limpieza, desinfección y protección diaria de heridas leves o escaras en etapa inicial.
+                            </p>
+                            <small>Precio estimado: S/ 25.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://www.cosmomedica.com/6952-large_default/cama-hospitalaria-articulada-manual-en-4-secciones.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Cama Clínica Articulada (Manual o Eléctrica)</h5>
+                            <p class="card-text">Estructura metálica con manivelas o control eléctrico que permite
+                                elevar la
+                                cabecera y los pies, facilitando la alimentación, la higiene y previniendo
+                                complicaciones
+                                respiratorias o úlceras.</p>
+                            <small>Precio estimado: S/ 150.00 – S/ 350.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">ALQUILAR</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://quantumspain.es/2482-large_default/concentrador-de-oxigeno-10-lpm-devilbiss-healthcare.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Concentrador de Oxígeno Medicinal (5 Litros)</h5>
+                            <p class="card-text">Equipo eléctrico que suministra oxígeno de alto flujo purificado de
+                                forma
+                                continua en el domicilio, indispensable para pacientes con afecciones respiratorias
+                                crónicas
+                                o
+                                postoperatorios.</p>
+                            <small>Precio estimado: S/ 250.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">ALQUILER</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.99vzveaqDGbCaJhdP1kCOQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Silla de Ruedas Plegable Estándar</h5>
+                            <p class="card-text">Dispositivo de movilidad con estructura de acero, asiento acolchado y
+                                frenos de
+                                seguridad, ideal para facilitar traslados seguros dentro del hogar o salidas a citas
+                                médicas.
+                            </p>
+                            <small>Precio estimado: S/ 60.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">ALQUILER</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.9-1pmVLf6g6x4OfOF-_DxQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Andador Ortopédico Fijo o con Ruedas</h5>
+                            <p class="card-text">Soporte de aluminio ligero diseñado para brindar estabilidad y
+                                confianza a
+                                adultos mayores con movilidad reducida durante sus caminatas o procesos de
+                                rehabilitación.
+                            </p>
+                            <small>Precio estimado: S/ 70.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">ALQUILER</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100">
+                    <img src="https://ortopediaqueralto.com/wp-content/uploads/2023/11/GRUA-600x600-1.webp"
+                        class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">Grúa de Transferencia Domiciliaria</h5>
+                            <p class="card-text">Equipo mecánico hidráulico o eléctrico que permite levantar y trasladar
+                                al
+                                paciente sin esfuerzo físico desde la cama hacia la silla de ruedas o el baño, cuidando
+                                también
+                                la espalda del familiar o cuidador.</p>
+                            <small>Precio estimado: S/ 200.00</small>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">ALQUILER</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- MODAL DE COMPRA -->
+    <!-- ===================================== -->
+    <div class="modal fade" id="modalComprar" tabindex="-1" aria-labelledby="modalComprarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header bg-success text-white rounded-top-4">
+                    <h5 class="modal-title fw-bold" id="modalComprarLabel"> Confirmar Compra de Producto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formComprar" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark small">Producto seleccionado:</label>
+                            <input type="text" id="nombreProductoCompra" class="form-control bg-light fw-bold" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cantidadCompra" class="form-label fw-semibold text-dark small">Cantidad de
+                                unidades</label>
+                            <input type="number" class="form-control" id="cantidadCompra" min="1" value="1">
+                            <div id="error-cantidadCompra" class="text-danger small mt-1"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccionCompra" class="form-label fw-semibold text-dark small">Dirección de
+                                entrega</label>
+                            <textarea class="form-control" id="direccionCompra" rows="2"
+                                placeholder="Calle, número, distrito y referencias"></textarea>
+                            <div id="error-direccionCompra" class="text-danger small mt-1"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pagoCompra" class="form-label fw-semibold text-dark small">Método de
+                                pago</label>
+                            <select id="pagoCompra" class="form-select">
+                                <option selected disabled value="">Selecciona método de pago</option>
+                                <option value="yape">Yape / Plin</option>
+                                <option value="tarjeta">Tarjeta de Crédito / Débito</option>
+                                <option value="efectivo">Pago contra entrega (Efectivo)</option>
+                            </select>
+                            <div id="error-pagoCompra" class="text-danger small mt-1"></div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success py-2 fw-bold">Confirmar Pedido de
+                                Compra</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- MODAL DE ALQUILER -->
+    <!-- ===================================== -->
+    <div class="modal fade" id="modalAlquiler" tabindex="-1" aria-labelledby="modalAlquilerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title fw-bold" id="modalAlquilerLabel"> Solicitar Alquiler de Equipo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formAlquiler" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark small">Equipo seleccionado:</label>
+                            <input type="text" id="nombreProductoAlquiler" class="form-control bg-light fw-bold"
+                                readonly>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label for="tiempoAlquiler" class="form-label fw-semibold text-dark small">Tiempo
+                                    estimado</label>
+                                <select id="tiempoAlquiler" class="form-select">
+                                    <option selected disabled value="">Selecciona plazo</option>
+                                    <option value="1_semana">1 Semana</option>
+                                    <option value="1_mes">1 Mes</option>
+                                    <option value="3_meses">3 Meses</option>
+                                </select>
+                                <div id="error-tiempoAlquiler" class="text-danger small mt-1"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fechaInicio" class="form-label fw-semibold text-dark small">Fecha de
+                                    inicio</label>
+                                <input type="date" class="form-control" id="fechaInicio">
+                                <div id="error-fechaInicio" class="text-danger small mt-1"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccionAlquiler" class="form-label fw-semibold text-dark small">Dirección del
+                                domicilio de entrega</label>
+                            <textarea class="form-control" id="direccionAlquiler" rows="2"
+                                placeholder="Calle, número, distrito y referencias"></textarea>
+                            <div id="error-direccionAlquiler" class="text-danger small mt-1"></div>
+                        </div>
+                        <div class="form-text text-muted mb-3 small">
+                            * El alquiler incluye contrato temporal y se solicita un documento de identidad más garantía
+                            reembolsable.
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary py-2 fw-bold">Solicitar Alquiler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- FOOTER -->
+
+
+    <footer class="footer py-5">
+
+        <div class="container">
+
+            <div class="row">
+
+
+                <div class="col-md-6">
+
+                    <h2 class="h4 fw-bold">
+                        ALIVIO
+                    </h2>
+
+
+                    <p>
+                        Enfermería y cuidado integral a domicilio.
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-6 text-md-end">
+
+                    <p class="mb-1">
+                        Atención profesional y humana.
+                    </p>
+
+
+                    <p class="mb-0">
+                        © 2026 ALIVIO
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <!-- Nuestro JavaScript -->
+    <script src="/JS/productos.js"></script>
+    <script src="/js/app.js"></script>
+
+</body>
+
+</html>

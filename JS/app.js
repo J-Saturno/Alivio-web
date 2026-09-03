@@ -546,3 +546,75 @@ if (formulario) {
 if (tablaSolicitudes) {
     aplicarFiltros();
 }
+
+
+
+
+
+
+
+// ===================================== //
+// VALIDACIÓN DEL MODAL DE LOGIN //
+// ===================================== //
+document.addEventListener('DOMContentLoaded', function () {
+    
+    var formulario = document.getElementById('formLogin');
+
+    // Comprobamos que el formulario existe
+    if (formulario != null) {
+        
+        formulario.addEventListener('submit', function (evento) {
+            // Evitamos que la página recargue
+            evento.preventDefault();
+
+            // 1. Obtener los elementos del HTML
+            var inputEmail = document.getElementById('loginEmail');
+            var inputPassword = document.getElementById('loginPassword');
+            
+            var errorEmail = document.getElementById('errorEmail');
+            var errorPassword = document.getElementById('errorPassword');
+            var mensajeExito = document.getElementById('mensajeExito');
+
+            // 2. Ocultar todos los mensajes al principio de la validación
+            errorEmail.style.display = 'none';
+            errorPassword.style.display = 'none';
+            mensajeExito.style.display = 'none';
+
+            // 3. Variable de control (bandera)
+            var esValido = true;
+
+            // 4. Validar el Correo
+            if (inputEmail.value == "") {
+                errorEmail.innerHTML = "El correo no puede estar vacío.";
+                errorEmail.style.display = "block";
+                esValido = false;
+            } else if (inputEmail.value.indexOf("@") == -1) {
+                // indexOf busca un caracter. Si devuelve -1, es que no existe.
+                errorEmail.innerHTML = "Ingresa un correo valido (@gmail.com).";
+                errorEmail.style.display = "block";
+                esValido = false;
+            }
+
+            // 5. Validar la Contraseña
+            if (inputPassword.value == "") {
+                errorPassword.innerHTML = "La contraseña no puede estar vacía.";
+                errorPassword.style.display = "block";
+                esValido = false;
+            } else if (inputPassword.value.length < 6) {
+                errorPassword.innerHTML = "La contraseña es muy corta (mínimo 6 letras).";
+                errorPassword.style.display = "block";
+                esValido = false;
+            }
+
+            // 6. Si no hubo errores, mostrar mensaje de éxito
+            if (esValido == true) {
+                mensajeExito.innerHTML = "¡Datos correctos! Ingresando al sistema...";
+                mensajeExito.style.display = "block";
+                
+                // Limpiamos las cajas de texto
+                inputEmail.value = "";
+                inputPassword.value = "";
+            }
+        });
+    }
+});

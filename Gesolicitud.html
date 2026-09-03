@@ -16,6 +16,7 @@
 
     <!-- CSS propio -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="CSS/encabezado.css">
 </head>
 
 <body>
@@ -26,16 +27,12 @@
 
             <div class="container">
 
-                <a class="navbar-brand" href="index.html">
-
-                    <span class="logo-alivio">
-                        ALIVIO
-                    </span>
-
-                    <small>
-                        Enfermería a domicilio
-                    </small>
-
+                <a class="navbar-brand d-flex align-items-center" href="index.html">
+                    <img src="imagen/logoo.png" alt="Logo" width="48" height="48" class="me-2">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold brand-title">ALIVIO</span>
+                        <small class="brand-subtitle">Enfermería a domicilio</small>
+                    </div>
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuGestion"
@@ -69,198 +66,198 @@
 
     </header>
 
-<!-- ================================================= -->
-<!-- GESTIÓN DE SOLICITUDES -->
-<!-- ================================================= -->
+    <!-- ================================================= -->
+    <!-- GESTIÓN DE SOLICITUDES -->
+    <!-- ================================================= -->
 
-<section id="gestionSolicitudes" class="py-5">
+    <section id="gestionSolicitudes" class="py-5">
 
-    <div class="container">
+        <div class="container">
 
 
-        <!-- ENCABEZADO -->
+            <!-- ENCABEZADO -->
 
-        <div class="d-flex flex-column flex-md-row
+            <div class="d-flex flex-column flex-md-row
                     justify-content-between
                     align-items-md-center
                     gap-3 mb-4">
 
-            <div>
+                <div>
 
-                <span class="seccion-etiqueta">
-                    GESTIÓN
-                </span>
-
-                <h2 class="fw-bold mt-2 mb-1">
-                    Solicitudes ALIVIO
-                </h2>
-
-                <p class="text-muted mb-0">
-                    Registro de solicitudes realizadas.
-                </p>
-
-            </div>
-
-
-            <!-- CONTADOR -->
-
-            <div class="contador-solicitudes">
-
-                <span id="contadorSolicitudes">
-                    0
-                </span>
-
-                solicitudes
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- BUSCADOR -->
-        <!-- ========================================= -->
-
-        <div class="row mb-4">
-
-            <div class="col-md-8">
-
-                <label for="buscarSolicitud" class="form-label">
-
-                    Buscar solicitud
-
-                </label>
-
-                <div class="input-group">
-
-                    <span class="input-group-text">
-
-                        <i class="bi bi-search"></i>
-
+                    <span class="seccion-etiqueta">
+                        GESTIÓN
                     </span>
 
-                    <input type="text" class="form-control" id="buscarSolicitud"
-                        placeholder="Buscar por código, cliente o distrito">
+                    <h2 class="fw-bold mt-2 mb-1">
+                        Solicitudes ALIVIO
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Registro de solicitudes realizadas.
+                    </p>
+
+                </div>
+
+
+                <!-- CONTADOR -->
+
+                <div class="contador-solicitudes">
+
+                    <span id="contadorSolicitudes">
+                        0
+                    </span>
+
+                    solicitudes
 
                 </div>
 
             </div>
 
 
-            <div class="col-md-4 mt-3 mt-md-0">
 
-                <label for="filtroEstado" class="form-label">
+            <!-- ========================================= -->
+            <!-- BUSCADOR -->
+            <!-- ========================================= -->
 
-                    Filtrar por estado
+            <div class="row mb-4">
 
-                </label>
+                <div class="col-md-8">
 
-                <select class="form-select" id="filtroEstado">
+                    <label for="buscarSolicitud" class="form-label">
 
-                    <option value="todos">
-                        Todos
-                    </option>
+                        Buscar solicitud
 
-                    <option value="Pendiente">
-                        Pendiente
-                    </option>
+                    </label>
 
-                    <option value="Confirmada">
-                        Confirmada
-                    </option>
+                    <div class="input-group">
 
-                    <option value="Finalizada">
-                        Finalizada
-                    </option>
+                        <span class="input-group-text">
 
-                    <option value="Cancelada">
-                        Cancelada
-                    </option>
+                            <i class="bi bi-search"></i>
 
-                </select>
+                        </span>
+
+                        <input type="text" class="form-control" id="buscarSolicitud"
+                            placeholder="Buscar por código, cliente o distrito">
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mt-3 mt-md-0">
+
+                    <label for="filtroEstado" class="form-label">
+
+                        Filtrar por estado
+
+                    </label>
+
+                    <select class="form-select" id="filtroEstado">
+
+                        <option value="todos">
+                            Todos
+                        </option>
+
+                        <option value="Pendiente">
+                            Pendiente
+                        </option>
+
+                        <option value="Confirmada">
+                            Confirmada
+                        </option>
+
+                        <option value="Finalizada">
+                            Finalizada
+                        </option>
+
+                        <option value="Cancelada">
+                            Cancelada
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================= -->
+            <!-- TABLA -->
+            <!-- ========================================= -->
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Código
+                            </th>
+
+                            <th>
+                                Cliente
+                            </th>
+
+                            <th>
+                                Servicio
+                            </th>
+
+                            <th>
+                                Distrito
+                            </th>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaSolicitudes">
+
+                        <!-- JavaScript generará
+                         las filas aquí -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- ========================================= -->
+            <!-- MENSAJE CUANDO NO HAY SOLICITUDES -->
+            <!-- ========================================= -->
+
+            <div id="sinSolicitudes" class="text-center py-5 d-none">
+
+                <i class="bi bi-inbox display-4 text-muted"></i>
+
+                <p class="text-muted mt-3">
+                    Todavía no hay solicitudes registradas.
+                </p>
 
             </div>
 
         </div>
 
-
-
-        <!-- ========================================= -->
-        <!-- TABLA -->
-        <!-- ========================================= -->
-
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Código
-                        </th>
-
-                        <th>
-                            Cliente
-                        </th>
-
-                        <th>
-                            Servicio
-                        </th>
-
-                        <th>
-                            Distrito
-                        </th>
-
-                        <th>
-                            Fecha
-                        </th>
-
-                        <th>
-                            Estado
-                        </th>
-
-                        <th>
-                            Acciones
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="tablaSolicitudes">
-
-                    <!-- JavaScript generará
-                         las filas aquí -->
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- MENSAJE CUANDO NO HAY SOLICITUDES -->
-        <!-- ========================================= -->
-
-        <div id="sinSolicitudes" class="text-center py-5 d-none">
-
-            <i class="bi bi-inbox display-4 text-muted"></i>
-
-            <p class="text-muted mt-3">
-                Todavía no hay solicitudes registradas.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
+    </section>
 
 
     <!-- ================================================= -->
