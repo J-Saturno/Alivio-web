@@ -227,6 +227,596 @@
     </section>
 
 
+
+
+    <div class="modal fade" id="modalSolicitud" tabindex="-1" aria-labelledby="modalSolicitudLabel" aria-hidden="true">
+
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h2 class="modal-title fs-5" id="modalSolicitudLabel">
+
+                        Solicitar atención
+
+                    </h2>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <p class="text-muted">
+
+                        Cuéntanos qué necesitas y nos pondremos
+                        en contacto contigo.
+
+                    </p>
+
+                    <form id="formSolicitud" novalidate>
+
+                        <!-- NOMBRE -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">
+
+                                Nombre
+
+                            </label>
+
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                placeholder="Ingresa tu nombre">
+
+                            <div class="invalid-feedback">
+                                Por favor, ingresa tu nombre.
+                            </div>
+
+                        </div>
+
+
+                        <!-- TELÉFONO -->
+
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">
+
+                                Teléfono
+
+                            </label>
+
+                            <input type="tel" class="form-control" id="telefono" name="telefono"
+                                placeholder="Ej. 987654321">
+
+                            <div class="invalid-feedback">
+
+                                Ingresa un número de teléfono válido.
+
+                            </div>
+
+                        </div>
+
+                        <!-- SERVICIO -->
+
+                        <div class="mb-3">
+
+                            <label for="servicio" class="form-label">
+
+                                ¿En qué podemos ayudarte?
+
+                            </label>
+
+                            <select class="form-select" id="servicio" name="servicio">
+
+                                <option value="">
+                                    Selecciona una opción
+                                </option>
+
+                                <option value="adulto-mayor">
+                                    Cuidado para un adulto mayor
+                                </option>
+
+                                <option value="enfermeria">
+                                    Atención de enfermería
+                                </option>
+
+                                <option value="curaciones">
+                                    Curación
+                                </option>
+
+                                <option value="acompanamiento">
+                                    Acompañamiento
+                                </option>
+
+                                <option value="equipamiento">
+                                    Alquiler de equipamiento
+                                </option>
+
+                                <option value="orientacion">
+                                    No estoy seguro, necesito orientación
+                                </option>
+
+                            </select>
+
+                            <div class="invalid-feedback">
+                                Selecciona una opción para poder ayudarte.
+
+                            </div>
+
+                        </div>
+
+                        <!-- CAMPOS DINÁMICOS -->
+
+                        <div id="camposDinamicos">
+
+                            <!-- ADULTO MAYOR -->
+
+                            <div id="camposAdultoMayor" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="edadPaciente" class="form-label">
+
+                                        Edad del paciente
+
+                                    </label>
+
+                                    <input type="number" class="form-control" id="edadPaciente" min="14" max="100"
+                                        placeholder="Ej. 78">
+
+                                    <div class="invalid-feedback">
+
+                                        Ingresa una edad válida.
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label for="tipoCuidado" class="form-label">
+                                        ¿Qué tipo de apoyo necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="tipoCuidado">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="cuidado-integral">
+                                            Cuidado integral
+                                        </option>
+
+                                        <option value="higiene">
+                                            Higiene y cuidado personal
+                                        </option>
+
+                                        <option value="alimentacion">
+                                            Apoyo en alimentación
+                                        </option>
+
+                                        <option value="movilidad">
+                                            Apoyo en movilidad
+                                        </option>
+
+                                        <option value="medicamentos">
+                                            Supervisión de medicamentos
+                                        </option>
+
+                                        <option value="acompanamiento">
+                                            Acompañamiento y compañía
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label for="duracion" class="form-label">
+
+                                        ¿Qué duración necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="duracion">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="6 horas">
+                                            6 horas
+                                        </option>
+
+                                        <option value="8 horas">
+                                            8 horas
+                                        </option>
+
+                                        <option value="12 horas">
+                                            12 horas
+                                        </option>
+
+                                        <option value="24 horas">
+                                            24 horas
+                                        </option>
+
+                                        <option value="interdiario">
+                                            Interdiario
+                                        </option>
+
+                                        <option value="fines de semana">
+                                            Fines de semana
+                                        </option>
+
+                                        <option value="por turnos">
+                                            Por turnos
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ENFERMERÍA -->
+
+                            <div id="camposEnfermeria" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoAtencion" class="form-label">
+
+                                        ¿Qué atención necesita?
+
+                                    </label>
+
+                                    <select class="form-select" id="tipoAtencion">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="atencion-domiciliaria">
+                                            Atención de enfermería a domicilio
+                                        </option>
+
+                                        <option value="signos-vitales">
+                                            Control de signos vitales
+                                        </option>
+
+                                        <option value="medicamentos">
+                                            Administración / supervisión de medicamentos
+                                        </option>
+
+                                        <option value="postoperatorio">
+                                            Cuidados postoperatorios
+                                        </option>
+
+                                        <option value="otro">
+                                            Otro tipo de atención
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <!-- CURACIONES -->
+
+                            <div id="camposCuracion" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoCuracion" class="form-label">
+
+                                        Cuéntanos qué necesita
+
+                                    </label>
+
+                                    <input type="text" class="form-control" id="tipoCuracion"
+                                        placeholder="Ej. Curación de herida">
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACOMPAÑAMIENTO -->
+
+                            <div id="camposAcompanamiento" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="tipoAcompanamiento" class="form-label">
+
+                                        ¿En qué necesita acompañamiento?
+
+                                    </label>
+                                    <select class="form-select" id="tipoAcompanamiento">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="citas-medicas">
+                                            Citas médicas
+                                        </option>
+
+                                        <option value="actividades">
+                                            Actividades cotidianas
+                                        </option>
+
+                                        <option value="compania">
+                                            Compañía y soporte
+                                        </option>
+
+                                        <option value="movilidad">
+                                            Apoyo para movilizarse
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EQUIPAMIENTO -->
+
+                            <div id="camposEquipamiento" class="campos-servicio d-none">
+
+                                <div class="mb-3">
+
+                                    <label for="producto" class="form-label">
+
+                                        ¿Qué equipo necesitas?
+
+                                    </label>
+
+                                    <select class="form-select" id="producto">
+
+                                        <option value="">
+                                            Selecciona una opción
+                                        </option>
+
+                                        <option value="silla-de-ruedas">
+                                            Silla de ruedas
+                                        </option>
+
+                                        <option value="balon-oxigeno">
+                                            Balón de oxígeno
+                                        </option>
+
+                                        <option value="aspirador">
+                                            Aspirador de secreciones
+                                        </option>
+
+                                        <option value="otro">
+                                            Otro equipo
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ORIENTACIÓN -->
+
+                            <div id="camposOrientacion" class="campos-servicio d-none">
+
+                                <div class="alert alert-info">
+
+                                    <i class="bi bi-info-circle"></i>
+
+                                    No te preocupes. Cuéntanos qué necesita
+                                    tu familiar y nuestro equipo te orientará.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DISTRITO -->
+
+                        <div class="mb-3">
+
+                            <label for="distrito" class="form-label">
+
+                                Distrito
+
+                            </label>
+
+
+                            <select class="form-select" id="distrito" name="distrito">
+
+                                <option value="">
+                                    Selecciona tu distrito
+                                </option>
+
+                                <option value="La Molina">
+                                    La Molina
+                                </option>
+
+                                <option value="San Borja">
+                                    San Borja
+                                </option>
+
+                                <option value="Santiago de Surco">
+                                    Santiago de Surco
+                                </option>
+
+                                <option value="San Isidro">
+                                    San Isidro
+                                </option>
+
+                                <option value="Miraflores">
+                                    Miraflores
+                                </option>
+
+                            </select>
+
+
+                            <div class="invalid-feedback">
+
+                                Selecciona tu distrito.
+
+                            </div>
+
+                        </div>
+
+                        <!-- FECHA -->
+
+                        <div class="mb-3">
+
+                            <label for="fecha" class="form-label">
+
+                                ¿Desde cuándo requiere el servicio?
+
+                            </label>
+
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+
+                        </div>
+
+                        <!-- MENSAJE -->
+
+                        <div class="mb-3">
+
+                            <label for="mensaje" class="form-label">
+
+                                Cuéntanos un poco más
+                                <span class="text-muted">
+                                    (opcional)
+                                </span>
+
+                            </label>
+
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="3"
+                                placeholder="¿Hay algo más que debamos saber?"></textarea>
+
+                        </div>
+
+
+
+                        <div class="d-grid">
+
+                            <button type="submit" class="btn btn-alivio btn-lg">
+
+                                Continuar
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL DE CONFIRMACIÓN -->
+
+    <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header border-0 pb-0">
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+                </div>
+
+                <div class="modal-body text-center pt-0 pb-4 px-4">
+
+                    <div class="icono-exito mb-3">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                    </div>
+
+                    <h2 class="modal-title fs-4 fw-bold" id="modalExitoLabel">
+
+                        Solicitud registrada
+
+                    </h2>
+
+                    <p class="text-muted mt-2">
+
+                        Recibimos tu pedido. ALIVIO se pondrá en contacto contigo.
+
+                    </p>
+
+                    <div class="resumen-solicitud text-start mt-4">
+
+                        <p class="mb-2">
+                            <strong>Código:</strong>
+                            <span id="exitoCodigo"></span>
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Cliente:</strong>
+                            <span id="exitoCliente"></span>
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Servicio:</strong>
+                            <span id="exitoServicio"></span>
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Distrito:</strong>
+                            <span id="exitoDistrito"></span>
+                        </p>
+
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+
+                        <!-- 
+                        <a href="Gesolicitud.html" class="btn btn-alivio">
+
+                            Ver mis solicitudes
+
+                        </a>
+                        -->
+
+                        <button type="button" class="btn btn-outline-alivio" data-bs-dismiss="modal">
+
+                            Cerrar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
     
     <!-- FOOTER -->
 
