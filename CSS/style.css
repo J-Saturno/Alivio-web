@@ -1,7 +1,5 @@
-/* ================================================= */
-/* VARIABLES */
-/* ================================================= */
 
+/* VARIABLES */
 :root {
 
     --alivio-primary: #2a9d8f;
@@ -13,10 +11,7 @@
 }
 
 
-
-/* ================================================= */
 /* GENERAL */
-/* ================================================= */
 
 html {
     scroll-behavior: smooth;
@@ -27,6 +22,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     color: #243333;
 }
+
+
 
 
 
@@ -93,12 +90,10 @@ body {
     transition: all 0.3s ease;
 }
 
-
 .btn-alivio:hover {
     background-color: #4b8a85;
     color: #ffffff;
 }
-
 
 .btn-outline-alivio {
     background-color: transparent;
@@ -110,7 +105,6 @@ body {
     border-radius: 50px; /* Misma curvatura que el botón principal */
     transition: all 0.3s ease;
 }
-
 
 .btn-outline-alivio:hover {
     background-color: #217068;
@@ -222,6 +216,7 @@ body {
 
 
 
+
 /* ============================= */
 /* Informacion extra */
 /* ============================= */
@@ -264,6 +259,8 @@ body {
     line-height: 1.6;
     text-align: justify;
 }
+
+
 
 
 
@@ -338,8 +335,6 @@ body {
 
 
 
-
-
 /* ============================= */
 /* Productos */
 /* ============================= */
@@ -365,9 +360,7 @@ body {
     background: #ffffff; 
     height: 220px;
     display: flex;
-
     align-items: center;
-
     justify-content: center;
     padding: 15px;
     overflow: hidden;
@@ -448,6 +441,7 @@ body {
 }
 
 
+
 /* ============================= */
 /* Beneficios */
 /* ============================= */
@@ -465,16 +459,45 @@ body {
 }
 
 
-/* ============================= */
-/* fotos */
-/* ============================= */
 
-.img-rectangulo-vertical {
-    height: 480px; 
-    object-fit: cover; 
-    object-position: center;
-    border-radius: 0;
+/* GESTIÓN DE SOLICITUDES */
+
+#gestionSolicitudes {
+
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 35px 20px; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.082);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.tarjeta-feature:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(21, 97, 89, 0.1);
+}
+
+.icono-box {
+    color: #156159;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-feature:hover .icono-box {
+    transform: scale(1.12);
+}
+
+.tarjeta-feature .card-title {
+    color: #1c2a38;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+    
+}
+
+.tarjeta-feature .card-text {
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
 
 
 
@@ -533,14 +556,20 @@ body {
 .modal .was-validated .form-control:valid, 
 .modal .form-control.is-valid {
     border-color: #156159;
-
 }
 
-
-
 /* ============================= */
+/* fotos */
+/* ============================= */
+
+.img-rectangulo-vertical {
+    height: 480px; 
+    object-fit: cover; 
+    object-position: center;
+    border-radius: 0;
+}
+
 /* CTA */
-/* ================================================= */
 
 .cta {
 
@@ -552,10 +581,7 @@ body {
 }
 
 
-
-/* ================================================= */
 /* FOOTER */
-/* ================================================= */
 
 .footer {
 
@@ -567,10 +593,7 @@ body {
 }
 
 
-
-/* ================================================= */
 /* MODAL DE ÉXITO */
-/* ================================================= */
 
 .icono-exito {
 
@@ -579,7 +602,6 @@ body {
     font-size: 3rem;
 
 }
-
 
 .resumen-solicitud {
 
@@ -603,10 +625,7 @@ body {
 }
 
 
-
-/* ================================================= */
 /* RESPONSIVE */
-/* ================================================= */
 
 @media (max-width: 768px) {
 
