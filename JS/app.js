@@ -1,11 +1,9 @@
-// ============================================================
-// 1. ARRAY PRINCIPAL
-// ============================================================
+
 let solicitudes = [];
 
-// ============================================================
-// 2. ELEMENTOS DEL FORMULARIO
-// ============================================================
+
+//  ELEMENTOS DEL FORMULARIO
+
 const formulario = document.getElementById("formSolicitud");
 const nombre = document.getElementById("nombre");
 const telefono = document.getElementById("telefono");
@@ -16,9 +14,9 @@ const mensaje = document.getElementById("mensaje");
 const modalSolicitudEl = document.getElementById("modalSolicitud");
 const modalExitoEl = document.getElementById("modalExito");
 
-// ============================================================
-// 3. CAMPOS DINÁMICOS DEL FORMULARIO
-// ============================================================
+
+// CAMPOS DINÁMICOS DEL FORMULARIO
+
 const camposAdultoMayor = document.getElementById("camposAdultoMayor");
 const camposEnfermeria = document.getElementById("camposEnfermeria");
 const camposCuracion = document.getElementById("camposCuracion");
@@ -34,9 +32,9 @@ const tipoCuracion = document.getElementById("tipoCuracion");
 const tipoAcompanamiento = document.getElementById("tipoAcompanamiento");
 const producto = document.getElementById("producto");
 
-// ============================================================
-// 4. ELEMENTOS DE LA TABLA
-// ============================================================
+
+//  ELEMENTOS DE LA TABLA
+
 const tablaSolicitudes = document.getElementById("tablaSolicitudes");
 const contadorSolicitudes = document.getElementById("contadorSolicitudes");
 const sinSolicitudes = document.getElementById("sinSolicitudes");
@@ -45,18 +43,17 @@ const filtroEstado = document.getElementById("filtroEstado");
 const detalleSolicitudCuerpo = document.getElementById("detalleSolicitudCuerpo");
 const modalDetalleEl = document.getElementById("modalDetalle");
 
-// ============================================================
-// 5. CARGAR SOLICITUDES GUARDADAS
-// ============================================================
+
+//  CARGAR SOLICITUDES GUARDADAS
 const solicitudesGuardadas = localStorage.getItem("solicitudesALIVIO");
 
 if (solicitudesGuardadas) {
     solicitudes = JSON.parse(solicitudesGuardadas);
 }
 
-// ============================================================
-// 6. GUARDAR EN LOCALSTORAGE
-// ============================================================
+
+//  GUARDAR EN LOCALSTORAGE
+
 function guardarEnLocalStorage() {
     localStorage.setItem("solicitudesALIVIO", JSON.stringify(solicitudes));
 }
@@ -75,9 +72,9 @@ function textoOpcion(selectEl) {
     return selectEl.options[selectEl.selectedIndex].text;
 }
 
-// ============================================================
-// 7. OCULTAR CAMPOS DINÁMICOS
-// ============================================================
+
+// OCULTAR CAMPOS DINÁMICOS
+
 function ocultarCampos() {
     [
         camposAdultoMayor,
@@ -93,9 +90,8 @@ function ocultarCampos() {
     });
 }
 
-// ============================================================
-// 8. MOSTRAR CAMPOS SEGÚN EL SERVICIO
-// ============================================================
+//MOSTRAR CAMPOS SEGÚN EL SERVICIO
+
 if (servicio) {
     servicio.addEventListener("change", function () {
         ocultarCampos();
@@ -123,9 +119,9 @@ if (servicio) {
     });
 }
 
-// ============================================================
-// 9-13. VALIDACIONES
-// ============================================================
+
+// VALIDACIONES
+
 function validarNombre() {
     if (!nombre.value.trim()) {
         nombre.classList.add("is-invalid");
@@ -189,9 +185,8 @@ function validarFecha() {
     return true;
 }
 
-// ============================================================
 // 14. GENERAR CÓDIGO DE SOLICITUD
-// ============================================================
+
 function generarCodigoSolicitud() {
     let numero = solicitudes.length + 1;
     let codigo = "SOL-" + String(numero).padStart(3, "0");
@@ -208,9 +203,9 @@ function generarCodigoSolicitud() {
     return codigo;
 }
 
-// ============================================================
-// 15. NOMBRE DEL SERVICIO Y DETALLE
-// ============================================================
+
+// NOMBRE DEL SERVICIO Y DETALLE
+
 function obtenerNombreServicio() {
     return textoOpcion(servicio);
 }
@@ -249,9 +244,9 @@ function obtenerDetalleServicio() {
     }
 }
 
-// ============================================================
-// 16. CREAR Y GUARDAR SOLICITUD
-// ============================================================
+
+// CREAR Y GUARDAR SOLICITUD
+
 function guardarSolicitud() {
     const solicitud = {
         codigo: generarCodigoSolicitud(),
@@ -270,9 +265,8 @@ function guardarSolicitud() {
     return solicitud;
 }
 
-// ============================================================
-// 17. CLASE DEL ESTADO
-// ============================================================
+// CLASE DEL ESTADO
+
 function obtenerClaseEstado(estado) {
     switch (estado) {
         case "Pendiente":
@@ -288,9 +282,8 @@ function obtenerClaseEstado(estado) {
     }
 }
 
-// ============================================================
-// 18. MOSTRAR SOLICITUDES EN LA TABLA
-// ============================================================
+// MOSTRAR SOLICITUDES EN LA TABLA
+
 function mostrarSolicitudes(lista) {
     if (!tablaSolicitudes) {
         return;
@@ -384,9 +377,9 @@ function verSolicitud(codigo) {
     bootstrap.Modal.getOrCreateInstance(modalDetalleEl).show();
 }
 
-// ============================================================
-// 19. CAMBIAR ESTADO
-// ============================================================
+
+// CAMBIAR ESTADO
+
 function cambiarEstado(codigo) {
     const solicitud = solicitudes.find(function (item) {
         return item.codigo === codigo;
@@ -415,9 +408,9 @@ function cambiarEstado(codigo) {
     aplicarFiltros();
 }
 
-// ============================================================
-// 20. ELIMINAR SOLICITUD
-// ============================================================
+
+//  ELIMINAR SOLICITUD
+
 function eliminarSolicitud(codigo) {
     const confirmar = confirm("¿Deseas eliminar esta solicitud?");
 
@@ -433,9 +426,9 @@ function eliminarSolicitud(codigo) {
     aplicarFiltros();
 }
 
-// ============================================================
-// 21. BUSCAR Y FILTRAR
-// ============================================================
+
+// BUSCAR Y FILTRAR
+
 function aplicarFiltros() {
     if (!tablaSolicitudes) {
         return;
@@ -462,9 +455,9 @@ function aplicarFiltros() {
     mostrarSolicitudes(resultados);
 }
 
-// ============================================================
-// 22-23. EVENTOS DE FILTRO
-// ============================================================
+
+// EVENTOS DE FILTRO
+
 if (buscarSolicitud) {
     buscarSolicitud.addEventListener("input", aplicarFiltros);
 }
@@ -473,9 +466,9 @@ if (filtroEstado) {
     filtroEstado.addEventListener("change", aplicarFiltros);
 }
 
-// ============================================================
+
 // 24. ENVÍO DEL FORMULARIO
-// ============================================================
+
 function mostrarModalExito(solicitud) {
     const codigoEl = document.getElementById("exitoCodigo");
     const clienteEl = document.getElementById("exitoCliente");
