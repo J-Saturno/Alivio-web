@@ -90,7 +90,7 @@ function ocultarCampos() {
     });
 }
 
-// 8. MOSTRAR CAMPOS SEGÚN EL SERVICIO
+//MOSTRAR CAMPOS SEGÚN EL SERVICIO
 
 if (servicio) {
     servicio.addEventListener("change", function () {
@@ -120,7 +120,7 @@ if (servicio) {
 }
 
 
-// 9-13. VALIDACIONES
+// VALIDACIONES
 
 function validarNombre() {
     if (!nombre.value.trim()) {
@@ -204,7 +204,7 @@ function generarCodigoSolicitud() {
 }
 
 
-// 15. NOMBRE DEL SERVICIO Y DETALLE
+// NOMBRE DEL SERVICIO Y DETALLE
 
 function obtenerNombreServicio() {
     return textoOpcion(servicio);
@@ -245,7 +245,7 @@ function obtenerDetalleServicio() {
 }
 
 
-// 16. CREAR Y GUARDAR SOLICITUD
+// CREAR Y GUARDAR SOLICITUD
 
 function guardarSolicitud() {
     const solicitud = {
@@ -265,7 +265,7 @@ function guardarSolicitud() {
     return solicitud;
 }
 
-// 17. CLASE DEL ESTADO
+// CLASE DEL ESTADO
 
 function obtenerClaseEstado(estado) {
     switch (estado) {
@@ -282,7 +282,7 @@ function obtenerClaseEstado(estado) {
     }
 }
 
-// 18. MOSTRAR SOLICITUDES EN LA TABLA
+// MOSTRAR SOLICITUDES EN LA TABLA
 
 function mostrarSolicitudes(lista) {
     if (!tablaSolicitudes) {
