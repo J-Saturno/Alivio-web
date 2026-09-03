@@ -324,7 +324,13 @@ function mostrarSolicitudes(lista) {
             </td>
             <td>
                 <div class="btn-group">
-                   
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="verSolicitud('${escapeHtml(solicitud.codigo)}')"
+                        title="Ver detalle">
+                        <i class="bi bi-eye"></i>
+                    </button>
                     <button
                         type="button"
                         class="btn btn-sm btn-outline-secondary"
