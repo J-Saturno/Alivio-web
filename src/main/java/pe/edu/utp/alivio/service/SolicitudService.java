@@ -20,10 +20,11 @@ public class SolicitudService {
 
     public Solicitud crear(Solicitud solicitud) {
         validar(solicitud);
-        solicitud.setCodigo(null);
-        solicitud.setEstado(EstadoSolicitud.PENDIENTE);
-        solicitud.setProfesionalAsignado(null);
-        return repository.save(solicitud);
+        Solicitud nueva = new Solicitud(solicitud);
+        nueva.setCodigo(null);
+        nueva.setEstado(EstadoSolicitud.PENDIENTE);
+        nueva.setProfesionalAsignado(null);
+        return repository.save(nueva);
     }
 
     public List<Solicitud> listar(String texto, EstadoSolicitud estado) {

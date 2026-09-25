@@ -14,24 +14,30 @@ public class SolicitudRepository {
     private final AtomicInteger secuencia = new AtomicInteger(1);
 
     public synchronized Solicitud save(Solicitud solicitud) {
-        if (solicitud.getEstado() == null) {
-            solicitud.setEstado(EstadoSolicitud.PENDIENTE);
+        Solicitud copia = new Solicitud(solicitud);
+        if (copia.getEstado() == null) {
+            copia.setEstado(EstadoSolicitud.PENDIENTE);
         }
-        if (solicitud.getCodigo() == null || solicitud.getCodigo().isBlank()) {
-            solicitud.setCodigo("SOL-%03d".formatted(secuencia.getAndIncrement()));
-            solicitudes.add(solicitud);
-            return solicitud;
+        if (copia.getCodigo() == null || copia.getCodigo().isBlank()) {
+            copia.setCodigo("SOL-%03d".formatted(secuencia.getAndIncrement()));
+            solicitudes.add(copia);
+            return new Solicitud(copia);
         }
-        Solicitud existente = findByCodigo(solicitud.getCodigo()).orElseThrow();
-        solicitudes.set(solicitudes.indexOf(existente), solicitud);
-        return solicitud;
+        for (int i = 0; i < solicitudes.size(); i++) {
+            if (solicitudes.get(i).getCodigo().equals(copia.getCodigo())) {
+                solicitudes.set(i, copia);
+                return new Solicitud(copia);
+            }
+        }
+        throw new java.util.NoSuchElementException("Solicitud no encontrada");
     }
 
-    public List<Solicitud> findAll() {
-        return new ArrayList<>(solicitudes);
+    public synchronized List<Solicitud> findAll() {
+        return solicitudes.stream().map(Solicitud::new).toList();
     }
 
-    public Optional<Solicitud> findByCodigo(String codigo) {
-        return solicitudes.stream().filter(s -> s.getCodigo().equals(codigo)).findFirst();
+    public synchronized Optional<Solicitud> findByCodigo(String codigo) {
+        return solicitudes.stream().filter(s -> s.getCodigo().equals(codigo))
+            .findFirst().map(Solicitud::new);
     }
 }

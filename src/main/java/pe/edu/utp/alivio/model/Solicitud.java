@@ -37,6 +37,22 @@ public class Solicitud {
         this.profesionalAsignado = profesionalAsignado;
     }
 
+    public Solicitud(Solicitud original) {
+        this(original.codigo, original.nombreContacto, original.telefonoContacto,
+            original.nombrePaciente, original.edadPaciente, original.tipoServicio,
+            original.distrito, original.fechaRequerida, original.turno, original.descripcion,
+            original.estado, copiarProfesional(original.profesionalAsignado));
+    }
+
+    private static Profesional copiarProfesional(Profesional profesional) {
+        if (profesional == null) {
+            return null;
+        }
+        return new Profesional(profesional.getCodigo(), profesional.getNombreCompleto(),
+            profesional.getTipoProfesional(), profesional.getTelefono(), profesional.getZonaCobertura(),
+            profesional.getEspecialidad(), profesional.isDisponible());
+    }
+
     public String getCodigo() { return codigo; }
     public void setCodigo(String codigo) { this.codigo = codigo; }
     public String getNombreContacto() { return nombreContacto; }

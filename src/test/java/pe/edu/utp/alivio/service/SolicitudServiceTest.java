@@ -148,7 +148,8 @@ class SolicitudServiceTest {
             () -> service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_ATENCION));
         assertThrows(IllegalArgumentException.class,
             () -> service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.ASIGNADA));
-        assertEquals(EstadoSolicitud.EN_EVALUACION, solicitud.getEstado());
+        assertEquals(EstadoSolicitud.EN_EVALUACION,
+            service.buscarPorCodigo(solicitud.getCodigo()).getEstado());
     }
 
     @Test
@@ -186,6 +187,63 @@ class SolicitudServiceTest {
             () -> service.actualizarEstado(solicitud.getCodigo(), null));
         assertEquals(EstadoSolicitud.PENDIENTE, solicitud.getEstado());
         assertThrows(IllegalArgumentException.class, () -> service.buscarPorCodigo("SOL-999"));
+    }
+
+    @Test
+    void mutarResultadoDeCrearNoCambiaEstadoAlmacenado() {
+        Solicitud creada = service.crear(solicitudValida());
+        creada.setEstado(EstadoSolicitud.FINALIZADA);
+        creada.setNombreContacto("Intrusa");
+
+        Solicitud almacenada = service.buscarPorCodigo("SOL-001");
+        assertEquals(EstadoSolicitud.PENDIENTE, almacenada.getEstado());
+        assertEquals("Rosa", almacenada.getNombreContacto());
+        assertThrows(IllegalArgumentException.class,
+            () -> service.actualizarEstado("SOL-001", EstadoSolicitud.FINALIZADA));
+    }
+
+    @Test
+    void mutarResultadoDeBuscarOListarNoCambiaEstadoAlmacenado() {
+        service.crear(solicitudValida());
+        Solicitud encontrada = service.buscarPorCodigo("SOL-001");
+        Solicitud listada = service.listar(null, null).get(0);
+        encontrada.setEstado(EstadoSolicitud.FINALIZADA);
+        listada.setNombrePaciente("Cambiada");
+
+        Solicitud almacenada = service.buscarPorCodigo("SOL-001");
+        assertEquals(EstadoSolicitud.PENDIENTE, almacenada.getEstado());
+        assertEquals("María", almacenada.getNombrePaciente());
+        assertEquals(1, service.listar("María", EstadoSolicitud.PENDIENTE).size());
+    }
+
+    @Test
+    void reutilizarEntradaEnCrearGeneraRegistrosIndependientes() {
+        Solicitud entrada = solicitudValida();
+        Solicitud primera = service.crear(entrada);
+        Solicitud segunda = service.crear(entrada);
+        entrada.setNombreContacto("Cambiada");
+        primera.setNombreContacto("Otra");
+
+        assertEquals("SOL-001", primera.getCodigo());
+        assertEquals("SOL-002", segunda.getCodigo());
+        assertEquals("Rosa", service.buscarPorCodigo("SOL-001").getNombreContacto());
+        assertEquals("Rosa", service.buscarPorCodigo("SOL-002").getNombreContacto());
+        assertEquals(2, service.listar(null, null).size());
+    }
+
+    @Test
+    void profesionalAsignadoNoComparteReferenciaMutable() {
+        Profesional profesional = profesionalService.registrar(profesional(true));
+        Solicitud solicitud = service.crear(solicitudValida());
+        service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        Solicitud asignada = service.asignar(solicitud.getCodigo(), profesional.getCodigo());
+        profesional.setNombreCompleto("Modificada");
+        asignada.getProfesionalAsignado().setNombreCompleto("Otra");
+        service.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado()
+            .setNombreCompleto("Tercera");
+
+        assertEquals("Ana Torres",
+            service.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado().getNombreCompleto());
     }
 
     private Solicitud solicitudValida() {
