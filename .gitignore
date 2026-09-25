@@ -1,0 +1,5 @@
+.worktrees/
+target/
+.idea/
+.vscode/
+*.log
