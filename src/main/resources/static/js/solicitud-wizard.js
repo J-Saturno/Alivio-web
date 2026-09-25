@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!firstStepIsValid()) { event.preventDefault(); showPanel(0); }
   });
 
-  showPanel(0);
+  const requestModal = document.querySelector('#modalSolicitud');
+  showPanel(requestModal?.dataset.errorStep === '1' ? 1 : 0);
   if (document.querySelector('#modalConfirmacion')) {
     bootstrap.Modal.getOrCreateInstance(document.querySelector('#modalConfirmacion')).show();
-  } else if (document.querySelector('#modalSolicitud .alert-danger')) {
-    bootstrap.Modal.getOrCreateInstance(document.querySelector('#modalSolicitud')).show();
+  } else if (requestModal.querySelector('.alert-danger')) {
+    bootstrap.Modal.getOrCreateInstance(requestModal).show();
   }
 });
