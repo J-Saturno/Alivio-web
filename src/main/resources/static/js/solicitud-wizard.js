@@ -37,6 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const requestModal = document.querySelector('#modalSolicitud');
+  requestModal?.addEventListener('shown.bs.modal', () => {
+    const activePanel = panels[current];
+    (activePanel.querySelector('[aria-invalid="true"]') || activePanel.querySelector('input, select, textarea'))?.focus();
+  });
   showPanel(requestModal?.dataset.errorStep === '1' ? 1 : 0);
   if (document.querySelector('#modalConfirmacion')) {
     bootstrap.Modal.getOrCreateInstance(document.querySelector('#modalConfirmacion')).show();

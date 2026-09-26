@@ -131,4 +131,25 @@ class SolicitudPublicaControllerTest {
             .andExpect(content().string(containsString("data-error-step=\"0\"")))
             .andExpect(content().string(containsString("value=\"OTRO_SERVICIO\" selected")));
     }
+
+    @Test
+    void conservaTurnoNoConvertibleEnElSegundoPasoConAyudaVisible() throws Exception {
+        MvcResult post = mvc.perform(post("/solicitudes")
+            .param("nombreContacto", "María Pérez")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Rosa Pérez")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", "Surco")
+            .param("fechaRequerida", LocalDate.now().plusDays(1).toString())
+            .param("turno", "TURNO_INVENTADO")
+            .param("descripcion", "Apoyo con movilidad"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+        mvc.perform(get("/").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("data-error-step=\"1\"")))
+            .andExpect(content().string(containsString("value=\"TURNO_INVENTADO\" selected")))
+            .andExpect(content().string(containsString("Selecciona un turno válido.")));
+    }
 }

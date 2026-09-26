@@ -108,6 +108,35 @@ class AdminSolicitudControllerTest {
             .andExpect(content().string(org.hamcrest.Matchers.containsString("data-form=\"estado\"")));
     }
 
+    @Test
+    void combinaBusquedaYEstadoEnLaTabla() throws Exception {
+        Solicitud pendiente = solicitud("Paciente Filtro Único");
+        Solicitud evaluada = solicitud("Paciente Filtro Evaluada");
+        solicitudes.actualizarEstado(evaluada.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+
+        mvc.perform(get("/admin/solicitudes")
+            .param("q", pendiente.getCodigo()).param("estado", "PENDIENTE"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Paciente Filtro Único")))
+            .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Paciente Filtro Evaluada"))));
+
+        mvc.perform(get("/admin/solicitudes")
+            .param("q", pendiente.getCodigo()).param("estado", "EN_EVALUACION"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("No hay solicitudes que coincidan")))
+            .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Paciente Filtro Único"))));
+    }
+
+    @Test
+    void codigoInexistenteMuestraMensajeAmigable() throws Exception {
+        mvc.perform(post("/admin/solicitudes/SOL-999/estado").param("estado", "FINALIZADA"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(flash().attribute("error", "Solicitud no encontrada"));
+        mvc.perform(post("/admin/solicitudes/SOL-999/asignar").param("profesionalCodigo", "PRO-999"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(flash().attribute("error", "Solicitud no encontrada"));
+    }
+
     private Solicitud solicitud(String paciente) {
         return solicitudes.crear(new Solicitud(null, "Contacto " + paciente, "912345678", paciente, 72,
             TipoServicio.ADULTO_MAYOR, "Surco", LocalDate.now().plusDays(1), TurnoAtencion.MANANA,

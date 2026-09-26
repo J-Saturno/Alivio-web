@@ -58,3 +58,9 @@ document.querySelector('#modalSolicitudDetalle')?.addEventListener('show.bs.moda
 
 const modalConError = document.querySelector('[data-error-modal]');
 if (modalConError) bootstrap.Modal.getOrCreateInstance(modalConError).show();
+
+for (const modal of document.querySelectorAll('#modalProfesional, #modalEditarProfesional, #modalSolicitudDetalle')) {
+  modal.addEventListener('shown.bs.modal', () => {
+    (modal.querySelector('[aria-describedby$="Error"]') || modal.querySelector('input, select, button:not(.btn-close)'))?.focus();
+  });
+}

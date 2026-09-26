@@ -13,21 +13,27 @@ public class ProfesionalRepository {
     private final AtomicInteger secuencia = new AtomicInteger(1);
 
     public synchronized Profesional save(Profesional profesional) {
-        if (profesional.getCodigo() == null || profesional.getCodigo().isBlank()) {
-            profesional.setCodigo("PRO-%03d".formatted(secuencia.getAndIncrement()));
-            profesionales.add(profesional);
-            return profesional;
+        Profesional copia = new Profesional(profesional);
+        if (copia.getCodigo() == null || copia.getCodigo().isBlank()) {
+            copia.setCodigo("PRO-%03d".formatted(secuencia.getAndIncrement()));
+            profesionales.add(copia);
+            return new Profesional(copia);
         }
-        Profesional existente = findByCodigo(profesional.getCodigo()).orElseThrow();
-        profesionales.set(profesionales.indexOf(existente), profesional);
-        return profesional;
+        for (int i = 0; i < profesionales.size(); i++) {
+            if (profesionales.get(i).getCodigo().equals(copia.getCodigo())) {
+                profesionales.set(i, copia);
+                return new Profesional(copia);
+            }
+        }
+        throw new java.util.NoSuchElementException("Profesional no encontrada");
     }
 
-    public List<Profesional> findAll() {
-        return new ArrayList<>(profesionales);
+    public synchronized List<Profesional> findAll() {
+        return profesionales.stream().map(Profesional::new).toList();
     }
 
-    public Optional<Profesional> findByCodigo(String codigo) {
-        return profesionales.stream().filter(p -> p.getCodigo().equals(codigo)).findFirst();
+    public synchronized Optional<Profesional> findByCodigo(String codigo) {
+        return profesionales.stream().filter(p -> p.getCodigo().equals(codigo))
+            .findFirst().map(Profesional::new);
     }
 }

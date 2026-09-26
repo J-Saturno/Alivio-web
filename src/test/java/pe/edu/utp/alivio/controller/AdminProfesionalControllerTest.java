@@ -13,7 +13,6 @@ import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.service.ProfesionalService;
 
-import static org.hamcrest.Matchers.hasItem;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,8 +32,8 @@ class AdminProfesionalControllerTest {
         mvc.perform(get("/admin/profesionales"))
             .andExpect(status().isOk())
             .andExpect(view().name("admin/profesionales"))
-            .andExpect(model().attribute("profesionales", hasItem(profesional)))
-            .andExpect(model().attributeExists("tiposProfesional", "especialidades", "nuevoProfesional"))
+            .andExpect(model().attributeExists("profesionales", "tiposProfesional", "especialidades", "nuevoProfesional"))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString(profesional.getCodigo())))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Ana Torres")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("modalEditarProfesional")));
     }

@@ -9,6 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProfesionalRepositoryTest {
     @Test
+    void devuelveCopiasParaQueLaDisponibilidadNoCambieSinGuardar() {
+        ProfesionalRepository repository = new ProfesionalRepository();
+        Profesional original = repository.save(new Profesional(null, "Ana Torres",
+            TipoProfesional.TECNICA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
+
+        original.setDisponible(false);
+        repository.findAll().getFirst().setNombreCompleto("Nombre ajeno");
+        repository.findByCodigo("PRO-001").orElseThrow().setDisponible(false);
+
+        assertEquals(true, repository.findByCodigo("PRO-001").orElseThrow().isDisponible());
+        assertEquals("Ana Torres", repository.findAll().getFirst().getNombreCompleto());
+    }
+
+    @Test
     void asignaCodigoYPermiteBuscar() {
         ProfesionalRepository repository = new ProfesionalRepository();
         Profesional guardada = repository.save(new Profesional(null, "Ana Torres",

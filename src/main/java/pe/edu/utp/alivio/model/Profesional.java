@@ -24,6 +24,11 @@ public class Profesional {
         this.disponible = disponible;
     }
 
+    public Profesional(Profesional original) {
+        this(original.codigo, original.nombreCompleto, original.tipoProfesional,
+            original.telefono, original.zonaCobertura, original.especialidad, original.disponible);
+    }
+
     public String getCodigo() {
         return codigo;
     }
