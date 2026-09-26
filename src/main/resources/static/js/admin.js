@@ -20,5 +20,41 @@ document.querySelector('#modalEditarProfesional')?.addEventListener('show.bs.mod
   }
 });
 
+document.querySelector('#modalSolicitudDetalle')?.addEventListener('show.bs.modal', event => {
+  const source = event.relatedTarget;
+  const modal = event.currentTarget;
+  if (!source) return;
+  for (const field of ['codigo', 'contacto', 'telefono', 'paciente', 'edad', 'servicio',
+    'distrito', 'fecha', 'turno', 'descripcion', 'estado', 'profesional']) {
+    modal.querySelector(`[data-detail="${field}"]`).textContent = source.dataset[field] || 'No indicado';
+  }
+  const codigo = encodeURIComponent(source.dataset.codigo);
+  modal.querySelector('[data-form="asignar"]').action = `/admin/solicitudes/${codigo}/asignar`;
+  modal.querySelector('[data-form="estado"]').action = `/admin/solicitudes/${codigo}/estado`;
+
+  const asignacion = modal.querySelector('[data-form="asignar"]');
+  asignacion.hidden = source.dataset.estado !== 'EN_EVALUACION';
+  asignacion.querySelector('select').value = '';
+  const transiciones = {
+    PENDIENTE: ['EN_EVALUACION', 'CANCELADA'],
+    EN_EVALUACION: ['CANCELADA'],
+    ASIGNADA: ['EN_ATENCION', 'CANCELADA'],
+    EN_ATENCION: ['FINALIZADA', 'CANCELADA'],
+    FINALIZADA: [],
+    CANCELADA: []
+  };
+  const estadoForm = modal.querySelector('[data-form="estado"]');
+  const permitidos = transiciones[source.dataset.estado] || [];
+  estadoForm.hidden = permitidos.length === 0;
+  const selector = estadoForm.querySelector('select');
+  selector.value = '';
+  for (const option of selector.options) {
+    if (option.value) {
+      option.hidden = !permitidos.includes(option.value);
+      option.disabled = !permitidos.includes(option.value);
+    }
+  }
+});
+
 const modalConError = document.querySelector('[data-error-modal]');
 if (modalConError) bootstrap.Modal.getOrCreateInstance(modalConError).show();
