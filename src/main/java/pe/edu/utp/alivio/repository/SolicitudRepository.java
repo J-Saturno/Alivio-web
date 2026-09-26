@@ -3,6 +3,7 @@ package pe.edu.utp.alivio.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
@@ -30,6 +31,19 @@ public class SolicitudRepository {
             }
         }
         throw new java.util.NoSuchElementException("Solicitud no encontrada");
+    }
+
+    public synchronized Solicitud update(String codigo, UnaryOperator<Solicitud> cambio) {
+        for (int i = 0; i < solicitudes.size(); i++) {
+            if (solicitudes.get(i).getCodigo().equals(codigo)) {
+                Solicitud actualizada = cambio.apply(new Solicitud(solicitudes.get(i)));
+                actualizada.setCodigo(codigo);
+                Solicitud almacenada = new Solicitud(actualizada);
+                solicitudes.set(i, almacenada);
+                return new Solicitud(almacenada);
+            }
+        }
+        throw new IllegalArgumentException("Solicitud no encontrada");
     }
 
     public synchronized List<Solicitud> findAll() {

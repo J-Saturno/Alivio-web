@@ -1,7 +1,9 @@
 package pe.edu.utp.alivio.service;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Profesional;
@@ -44,29 +46,31 @@ public class SolicitudService {
     }
 
     public Solicitud asignar(String solicitudCodigo, String profesionalCodigo) {
-        Solicitud solicitud = buscarPorCodigo(solicitudCodigo);
-        Profesional profesional = profesionalService.buscarPorCodigo(profesionalCodigo);
-        if (!profesional.isDisponible()) {
-            throw new IllegalArgumentException("Selecciona una profesional disponible");
-        }
-        if (solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
-            throw new IllegalArgumentException("La solicitud debe estar en evaluación antes de asignar");
-        }
-        solicitud.setProfesionalAsignado(profesional);
-        solicitud.setEstado(EstadoSolicitud.ASIGNADA);
-        return repository.save(solicitud);
+        return repository.update(solicitudCodigo, solicitud -> {
+            Profesional profesional = profesionalService.buscarPorCodigo(profesionalCodigo);
+            if (!profesional.isDisponible()) {
+                throw new IllegalArgumentException("Selecciona una profesional disponible");
+            }
+            if (solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
+                throw new IllegalArgumentException("La solicitud debe estar en evaluación antes de asignar");
+            }
+            solicitud.setProfesionalAsignado(profesional);
+            solicitud.setEstado(EstadoSolicitud.ASIGNADA);
+            return solicitud;
+        });
     }
 
     public Solicitud actualizarEstado(String codigo, EstadoSolicitud nuevoEstado) {
-        Solicitud solicitud = buscarPorCodigo(codigo);
-        if (nuevoEstado == EstadoSolicitud.ASIGNADA && solicitud.getProfesionalAsignado() == null) {
-            throw new IllegalArgumentException("Asigna una profesional antes de continuar");
-        }
-        if (!transicionPermitida(solicitud.getEstado(), nuevoEstado)) {
-            throw new IllegalArgumentException("El cambio de estado solicitado no está permitido");
-        }
-        solicitud.setEstado(nuevoEstado);
-        return repository.save(solicitud);
+        return repository.update(codigo, solicitud -> {
+            if (nuevoEstado == EstadoSolicitud.ASIGNADA && solicitud.getProfesionalAsignado() == null) {
+                throw new IllegalArgumentException("Asigna una profesional antes de continuar");
+            }
+            if (!transicionPermitida(solicitud.getEstado(), nuevoEstado)) {
+                throw new IllegalArgumentException("El cambio de estado solicitado no está permitido");
+            }
+            solicitud.setEstado(nuevoEstado);
+            return solicitud;
+        });
     }
 
     private boolean transicionPermitida(EstadoSolicitud actual, EstadoSolicitud siguiente) {
@@ -89,24 +93,39 @@ public class SolicitudService {
         if (solicitud == null) {
             throw new IllegalArgumentException("La solicitud es obligatoria");
         }
-        if (solicitud.getNombreContacto() == null || solicitud.getNombreContacto().isBlank()
-                || solicitud.getNombrePaciente() == null || solicitud.getNombrePaciente().isBlank()) {
-            throw new IllegalArgumentException("Los nombres son obligatorios");
+        Map<String, String> errores = new LinkedHashMap<>();
+        if (solicitud.getNombreContacto() == null || solicitud.getNombreContacto().isBlank()) {
+            errores.put("nombreContacto", "Indica el nombre de contacto.");
+        }
+        if (solicitud.getNombrePaciente() == null || solicitud.getNombrePaciente().isBlank()) {
+            errores.put("nombrePaciente", "Indica el nombre del paciente.");
         }
         if (solicitud.getTelefonoContacto() == null
                 || !solicitud.getTelefonoContacto().matches("9\\d{8}")) {
-            throw new IllegalArgumentException("El teléfono debe tener nueve dígitos");
+            errores.put("telefonoContacto", "Ingresa un celular de nueve dígitos que empiece con 9.");
         }
-        if (solicitud.getTipoServicio() == null || solicitud.getTurno() == null) {
-            throw new IllegalArgumentException("Selecciona servicio y turno");
+        if (solicitud.getEdadPaciente() != null
+                && (solicitud.getEdadPaciente() < 0 || solicitud.getEdadPaciente() > 120)) {
+            errores.put("edadPaciente", "Ingresa una edad entre 0 y 120.");
         }
-        if (solicitud.getDistrito() == null || solicitud.getDistrito().isBlank()
-                || solicitud.getDescripcion() == null || solicitud.getDescripcion().isBlank()) {
-            throw new IllegalArgumentException("El distrito y la descripción son obligatorios");
+        if (solicitud.getTipoServicio() == null) {
+            errores.put("tipoServicio", "Selecciona uno de los servicios disponibles.");
+        }
+        if (solicitud.getDistrito() == null || solicitud.getDistrito().isBlank()) {
+            errores.put("distrito", "Indica el distrito de atención.");
         }
         if (solicitud.getFechaRequerida() == null
                 || solicitud.getFechaRequerida().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha requerida no puede ser pasada");
+            errores.put("fechaRequerida", "Selecciona hoy o una fecha posterior.");
+        }
+        if (solicitud.getTurno() == null) {
+            errores.put("turno", "Selecciona un turno válido.");
+        }
+        if (solicitud.getDescripcion() == null || solicitud.getDescripcion().isBlank()) {
+            errores.put("descripcion", "Describe brevemente la necesidad de atención.");
+        }
+        if (!errores.isEmpty()) {
+            throw new SolicitudValidationException(errores);
         }
     }
 }

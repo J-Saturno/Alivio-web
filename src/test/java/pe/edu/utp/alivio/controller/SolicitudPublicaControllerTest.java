@@ -152,4 +152,77 @@ class SolicitudPublicaControllerTest {
             .andExpect(content().string(containsString("value=\"TURNO_INVENTADO\" selected")))
             .andExpect(content().string(containsString("Selecciona un turno válido.")));
     }
+
+    @Test
+    void fechaPasadaReabreSegundoPasoConValorYErrorDeCampo() throws Exception {
+        String fecha = LocalDate.now().minusDays(1).toString();
+        MvcResult post = mvc.perform(post("/solicitudes")
+            .param("nombreContacto", "María Pérez")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Rosa Pérez")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", "Surco")
+            .param("fechaRequerida", fecha)
+            .param("turno", "MANANA")
+            .param("descripcion", "Apoyo con movilidad"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"))
+            .andReturn();
+
+        mvc.perform(get("/").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("data-error-step=\"1\"")))
+            .andExpect(content().string(containsString("id=\"errorSolicitud\"")))
+            .andExpect(content().string(containsString("id=\"fechaRequerida\"")))
+            .andExpect(content().string(containsString("value=\"" + fecha + "\"")))
+            .andExpect(content().string(containsString("aria-invalid=\"true\"")))
+            .andExpect(content().string(containsString("Selecciona hoy o una fecha posterior.")));
+    }
+
+    @Test
+    void distritoEnBlancoReabreSegundoPasoConValorYErrorDeCampo() throws Exception {
+        MvcResult post = mvc.perform(post("/solicitudes")
+            .param("nombreContacto", "María Pérez")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Rosa Pérez")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", " ")
+            .param("fechaRequerida", LocalDate.now().plusDays(1).toString())
+            .param("turno", "MANANA")
+            .param("descripcion", "Apoyo con movilidad"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"))
+            .andReturn();
+
+        mvc.perform(get("/").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("data-error-step=\"1\"")))
+            .andExpect(content().string(containsString("id=\"distrito\"")))
+            .andExpect(content().string(containsString("value=\" \"")))
+            .andExpect(content().string(containsString("Indica el distrito de atención.")));
+    }
+
+    @Test
+    void edadFueraDeRangoReabrePrimerPasoConValorYErrorDeCampo() throws Exception {
+        MvcResult post = mvc.perform(post("/solicitudes")
+            .param("nombreContacto", "María Pérez")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Rosa Pérez")
+            .param("edadPaciente", "121")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", "Surco")
+            .param("fechaRequerida", LocalDate.now().plusDays(1).toString())
+            .param("turno", "MANANA")
+            .param("descripcion", "Apoyo con movilidad"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"))
+            .andReturn();
+
+        mvc.perform(get("/").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("data-error-step=\"0\"")))
+            .andExpect(content().string(containsString("id=\"edadPaciente\"")))
+            .andExpect(content().string(containsString("value=\"121\"")))
+            .andExpect(content().string(containsString("Ingresa una edad entre 0 y 120.")));
+    }
 }

@@ -51,6 +51,21 @@ class SolicitudServiceTest {
     }
 
     @Test
+    void aceptaEdadesLimiteYOpcionalYRechazaFueraDeRango() {
+        for (Integer edad : new Integer[] {null, 0, 120}) {
+            Solicitud valida = solicitudValida();
+            valida.setEdadPaciente(edad);
+            assertEquals(edad, service.crear(valida).getEdadPaciente());
+        }
+        for (int edad : new int[] {-1, 121}) {
+            Solicitud invalida = solicitudValida();
+            invalida.setEdadPaciente(edad);
+            assertThrows(IllegalArgumentException.class, () -> service.crear(invalida));
+        }
+        assertEquals(3, service.listar(null, null).size());
+    }
+
+    @Test
     void validaCamposObligatoriosDeSolicitud() {
         Solicitud sinContacto = solicitudValida();
         sinContacto.setNombreContacto(" ");
