@@ -1,16 +1,20 @@
 package pe.edu.utp.alivio.controller;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.util.HtmlUtils;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.service.ProfesionalService;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -94,5 +98,96 @@ class AdminProfesionalControllerTest {
             .param("especialidad", "ADULTO_MAYOR"))
             .andExpect(status().is3xxRedirection())
             .andExpect(flash().attributeExists("error"));
+    }
+
+    @Test
+    void reabreRegistroConTipoRechazadoYValoresIngresados() throws Exception {
+        MvcResult post = mvc.perform(post("/admin/profesionales")
+            .param("nombreCompleto", "María Vega")
+            .param("tipoProfesional", "MEDICA")
+            .param("telefono", "987654321")
+            .param("zonaCobertura", "Surquillo")
+            .param("especialidad", "ADULTO_MAYOR")
+            .param("disponible", "true"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/admin/profesionales"))
+            .andReturn();
+
+        String html = html(mvc.perform(get("/admin/profesionales").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk()).andReturn());
+        assertThat(html).contains("data-error-modal=\"registro\"");
+        assertThat(html).contains("value=\"María Vega\"");
+        assertThat(html).contains("value=\"Surquillo\"");
+        assertThat(html).contains("value=\"MEDICA\" selected");
+        assertThat(html).contains("id=\"nuevoTipoError\"").contains("Selecciona un tipo de profesional válido");
+        assertThat(html).contains("id=\"nuevaDisponible\"").contains("checked=\"checked\"");
+    }
+
+    @Test
+    void reabreEdicionConCodigoYCambiosAunqueTelefonoEsteVacio() throws Exception {
+        Profesional profesional = service.registrar(new Profesional(null, "Sofía León", TipoProfesional.TECNICA,
+            "945678123", "Surco", TipoServicio.ADULTO_MAYOR, true));
+        MvcResult post = mvc.perform(post("/admin/profesionales/{codigo}", profesional.getCodigo())
+            .param("nombreCompleto", "Sofía Actualizada")
+            .param("tipoProfesional", "LICENCIADA")
+            .param("telefono", "")
+            .param("zonaCobertura", "Lince")
+            .param("especialidad", "CURACIONES_POSTOPERATORIO")
+            .param("disponible", "false"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/admin/profesionales"))
+            .andReturn();
+
+        String html = html(mvc.perform(get("/admin/profesionales").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk()).andReturn());
+        assertThat(html).contains("data-error-modal=\"edicion\"");
+        assertThat(html).contains("data-codigo-edicion=\"" + profesional.getCodigo() + "\"");
+        assertThat(html).contains("value=\"Sofía Actualizada\"").contains("value=\"Lince\"");
+        assertThat(html).contains("id=\"editarTelefonoError\"").contains("El teléfono debe tener nueve dígitos");
+        assertThat(html).contains("value=\"LICENCIADA\" selected");
+        assertThat(html).contains("value=\"CURACIONES_POSTOPERATORIO\" selected");
+        assertThat(service.buscarPorCodigo(profesional.getCodigo()).getNombreCompleto()).isEqualTo("Sofía León");
+    }
+
+    @Test
+    void conservaDisponibilidadMalformadaEnRegistroSinError500() throws Exception {
+        MvcResult post = mvc.perform(post("/admin/profesionales")
+            .param("nombreCompleto", "Elisa Paz")
+            .param("tipoProfesional", "TECNICA")
+            .param("telefono", "956789123")
+            .param("zonaCobertura", "Surco")
+            .param("especialidad", "ADULTO_MAYOR")
+            .param("disponible", "quizas"))
+            .andExpect(status().is3xxRedirection()).andReturn();
+
+        String html = html(mvc.perform(get("/admin/profesionales").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk()).andReturn());
+        assertThat(html).contains("data-error-modal=\"registro\"");
+        assertThat(html).contains("value=\"quizas\"").contains("id=\"nuevaDisponibleError\"");
+        assertThat(html).contains("Indica si la profesional está disponible");
+    }
+
+    @Test
+    void conservaEspecialidadMalformadaEnEdicion() throws Exception {
+        Profesional profesional = service.registrar(new Profesional(null, "Clara Ruiz", TipoProfesional.TECNICA,
+            "934567812", "Surco", TipoServicio.ADULTO_MAYOR, true));
+        MvcResult post = mvc.perform(post("/admin/profesionales/{codigo}", profesional.getCodigo())
+            .param("nombreCompleto", "Clara Nueva")
+            .param("tipoProfesional", "TECNICA")
+            .param("telefono", "934567812")
+            .param("zonaCobertura", "Barranco")
+            .param("especialidad", "OTRA"))
+            .andExpect(status().is3xxRedirection()).andReturn();
+
+        String html = html(mvc.perform(get("/admin/profesionales").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk()).andReturn());
+        assertThat(html).contains("data-error-modal=\"edicion\"");
+        assertThat(html).contains("data-codigo-edicion=\"" + profesional.getCodigo() + "\"");
+        assertThat(html).contains("value=\"OTRA\" selected").contains("id=\"editarEspecialidadError\"");
+        assertThat(html).contains("Selecciona una especialidad válida").contains("value=\"Clara Nueva\"");
+    }
+
+    private String html(MvcResult result) throws Exception {
+        return HtmlUtils.htmlUnescape(result.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
 }
