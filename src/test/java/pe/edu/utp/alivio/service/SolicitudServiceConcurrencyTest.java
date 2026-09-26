@@ -1,14 +1,11 @@
 package pe.edu.utp.alivio.service;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Test;
+import java.util.function.UnaryOperator;
+import org.junit.jupiter.api.RepeatedTest;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.Solicitud;
@@ -19,22 +16,24 @@ import pe.edu.utp.alivio.repository.ProfesionalRepository;
 import pe.edu.utp.alivio.repository.SolicitudRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SolicitudServiceConcurrencyTest {
-    @Test
+    private static final int TIMEOUT_SEGUNDOS = 20;
+
+    @RepeatedTest(25)
     void cancelacionConcurrenteNoPuedeSerSobrescritaPorEvaluacion() throws Exception {
         verificarCancelacionConcurrente(false);
     }
 
-    @Test
+    @RepeatedTest(25)
     void cancelacionConcurrenteNoPuedeSerSobrescritaPorAsignacion() throws Exception {
         verificarCancelacionConcurrente(true);
     }
 
     private void verificarCancelacionConcurrente(boolean asignar) throws Exception {
-        RepositorioConCarreraForzada repository = new RepositorioConCarreraForzada();
+        RepositorioConBloqueoAntesDeUpdate repository = new RepositorioConBloqueoAntesDeUpdate();
         ProfesionalService profesionales = new ProfesionalService(new ProfesionalRepository());
         SolicitudService service = new SolicitudService(repository, profesionales);
         Profesional profesional = profesionales.registrar(new Profesional(null, "Ana",
@@ -45,25 +44,32 @@ class SolicitudServiceConcurrencyTest {
         if (asignar) {
             service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
         }
-        repository.armar();
-        ExecutorService pool = Executors.newFixedThreadPool(2);
+        FutureTask<Throwable> competidora = new FutureTask<>(() -> ejecutar(() -> {
+            if (asignar) {
+                service.asignar(solicitud.getCodigo(), profesional.getCodigo());
+            } else {
+                service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+            }
+        }));
+        Thread hiloCompetidor = new Thread(competidora, "competidora");
+        hiloCompetidor.setDaemon(true);
+        hiloCompetidor.start();
         try {
-            Future<Throwable> cancelacion = pool.submit(() -> ejecutar(() ->
+            repository.esperarIntentoCompetidor();
+            FutureTask<Throwable> cancelacion = new FutureTask<>(() -> ejecutar(() ->
                 service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.CANCELADA)));
-            Future<Throwable> competidora = pool.submit(() -> ejecutar(() -> {
-                if (asignar) {
-                    service.asignar(solicitud.getCodigo(), profesional.getCodigo());
-                } else {
-                    service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
-                }
-            }));
-
-            assertNull(cancelacion.get(10, TimeUnit.SECONDS));
-            Throwable errorCompetidora = competidora.get(10, TimeUnit.SECONDS);
-            assertTrue(errorCompetidora == null || errorCompetidora instanceof IllegalArgumentException);
+            Thread hiloCancelacion = new Thread(cancelacion, "cancelacion");
+            hiloCancelacion.setDaemon(true);
+            hiloCancelacion.start();
+            assertNull(cancelacion.get(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS));
+            assertEquals(EstadoSolicitud.CANCELADA,
+                service.buscarPorCodigo(solicitud.getCodigo()).getEstado());
+            repository.liberarCompetidor();
+            assertInstanceOf(IllegalArgumentException.class,
+                competidora.get(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS));
         } finally {
-            repository.desarmar();
-            pool.shutdownNow();
+            repository.liberarCompetidor();
+            hiloCompetidor.interrupt();
         }
         assertEquals(EstadoSolicitud.CANCELADA,
             service.buscarPorCodigo(solicitud.getCodigo()).getEstado());
@@ -79,42 +85,31 @@ class SolicitudServiceConcurrencyTest {
         }
     }
 
-    private static class RepositorioConCarreraForzada extends SolicitudRepository {
-        private final CountDownLatch ambasLecturas = new CountDownLatch(2);
-        private final CountDownLatch canceladaGuardada = new CountDownLatch(1);
-        private final AtomicInteger lecturas = new AtomicInteger();
-        private volatile boolean armado;
-
-        void armar() { armado = true; }
-        void desarmar() { armado = false; }
+    private static class RepositorioConBloqueoAntesDeUpdate extends SolicitudRepository {
+        private final CountDownLatch intentoCompetidor = new CountDownLatch(1);
+        private final CountDownLatch liberarCompetidor = new CountDownLatch(1);
 
         @Override
-        public Optional<Solicitud> findByCodigo(String codigo) {
-            Optional<Solicitud> resultado = super.findByCodigo(codigo);
-            if (armado && lecturas.getAndIncrement() < 2) {
-                ambasLecturas.countDown();
-                esperar(ambasLecturas);
+        public Solicitud update(String codigo, UnaryOperator<Solicitud> cambio) {
+            if (Thread.currentThread().getName().equals("competidora")) {
+                intentoCompetidor.countDown();
+                esperar(liberarCompetidor);
             }
-            return resultado;
+            return super.update(codigo, cambio);
         }
 
-        @Override
-        public Solicitud save(Solicitud solicitud) {
-            if (armado && (solicitud.getEstado() == EstadoSolicitud.EN_EVALUACION
-                    || solicitud.getEstado() == EstadoSolicitud.ASIGNADA)) {
-                esperar(canceladaGuardada);
-            }
-            Solicitud guardada = super.save(solicitud);
-            if (armado && solicitud.getEstado() == EstadoSolicitud.CANCELADA) {
-                canceladaGuardada.countDown();
-            }
-            return guardada;
+        void esperarIntentoCompetidor() {
+            esperar(intentoCompetidor);
+        }
+
+        void liberarCompetidor() {
+            liberarCompetidor.countDown();
         }
 
         private void esperar(CountDownLatch latch) {
             try {
-                if (!latch.await(5, TimeUnit.SECONDS)) {
-                    throw new AssertionError("No se alcanzó la intercalación esperada");
+                if (!latch.await(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS)) {
+                    throw new AssertionError("No se alcanzó la actualización competidora");
                 }
             } catch (InterruptedException error) {
                 Thread.currentThread().interrupt();
