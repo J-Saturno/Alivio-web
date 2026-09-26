@@ -1,0 +1,35 @@
+package pe.edu.utp.alivio.repository;
+
+import org.junit.jupiter.api.Test;
+import pe.edu.utp.alivio.model.Profesional;
+import pe.edu.utp.alivio.model.TipoProfesional;
+import pe.edu.utp.alivio.model.TipoServicio;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class ProfesionalRepositoryTest {
+    @Test
+    void devuelveCopiasParaQueLaDisponibilidadNoCambieSinGuardar() {
+        ProfesionalRepository repository = new ProfesionalRepository();
+        Profesional original = repository.save(new Profesional(null, "Ana Torres",
+            TipoProfesional.TECNICA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
+
+        original.setDisponible(false);
+        repository.findAll().getFirst().setNombreCompleto("Nombre ajeno");
+        repository.findByCodigo("PRO-001").orElseThrow().setDisponible(false);
+
+        assertEquals(true, repository.findByCodigo("PRO-001").orElseThrow().isDisponible());
+        assertEquals("Ana Torres", repository.findAll().getFirst().getNombreCompleto());
+    }
+
+    @Test
+    void asignaCodigoYPermiteBuscar() {
+        ProfesionalRepository repository = new ProfesionalRepository();
+        Profesional guardada = repository.save(new Profesional(null, "Ana Torres",
+            TipoProfesional.TECNICA, "987654321", "Surco",
+            TipoServicio.ADULTO_MAYOR, true));
+
+        assertEquals("PRO-001", guardada.getCodigo());
+        assertEquals("Ana Torres", repository.findByCodigo("PRO-001").orElseThrow().getNombreCompleto());
+    }
+}

@@ -1,5 +1,6 @@
-.worktrees/
-target/
-.idea/
-.vscode/
+/.worktrees/
+/target/
+/.idea/
+/.vscode/
+/.superpowers/
 *.log
