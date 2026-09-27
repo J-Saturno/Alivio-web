@@ -1,50 +1,166 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Solicitudes | Alivio</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/alivio.css}">
 </head>
+
 <body>
-<main class="container py-5">
-  <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4"><a th:href="@{/}">Inicio</a><a th:href="@{/admin/solicitudes}" aria-current="page">Solicitudes</a><a th:href="@{/admin/profesionales}">Profesionales</a></nav>
-  <header class="mb-4"><p class="eyebrow">Administración · Demo</p><h1>Solicitudes de atención</h1><p>Revisa cada necesidad, evalúala y coordina la atención con una profesional disponible.</p></header>
-  <div th:if="${mensaje}" class="alert alert-success" role="status" aria-live="polite" th:text="${mensaje}"></div>
-  <div th:if="${error}" class="alert alert-danger" role="alert" aria-live="polite" th:text="${error}"></div>
+  <main class="container py-5">
+    <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4"><a th:href="@{/}">Inicio</a><a
+        th:href="@{/admin/solicitudes}" aria-current="page">Solicitudes</a><a
+        th:href="@{/admin/profesionales}">Profesionales</a></nav>
+    <header class="mb-4">
+      <p class="eyebrow">Administración</p>
+      <h1>Solicitudes de atención</h1>
+      <p>Revisa cada necesidad, evalúala y coordina la atención con una profesional disponible.</p>
+    </header>
+    <div th:if="${mensaje}" class="alert alert-success" role="status" aria-live="polite" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" aria-live="polite" th:text="${error}"></div>
 
-  <section aria-label="Resumen de solicitudes" class="row g-3 mb-4">
-    <div class="col-12 col-sm-4"><div class="card h-100"><div class="card-body"><p class="mb-1">Pendientes</p><strong class="display-6" th:text="${pendientes}">0</strong></div></div></div>
-    <div class="col-12 col-sm-4"><div class="card h-100"><div class="card-body"><p class="mb-1">Asignadas</p><strong class="display-6" th:text="${asignadas}">0</strong></div></div></div>
-    <div class="col-12 col-sm-4"><div class="card h-100"><div class="card-body"><p class="mb-1">Finalizadas</p><strong class="display-6" th:text="${finalizadas}">0</strong></div></div></div>
-  </section>
+    <section aria-label="Resumen de solicitudes" class="row g-3 mb-4">
+      <div class="col-12 col-sm-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <p class="mb-1">Pendientes</p><strong class="display-6" th:text="${pendientes}">0</strong>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <p class="mb-1">Asignadas</p><strong class="display-6" th:text="${asignadas}">0</strong>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <p class="mb-1">Finalizadas</p><strong class="display-6" th:text="${finalizadas}">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <form th:action="@{/admin/solicitudes}" method="get" class="row g-3 align-items-end mb-4" role="search">
-    <div class="col-12 col-md-6"><label for="buscarSolicitud" class="form-label">Buscar por código, contacto o paciente</label><input id="buscarSolicitud" class="form-control" type="search" name="q" th:value="${q}" placeholder="Nombre o código"></div>
-    <div class="col-12 col-md-4"><label for="filtrarEstado" class="form-label">Estado</label><select id="filtrarEstado" name="estado" class="form-select"><option value="">Todos los estados</option><option th:each="opcion : ${estados}" th:value="${opcion}" th:selected="${opcion == estadoSeleccionado}" th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(opcion, '_', ' ')))}"></option></select></div>
-    <div class="col-12 col-md-2"><button class="btn btn-alivio w-100" type="submit">Filtrar</button></div>
-  </form>
+    <form th:action="@{/admin/solicitudes}" method="get" class="row g-3 align-items-end mb-4" role="search">
+      <div class="col-12 col-md-6"><label for="buscarSolicitud" class="form-label">Buscar por código, contacto o
+          paciente</label><input id="buscarSolicitud" class="form-control" type="search" name="q" th:value="${q}"
+          placeholder="Nombre o código"></div>
+      <div class="col-12 col-md-4"><label for="filtrarEstado" class="form-label">Estado</label><select
+          id="filtrarEstado" name="estado" class="form-select">
+          <option value="">Todos los estados</option>
+          <option th:each="opcion : ${estados}" th:value="${opcion}" th:selected="${opcion == estadoSeleccionado}"
+            th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(opcion, '_', ' ')))}"></option>
+        </select></div>
+      <div class="col-12 col-md-2"><button class="btn btn-alivio w-100" type="submit">Filtrar</button></div>
+    </form>
 
-  <div class="table-responsive"><table class="table table-hover align-middle"><caption class="visually-hidden">Solicitudes de atención</caption><thead><tr><th scope="col">Código</th><th scope="col">Paciente</th><th scope="col">Servicio</th><th scope="col">Fecha</th><th scope="col">Estado</th><th scope="col">Acción</th></tr></thead><tbody>
-    <tr th:if="${#lists.isEmpty(solicitudes)}"><td colspan="6">No hay solicitudes que coincidan con los filtros.</td></tr>
-    <tr th:each="solicitud : ${solicitudes}">
-      <td th:text="${solicitud.codigo}"></td><td th:text="${solicitud.nombrePaciente}"></td>
-      <td th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.tipoServicio, '_', ' ')))}"></td>
-      <td th:text="${#temporals.format(solicitud.fechaRequerida, 'dd/MM/yyyy')}"></td>
-      <td><span class="badge text-bg-light border" th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.estado, '_', ' ')))}"></span></td>
-      <td><button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitudDetalle"
-        th:attr="data-codigo=${solicitud.codigo},data-contacto=${solicitud.nombreContacto},data-telefono=${solicitud.telefonoContacto},data-paciente=${solicitud.nombrePaciente},data-edad=${solicitud.edadPaciente},data-servicio=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.tipoServicio, '_', ' ')))},data-distrito=${solicitud.distrito},data-fecha=${#temporals.format(solicitud.fechaRequerida, 'dd/MM/yyyy')},data-turno=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.turno, '_', ' ')))},data-descripcion=${solicitud.descripcion},data-estado=${solicitud.estado},data-profesional=${solicitud.profesionalAsignado != null ? solicitud.profesionalAsignado.nombreCompleto : ''}">Revisar</button></td>
-    </tr>
-  </tbody></table></div>
-</main>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <caption class="visually-hidden">Solicitudes de atención</caption>
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Paciente</th>
+            <th scope="col">Servicio</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(solicitudes)}">
+            <td colspan="6">No hay solicitudes que coincidan con los filtros.</td>
+          </tr>
+          <tr th:each="solicitud : ${solicitudes}">
+            <td th:text="${solicitud.codigo}"></td>
+            <td th:text="${solicitud.nombrePaciente}"></td>
+            <td
+              th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.tipoServicio, '_', ' ')))}">
+            </td>
+            <td th:text="${#temporals.format(solicitud.fechaRequerida, 'dd/MM/yyyy')}"></td>
+            <td><span class="badge text-bg-light border"
+                th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.estado, '_', ' ')))}"></span>
+            </td>
+            <td><button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                data-bs-target="#modalSolicitudDetalle"
+                th:attr="data-codigo=${solicitud.codigo},data-contacto=${solicitud.nombreContacto},data-telefono=${solicitud.telefonoContacto},data-paciente=${solicitud.nombrePaciente},data-edad=${solicitud.edadPaciente},data-servicio=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.tipoServicio, '_', ' ')))},data-distrito=${solicitud.distrito},data-fecha=${#temporals.format(solicitud.fechaRequerida, 'dd/MM/yyyy')},data-turno=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.turno, '_', ' ')))},data-descripcion=${solicitud.descripcion},data-estado=${solicitud.estado},data-profesional=${solicitud.profesionalAsignado != null ? solicitud.profesionalAsignado.nombreCompleto : ''}">Revisar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 
-<div class="modal fade" id="modalSolicitudDetalle" tabindex="-1" aria-labelledby="tituloModalSolicitudDetalle" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
-  <div class="modal-header"><h2 class="modal-title h4" id="tituloModalSolicitudDetalle" tabindex="-1" data-focus-fallback>Solicitud <span data-detail="codigo"></span></h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
-  <div class="modal-body">
-    <dl class="row mb-4"><dt class="col-sm-4">Paciente</dt><dd class="col-sm-8" data-detail="paciente"></dd><dt class="col-sm-4">Edad</dt><dd class="col-sm-8" data-detail="edad"></dd><dt class="col-sm-4">Contacto</dt><dd class="col-sm-8" data-detail="contacto"></dd><dt class="col-sm-4">Teléfono</dt><dd class="col-sm-8" data-detail="telefono"></dd><dt class="col-sm-4">Servicio</dt><dd class="col-sm-8" data-detail="servicio"></dd><dt class="col-sm-4">Distrito</dt><dd class="col-sm-8" data-detail="distrito"></dd><dt class="col-sm-4">Fecha</dt><dd class="col-sm-8" data-detail="fecha"></dd><dt class="col-sm-4">Turno</dt><dd class="col-sm-8" data-detail="turno"></dd><dt class="col-sm-4">Necesidad descrita</dt><dd class="col-sm-8 text-break" data-detail="descripcion"></dd><dt class="col-sm-4">Estado</dt><dd class="col-sm-8" data-detail="estado"></dd><dt class="col-sm-4">Profesional asignada</dt><dd class="col-sm-8" data-detail="profesional"></dd></dl>
-    <form data-form="asignar" th:action="@{/admin/solicitudes/{codigo}/asignar(codigo='pendiente')}" method="post" class="border-top pt-3 mb-4"><h3 class="h5">Asignar profesional</h3><p class="form-help" id="asignacionAyuda">Disponible cuando la solicitud esté en evaluación.</p><label class="form-label" for="profesionalCodigo">Profesional disponible</label><select id="profesionalCodigo" name="profesionalCodigo" class="form-select mb-2" aria-describedby="asignacionAyuda" required><option value="">Selecciona una profesional</option><option th:each="profesional : ${profesionalesDisponibles}" th:value="${profesional.codigo}" th:text="${profesional.nombreCompleto + ' · ' + profesional.zonaCobertura}"></option></select><p th:if="${#lists.isEmpty(profesionalesDisponibles)}" class="form-help">No hay profesionales disponibles. Actualiza su disponibilidad en el registro de profesionales.</p><button class="btn btn-alivio" type="submit" th:disabled="${#lists.isEmpty(profesionalesDisponibles)}">Asignar</button></form>
-    <form data-form="estado" th:action="@{/admin/solicitudes/{codigo}/estado(codigo='pendiente')}" method="post" class="border-top pt-3"><h3 class="h5">Actualizar estado</h3><label class="form-label" for="nuevoEstado">Siguiente estado</label><select id="nuevoEstado" name="estado" class="form-select mb-2" required><option value="">Selecciona un estado</option><option value="EN_EVALUACION">En evaluación</option><option value="EN_ATENCION">En atención</option><option value="FINALIZADA">Finalizada</option><option value="CANCELADA">Cancelada</option></select><button class="btn btn-outline-primary" type="submit">Actualizar estado</button></form>
+  <div class="modal fade" id="modalSolicitudDetalle" tabindex="-1" aria-labelledby="tituloModalSolicitudDetalle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h4" id="tituloModalSolicitudDetalle" tabindex="-1" data-focus-fallback>Solicitud <span
+              data-detail="codigo"></span></h2><button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <dl class="row mb-4">
+            <dt class="col-sm-4">Paciente</dt>
+            <dd class="col-sm-8" data-detail="paciente"></dd>
+            <dt class="col-sm-4">Edad</dt>
+            <dd class="col-sm-8" data-detail="edad"></dd>
+            <dt class="col-sm-4">Contacto</dt>
+            <dd class="col-sm-8" data-detail="contacto"></dd>
+            <dt class="col-sm-4">Teléfono</dt>
+            <dd class="col-sm-8" data-detail="telefono"></dd>
+            <dt class="col-sm-4">Servicio</dt>
+            <dd class="col-sm-8" data-detail="servicio"></dd>
+            <dt class="col-sm-4">Distrito</dt>
+            <dd class="col-sm-8" data-detail="distrito"></dd>
+            <dt class="col-sm-4">Fecha</dt>
+            <dd class="col-sm-8" data-detail="fecha"></dd>
+            <dt class="col-sm-4">Turno</dt>
+            <dd class="col-sm-8" data-detail="turno"></dd>
+            <dt class="col-sm-4">Necesidad descrita</dt>
+            <dd class="col-sm-8 text-break" data-detail="descripcion"></dd>
+            <dt class="col-sm-4">Estado</dt>
+            <dd class="col-sm-8" data-detail="estado"></dd>
+            <dt class="col-sm-4">Profesional asignada</dt>
+            <dd class="col-sm-8" data-detail="profesional"></dd>
+          </dl>
+          <form data-form="asignar" th:action="@{/admin/solicitudes/{codigo}/asignar(codigo='pendiente')}" method="post"
+            class="border-top pt-3 mb-4">
+            <h3 class="h5">Asignar profesional</h3>
+            <p class="form-help" id="asignacionAyuda">Disponible cuando la solicitud esté en evaluación.</p><label
+              class="form-label" for="profesionalCodigo">Profesional disponible</label><select id="profesionalCodigo"
+              name="profesionalCodigo" class="form-select mb-2" aria-describedby="asignacionAyuda" required>
+              <option value="">Selecciona una profesional</option>
+              <option th:each="profesional : ${profesionalesDisponibles}" th:value="${profesional.codigo}"
+                th:text="${profesional.nombreCompleto + ' · ' + profesional.zonaCobertura}"></option>
+            </select>
+            <p th:if="${#lists.isEmpty(profesionalesDisponibles)}" class="form-help">No hay profesionales disponibles.
+              Actualiza su disponibilidad en el registro de profesionales.</p><button class="btn btn-alivio"
+              type="submit" th:disabled="${#lists.isEmpty(profesionalesDisponibles)}">Asignar</button>
+          </form>
+          <form data-form="estado" th:action="@{/admin/solicitudes/{codigo}/estado(codigo='pendiente')}" method="post"
+            class="border-top pt-3">
+            <h3 class="h5">Actualizar estado</h3><label class="form-label" for="nuevoEstado">Siguiente
+              estado</label><select id="nuevoEstado" name="estado" class="form-select mb-2" required>
+              <option value="">Selecciona un estado</option>
+              <option value="EN_EVALUACION">En evaluación</option>
+              <option value="EN_ATENCION">En atención</option>
+              <option value="FINALIZADA">Finalizada</option>
+              <option value="CANCELADA">Cancelada</option>
+            </select><button class="btn btn-outline-primary" type="submit">Actualizar estado</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-</div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script th:src="@{/js/admin.js}" defer></script>
-</body></html>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/admin.js}" defer></script>
+</body>
+
+</html>
