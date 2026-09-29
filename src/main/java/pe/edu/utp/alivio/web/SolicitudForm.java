@@ -32,22 +32,75 @@ public class SolicitudForm {
         return solicitud;
     }
 
-    public String getNombreContacto() { return nombreContacto; }
-    public void setNombreContacto(String nombreContacto) { this.nombreContacto = nombreContacto; }
-    public String getTelefonoContacto() { return telefonoContacto; }
-    public void setTelefonoContacto(String telefonoContacto) { this.telefonoContacto = telefonoContacto; }
-    public String getNombrePaciente() { return nombrePaciente; }
-    public void setNombrePaciente(String nombrePaciente) { this.nombrePaciente = nombrePaciente; }
-    public Integer getEdadPaciente() { return edadPaciente; }
-    public void setEdadPaciente(Integer edadPaciente) { this.edadPaciente = edadPaciente; }
-    public TipoServicio getTipoServicio() { return tipoServicio; }
-    public void setTipoServicio(TipoServicio tipoServicio) { this.tipoServicio = tipoServicio; }
-    public String getDistrito() { return distrito; }
-    public void setDistrito(String distrito) { this.distrito = distrito; }
-    public LocalDate getFechaRequerida() { return fechaRequerida; }
-    public void setFechaRequerida(LocalDate fechaRequerida) { this.fechaRequerida = fechaRequerida; }
-    public TurnoAtencion getTurno() { return turno; }
-    public void setTurno(TurnoAtencion turno) { this.turno = turno; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getNombreContacto() {
+        return nombreContacto;
+    }
+
+    public void setNombreContacto(String nombreContacto) {
+        this.nombreContacto = nombreContacto;
+    }
+
+    public String getTelefonoContacto() {
+        return telefonoContacto;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public String getNombrePaciente() {
+        return nombrePaciente;
+    }
+
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+    }
+
+    public Integer getEdadPaciente() {
+        return edadPaciente;
+    }
+
+    public void setEdadPaciente(Integer edadPaciente) {
+        this.edadPaciente = edadPaciente;
+    }
+
+    public TipoServicio getTipoServicio() {
+        return tipoServicio;
+    }
+
+    public void setTipoServicio(TipoServicio tipoServicio) {
+        this.tipoServicio = tipoServicio;
+    }
+
+    public String getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
+
+    public LocalDate getFechaRequerida() {
+        return fechaRequerida;
+    }
+
+    public void setFechaRequerida(LocalDate fechaRequerida) {
+        this.fechaRequerida = fechaRequerida;
+    }
+
+    public TurnoAtencion getTurno() {
+        return turno;
+    }
+
+    public void setTurno(TurnoAtencion turno) {
+        this.turno = turno;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
