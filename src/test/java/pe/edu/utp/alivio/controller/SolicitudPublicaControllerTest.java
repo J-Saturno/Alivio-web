@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -83,8 +84,9 @@ class SolicitudPublicaControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Revisa los datos ingresados e inténtalo de nuevo")))
             .andExpect(content().string(containsString("data-error-step=\"0\"")))
-            .andExpect(content().string(containsString("name=\"edadPaciente\" type=\"text\"")))
-            .andExpect(content().string(containsString("value=\"abc\"")));
+            .andExpect(content().string(matchesPattern(
+                "(?s).*<input\\b(?=[^>]*\\bname=\"edadPaciente\")"
+                    + "(?=[^>]*\\btype=\"text\")(?=[^>]*\\bvalue=\"abc\")[^>]*>.*")));
     }
 
     @Test
@@ -106,8 +108,9 @@ class SolicitudPublicaControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Revisa los datos ingresados e inténtalo de nuevo")))
             .andExpect(content().string(containsString("data-error-step=\"1\"")))
-            .andExpect(content().string(containsString("name=\"fechaRequerida\" type=\"text\"")))
-            .andExpect(content().string(containsString("value=\"manana\"")));
+            .andExpect(content().string(matchesPattern(
+                "(?s).*<input\\b(?=[^>]*\\bname=\"fechaRequerida\")"
+                    + "(?=[^>]*\\btype=\"text\")(?=[^>]*\\bvalue=\"manana\")[^>]*>.*")));
     }
 
     @Test

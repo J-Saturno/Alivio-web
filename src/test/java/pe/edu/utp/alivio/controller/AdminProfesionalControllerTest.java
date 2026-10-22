@@ -143,8 +143,12 @@ class AdminProfesionalControllerTest {
         assertThat(html).contains("data-codigo-edicion=\"" + profesional.getCodigo() + "\"");
         assertThat(html).contains("value=\"Sofía Actualizada\"").contains("value=\"Lince\"");
         assertThat(html).contains("id=\"editarTelefonoError\"").contains("El teléfono debe tener nueve dígitos");
-        assertThat(html).contains("value=\"LICENCIADA\" selected");
-        assertThat(html).contains("value=\"CURACIONES_POSTOPERATORIO\" selected");
+        assertThat(html).containsPattern("(?s)<select\\b[^>]*\\bid=\"editarTipo\"[^>]*>"
+            + "(?:(?!</select>).)*<option\\b(?=[^>]*\\bvalue=\"LICENCIADA\")"
+            + "(?=[^>]*\\bselected(?:\\s|=|>))[^>]*>");
+        assertThat(html).containsPattern("(?s)<select\\b[^>]*\\bid=\"editarEspecialidad\"[^>]*>"
+            + "(?:(?!</select>).)*<option\\b(?=[^>]*\\bvalue=\"CURACIONES_POSTOPERATORIO\")"
+            + "(?=[^>]*\\bselected(?:\\s|=|>))[^>]*>");
         assertThat(service.buscarPorCodigo(profesional.getCodigo()).getNombreCompleto()).isEqualTo("Sofía León");
     }
 

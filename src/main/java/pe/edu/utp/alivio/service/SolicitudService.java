@@ -96,9 +96,13 @@ public class SolicitudService {
         Map<String, String> errores = new LinkedHashMap<>();
         if (solicitud.getNombreContacto() == null || solicitud.getNombreContacto().isBlank()) {
             errores.put("nombreContacto", "Indica el nombre de contacto.");
+        } else if (solicitud.getNombreContacto().length() > 100) {
+            errores.put("nombreContacto", "El nombre de contacto debe tener como máximo 100 caracteres.");
         }
         if (solicitud.getNombrePaciente() == null || solicitud.getNombrePaciente().isBlank()) {
             errores.put("nombrePaciente", "Indica el nombre del paciente.");
+        } else if (solicitud.getNombrePaciente().length() > 100) {
+            errores.put("nombrePaciente", "El nombre del paciente debe tener como máximo 100 caracteres.");
         }
         if (solicitud.getTelefonoContacto() == null
                 || !solicitud.getTelefonoContacto().matches("9\\d{8}")) {
@@ -113,6 +117,8 @@ public class SolicitudService {
         }
         if (solicitud.getDistrito() == null || solicitud.getDistrito().isBlank()) {
             errores.put("distrito", "Indica el distrito de atención.");
+        } else if (solicitud.getDistrito().length() > 80) {
+            errores.put("distrito", "El distrito debe tener como máximo 80 caracteres.");
         }
         if (solicitud.getFechaRequerida() == null
                 || solicitud.getFechaRequerida().isBefore(LocalDate.now())) {
@@ -123,6 +129,8 @@ public class SolicitudService {
         }
         if (solicitud.getDescripcion() == null || solicitud.getDescripcion().isBlank()) {
             errores.put("descripcion", "Describe brevemente la necesidad de atención.");
+        } else if (solicitud.getDescripcion().length() > 500) {
+            errores.put("descripcion", "La descripción debe tener como máximo 500 caracteres.");
         }
         if (!errores.isEmpty()) {
             throw new SolicitudValidationException(errores);

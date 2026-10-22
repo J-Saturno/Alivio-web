@@ -3,6 +3,8 @@ package pe.edu.utp.alivio.service;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.Solicitud;
@@ -259,6 +261,35 @@ class SolicitudServiceTest {
 
         assertEquals("Ana Torres",
             service.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado().getNombreCompleto());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "nombreContacto, 100, true", "nombreContacto, 101, false",
+        "nombrePaciente, 100, true", "nombrePaciente, 101, false",
+        "distrito, 80, true", "distrito, 81, false",
+        "descripcion, 500, true", "descripcion, 501, false"
+    })
+    void validaLongitudesAunqueLaSolicitudNoPasePorElNavegador(String campo, int longitud, boolean valida) {
+        Solicitud solicitud = solicitudValida();
+        String valor = "a".repeat(longitud);
+        switch (campo) {
+            case "nombreContacto" -> solicitud.setNombreContacto(valor);
+            case "nombrePaciente" -> solicitud.setNombrePaciente(valor);
+            case "distrito" -> solicitud.setDistrito(valor);
+            case "descripcion" -> solicitud.setDescripcion(valor);
+            default -> throw new IllegalArgumentException(campo);
+        }
+
+        if (valida) {
+            service.crear(solicitud);
+            assertEquals(1, service.listar(null, null).size());
+        } else {
+            SolicitudValidationException error = assertThrows(SolicitudValidationException.class,
+                () -> service.crear(solicitud));
+            assertTrue(error.getErrores().containsKey(campo));
+            assertTrue(service.listar(null, null).isEmpty());
+        }
     }
 
     private Solicitud solicitudValida() {
