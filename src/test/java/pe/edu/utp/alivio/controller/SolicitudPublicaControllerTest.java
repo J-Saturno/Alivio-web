@@ -10,14 +10,40 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.matchesPattern;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 @AutoConfigureMockMvc
 class SolicitudPublicaControllerTest {
     @Autowired MockMvc mvc;
+
+    @Test
+    void descripcionDemasiadoLargaConservaTextoYMensajeDeValidacion() throws Exception {
+        String descripcion = "A".repeat(501);
+        MvcResult post = mvc.perform(post("/solicitudes")
+            .param("nombreContacto", "María Pérez")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Rosa Pérez")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", "Surco")
+            .param("fechaRequerida", LocalDate.now().plusDays(1).toString())
+            .param("turno", "MANANA")
+            .param("descripcion", descripcion))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(result -> assertThat(result.getFlashMap().containsKey("solicitudCreada")).isFalse())
+            .andReturn();
+
+        assertThat((java.util.Map<?, ?>) post.getFlashMap().get("valoresRechazados")).isEmpty();
+        mvc.perform(get("/").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("data-error-step=\"1\"")))
+            .andExpect(content().string(containsString(descripcion)))
+            .andExpect(content().string(containsString("La descripción debe tener como máximo 500 caracteres.")));
+    }
 
     @Test
     void registraSolicitudYRedirigeConConfirmacion() throws Exception {

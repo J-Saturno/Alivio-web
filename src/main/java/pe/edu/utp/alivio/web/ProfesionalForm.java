@@ -1,15 +1,27 @@
 package pe.edu.utp.alivio.web;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
 
 public class ProfesionalForm {
     private String codigo;
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(max = 100, message = "El nombre debe tener como máximo 100 caracteres.")
     private String nombreCompleto;
+    @NotNull(message = "Selecciona un tipo de profesional válido")
     private TipoProfesional tipoProfesional;
+    @NotBlank(message = "El teléfono debe tener nueve dígitos")
+    @Pattern(regexp = "9[0-9]{8}", message = "El teléfono debe tener nueve dígitos")
     private String telefono;
+    @NotBlank(message = "La zona de cobertura es obligatoria")
+    @Size(max = 80, message = "La zona de cobertura debe tener como máximo 80 caracteres.")
     private String zonaCobertura;
+    @NotNull(message = "Selecciona una especialidad válida")
     private TipoServicio especialidad;
     private boolean disponible;
 

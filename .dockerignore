@@ -1,0 +1,7 @@
+.git
+.worktrees
+target
+tools
+application-local.properties
+.env
+*.log

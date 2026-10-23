@@ -1,11 +1,34 @@
 package pe.edu.utp.alivio.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
+@Entity
+@Table(name = "profesionales")
 public class Profesional {
-    private String codigo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "profesional_seq")
+    @SequenceGenerator(name = "profesional_seq", sequenceName = "profesional_seq", allocationSize = 1)
+    private Long id;
+    @NotBlank
+    @Size(max = 100)
+    @Column(nullable = false, length = 100)
     private String nombreCompleto;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 40)
     private TipoProfesional tipoProfesional;
+    @NotBlank
+    @Pattern(regexp = "9[0-9]{8}")
+    @Column(nullable = false, length = 9)
     private String telefono;
+    @NotBlank
+    @Size(max = 80)
+    @Column(nullable = false, length = 80)
     private String zonaCobertura;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 40)
     private TipoServicio especialidad;
     private boolean disponible;
 
@@ -15,7 +38,7 @@ public class Profesional {
     public Profesional(String codigo, String nombreCompleto, TipoProfesional tipoProfesional,
                        String telefono, String zonaCobertura, TipoServicio especialidad,
                        boolean disponible) {
-        this.codigo = codigo;
+        this.id = CodigoRegistro.id(codigo, "PRO").orElse(null);
         this.nombreCompleto = nombreCompleto;
         this.tipoProfesional = tipoProfesional;
         this.telefono = telefono;
@@ -25,16 +48,18 @@ public class Profesional {
     }
 
     public Profesional(Profesional original) {
-        this(original.codigo, original.nombreCompleto, original.tipoProfesional,
-            original.telefono, original.zonaCobertura, original.especialidad, original.disponible);
+        this(original.getCodigo(), original.getNombreCompleto(), original.getTipoProfesional(),
+            original.getTelefono(), original.getZonaCobertura(), original.getEspecialidad(), original.isDisponible());
     }
 
+    public Long getId() { return id; }
+
     public String getCodigo() {
-        return codigo;
+        return id == null ? null : "PRO-%03d".formatted(id);
     }
 
     public void setCodigo(String codigo) {
-        this.codigo = codigo;
+        this.id = CodigoRegistro.id(codigo, "PRO").orElse(null);
     }
 
     public String getNombreCompleto() {

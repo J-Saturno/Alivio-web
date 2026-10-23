@@ -19,10 +19,32 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 @AutoConfigureMockMvc
 class AdminProfesionalControllerTest {
     @Autowired MockMvc mvc;
     @Autowired ProfesionalService service;
+
+    @Test
+    void nombreDemasiadoLargoReabreRegistroConErrorYConservaValorSinOpcionesRechazadas() throws Exception {
+        String nombre = "A".repeat(101);
+        MvcResult post = mvc.perform(post("/admin/profesionales")
+            .param("nombreCompleto", nombre)
+            .param("tipoProfesional", "TECNICA")
+            .param("telefono", "987654321")
+            .param("zonaCobertura", "Surco")
+            .param("especialidad", "ADULTO_MAYOR"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(result -> assertThat(result.getFlashMap().containsKey("mensaje")).isFalse())
+            .andReturn();
+
+        assertThat((java.util.Map<?, ?>) post.getFlashMap().get("valoresRechazados")).isEmpty();
+        String html = html(mvc.perform(get("/admin/profesionales").flashAttrs(post.getFlashMap()))
+            .andExpect(status().isOk()).andReturn());
+        assertThat(html).contains("data-error-modal=\"registro\"", "value=\"" + nombre + "\"");
+        assertThat(html).contains("id=\"nuevoNombreError\"", "El nombre debe tener como máximo 100 caracteres.");
+        assertThat(html).doesNotContain("Valor ingresado no válido");
+    }
 
     @Test
     void muestraTablaDeProfesionalesYOpcionesAprobadas() throws Exception {

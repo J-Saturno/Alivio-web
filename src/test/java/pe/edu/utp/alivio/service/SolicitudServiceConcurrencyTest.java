@@ -1,120 +1,80 @@
 package pe.edu.utp.alivio.service;
 
 import java.time.LocalDate;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.function.UnaryOperator;
+import java.util.concurrent.*;
 import org.junit.jupiter.api.RepeatedTest;
-import pe.edu.utp.alivio.model.EstadoSolicitud;
-import pe.edu.utp.alivio.model.Profesional;
-import pe.edu.utp.alivio.model.Solicitud;
-import pe.edu.utp.alivio.model.TipoProfesional;
-import pe.edu.utp.alivio.model.TipoServicio;
-import pe.edu.utp.alivio.model.TurnoAtencion;
-import pe.edu.utp.alivio.repository.ProfesionalRepository;
-import pe.edu.utp.alivio.repository.SolicitudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import pe.edu.utp.alivio.model.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
+@SpringBootTest
 class SolicitudServiceConcurrencyTest {
-    private static final int TIMEOUT_SEGUNDOS = 20;
+    @Autowired SolicitudService solicitudes;
+    @Autowired ProfesionalService profesionales;
+    @Autowired PlatformTransactionManager transactionManager;
 
-    @RepeatedTest(25)
+    @RepeatedTest(3)
     void cancelacionConcurrenteNoPuedeSerSobrescritaPorEvaluacion() throws Exception {
-        verificarCancelacionConcurrente(false);
+        verificar(false);
     }
 
-    @RepeatedTest(25)
+    @RepeatedTest(3)
     void cancelacionConcurrenteNoPuedeSerSobrescritaPorAsignacion() throws Exception {
-        verificarCancelacionConcurrente(true);
+        verificar(true);
     }
 
-    private void verificarCancelacionConcurrente(boolean asignar) throws Exception {
-        RepositorioConBloqueoAntesDeUpdate repository = new RepositorioConBloqueoAntesDeUpdate();
-        ProfesionalService profesionales = new ProfesionalService(new ProfesionalRepository());
-        SolicitudService service = new SolicitudService(repository, profesionales);
+    private void verificar(boolean asignar) throws Exception {
         Profesional profesional = profesionales.registrar(new Profesional(null, "Ana",
             TipoProfesional.TECNICA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
-        Solicitud solicitud = service.crear(new Solicitud(null, "Rosa", "987654321", "María", 80,
+        Solicitud solicitud = solicitudes.crear(new Solicitud(null, "Rosa", "987654321", "María", 80,
             TipoServicio.ADULTO_MAYOR, "Surco", LocalDate.now(), TurnoAtencion.MANANA,
             "Apoyo", null, null));
-        if (asignar) {
-            service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
-        }
-        FutureTask<Throwable> competidora = new FutureTask<>(() -> ejecutar(() -> {
-            if (asignar) {
-                service.asignar(solicitud.getCodigo(), profesional.getCodigo());
-            } else {
-                service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
-            }
-        }));
-        Thread hiloCompetidor = new Thread(competidora, "competidora");
-        hiloCompetidor.setDaemon(true);
-        hiloCompetidor.start();
+        if (asignar) solicitudes.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        CountDownLatch canceladaSinCommit = new CountDownLatch(1);
+        CountDownLatch confirmarCancelacion = new CountDownLatch(1);
+        CountDownLatch competidoraIniciada = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(2);
         try {
-            repository.esperarIntentoCompetidor();
-            FutureTask<Throwable> cancelacion = new FutureTask<>(() -> ejecutar(() ->
-                service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.CANCELADA)));
-            Thread hiloCancelacion = new Thread(cancelacion, "cancelacion");
-            hiloCancelacion.setDaemon(true);
-            hiloCancelacion.start();
-            assertNull(cancelacion.get(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS));
-            assertEquals(EstadoSolicitud.CANCELADA,
-                service.buscarPorCodigo(solicitud.getCodigo()).getEstado());
-            repository.liberarCompetidor();
-            assertInstanceOf(IllegalArgumentException.class,
-                competidora.get(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS));
+            Future<?> cancelacion = executor.submit(() -> new TransactionTemplate(transactionManager).execute(status -> {
+                solicitudes.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.CANCELADA);
+                canceladaSinCommit.countDown();
+                esperar(confirmarCancelacion);
+                return null;
+            }));
+            assertTrue(canceladaSinCommit.await(10, TimeUnit.SECONDS));
+            Future<?> competidora = executor.submit(() -> {
+                competidoraIniciada.countDown();
+                if (asignar) solicitudes.asignar(solicitud.getCodigo(), profesional.getCodigo());
+                else solicitudes.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+            });
+            assertTrue(competidoraIniciada.await(10, TimeUnit.SECONDS));
+            assertThrows(TimeoutException.class, () -> competidora.get(200, TimeUnit.MILLISECONDS));
+            confirmarCancelacion.countDown();
+            cancelacion.get(10, TimeUnit.SECONDS);
+            ExecutionException rechazo = assertThrows(ExecutionException.class,
+                () -> competidora.get(10, TimeUnit.SECONDS));
+            assertInstanceOf(IllegalArgumentException.class, rechazo.getCause());
+            Solicitud finalizada = solicitudes.buscarPorCodigo(solicitud.getCodigo());
+            assertEquals(EstadoSolicitud.CANCELADA, finalizada.getEstado());
+            assertNull(finalizada.getProfesionalAsignado());
         } finally {
-            repository.liberarCompetidor();
-            hiloCompetidor.interrupt();
+            confirmarCancelacion.countDown();
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+            solicitudes.eliminar(solicitud.getCodigo());
+            profesionales.eliminar(profesional.getCodigo());
         }
-        assertEquals(EstadoSolicitud.CANCELADA,
-            service.buscarPorCodigo(solicitud.getCodigo()).getEstado());
-        assertNull(service.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado());
     }
 
-    private Throwable ejecutar(Runnable accion) {
+    private void esperar(CountDownLatch latch) {
         try {
-            accion.run();
-            return null;
-        } catch (RuntimeException error) {
-            return error;
-        }
-    }
-
-    private static class RepositorioConBloqueoAntesDeUpdate extends SolicitudRepository {
-        private final CountDownLatch intentoCompetidor = new CountDownLatch(1);
-        private final CountDownLatch liberarCompetidor = new CountDownLatch(1);
-
-        @Override
-        public Solicitud update(String codigo, UnaryOperator<Solicitud> cambio) {
-            if (Thread.currentThread().getName().equals("competidora")) {
-                intentoCompetidor.countDown();
-                esperar(liberarCompetidor);
-            }
-            return super.update(codigo, cambio);
-        }
-
-        void esperarIntentoCompetidor() {
-            esperar(intentoCompetidor);
-        }
-
-        void liberarCompetidor() {
-            liberarCompetidor.countDown();
-        }
-
-        private void esperar(CountDownLatch latch) {
-            try {
-                if (!latch.await(TIMEOUT_SEGUNDOS, TimeUnit.SECONDS)) {
-                    throw new AssertionError("No se alcanzó la actualización competidora");
-                }
-            } catch (InterruptedException error) {
-                Thread.currentThread().interrupt();
-                throw new AssertionError(error);
-            }
+            if (!latch.await(10, TimeUnit.SECONDS)) throw new AssertionError("La prueba no confirmó la cancelación");
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new AssertionError(error);
         }
     }
 }

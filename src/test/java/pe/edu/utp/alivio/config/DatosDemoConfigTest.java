@@ -12,11 +12,13 @@ import pe.edu.utp.alivio.service.SolicitudService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@org.springframework.boot.test.context.SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 class DatosDemoConfigTest {
+    @org.springframework.beans.factory.annotation.Autowired ProfesionalService profesionales;
+    @org.springframework.beans.factory.annotation.Autowired SolicitudService solicitudes;
     @Test
     void cargaTresProfesionalesYDosSolicitudesSoloUnaVezEnRepositoriosVacios() throws Exception {
-        ProfesionalService profesionales = new ProfesionalService(new ProfesionalRepository());
-        SolicitudService solicitudes = new SolicitudService(new SolicitudRepository(), profesionales);
         var runner = new DatosDemoConfig().datosDemo(profesionales, solicitudes);
 
         runner.run();
@@ -32,8 +34,6 @@ class DatosDemoConfigTest {
 
     @Test
     void noCargaDatosSiYaExisteUnProfesional() throws Exception {
-        ProfesionalService profesionales = new ProfesionalService(new ProfesionalRepository());
-        SolicitudService solicitudes = new SolicitudService(new SolicitudRepository(), profesionales);
         profesionales.registrar(new Profesional(null, "Lucía Existente", TipoProfesional.TECNICA,
             "912345678", "Surco", TipoServicio.ADULTO_MAYOR, true));
 

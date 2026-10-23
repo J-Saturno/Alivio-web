@@ -1,19 +1,57 @@
 package pe.edu.utp.alivio.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "solicitudes")
 public class Solicitud {
-    private String codigo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "solicitud_seq")
+    @SequenceGenerator(name = "solicitud_seq", sequenceName = "solicitud_seq", allocationSize = 1)
+    private Long id;
+    @NotBlank
+    @Size(max = 100)
+    @Column(nullable = false, length = 100)
     private String nombreContacto;
+    @NotBlank
+    @Pattern(regexp = "9[0-9]{8}")
+    @Column(nullable = false, length = 9)
     private String telefonoContacto;
+    @NotBlank
+    @Size(max = 100)
+    @Column(nullable = false, length = 100)
     private String nombrePaciente;
+    @Min(0)
+    @Max(120)
     private Integer edadPaciente;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 40)
     private TipoServicio tipoServicio;
+    @NotBlank
+    @Size(max = 80)
+    @Column(nullable = false, length = 80)
     private String distrito;
+    @NotNull
+    @Column(nullable = false)
     private LocalDate fechaRequerida;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 40)
     private TurnoAtencion turno;
+    @NotBlank
+    @Size(max = 500)
+    @Column(nullable = false, length = 500)
     private String descripcion;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 40)
     private EstadoSolicitud estado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profesional_id", foreignKey = @ForeignKey(name = "fk_solicitud_profesional"))
     private Profesional profesionalAsignado;
 
     public Solicitud() {
@@ -23,7 +61,7 @@ public class Solicitud {
                      String nombrePaciente, Integer edadPaciente, TipoServicio tipoServicio,
                      String distrito, LocalDate fechaRequerida, TurnoAtencion turno,
                      String descripcion, EstadoSolicitud estado, Profesional profesionalAsignado) {
-        this.codigo = codigo;
+        this.id = CodigoRegistro.id(codigo, "SOL").orElse(null);
         this.nombreContacto = nombreContacto;
         this.telefonoContacto = telefonoContacto;
         this.nombrePaciente = nombrePaciente;
@@ -38,7 +76,7 @@ public class Solicitud {
     }
 
     public Solicitud(Solicitud original) {
-        this(original.codigo, original.nombreContacto, original.telefonoContacto,
+        this(original.getCodigo(), original.nombreContacto, original.telefonoContacto,
             original.nombrePaciente, original.edadPaciente, original.tipoServicio,
             original.distrito, original.fechaRequerida, original.turno, original.descripcion,
             original.estado, copiarProfesional(original.profesionalAsignado));
@@ -53,8 +91,10 @@ public class Solicitud {
             profesional.getEspecialidad(), profesional.isDisponible());
     }
 
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
+    public Long getId() { return id; }
+
+    public String getCodigo() { return id == null ? null : "SOL-%03d".formatted(id); }
+    public void setCodigo(String codigo) { this.id = CodigoRegistro.id(codigo, "SOL").orElse(null); }
     public String getNombreContacto() { return nombreContacto; }
     public void setNombreContacto(String nombreContacto) { this.nombreContacto = nombreContacto; }
     public String getTelefonoContacto() { return telefonoContacto; }
