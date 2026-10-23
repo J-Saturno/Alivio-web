@@ -58,7 +58,7 @@
 - [x] Ejecutar pruebas Java y JS, package y diff --check.
 - [x] Revisar cambios con un agente independiente y corregir hallazgos.
 - [x] Probar PostgreSQL real sin sustituir esta comprobación por H2. Verificado en instancia PostgreSQL 18 temporal aislada; la conexión al servidor personal requiere completar el archivo local.
-- [ ] Guardar y subir la rama con los cambios verificados y señalar cualquier comprobación pendiente.
+- [x] Guardar y subir la rama con los cambios verificados y señalar cualquier comprobación pendiente.
 
 ## Evidencia de verificación — 23 de octubre de 2026
 
@@ -69,3 +69,5 @@
 - Revisión independiente: sin hallazgos importantes.
 - Pendiente de configuración personal: crear alivio_web y completar application-local.properties; no se conoce la contraseña de la instalación habitual.
 - No se realizó verificación visual de anchos de pantalla.
+
+- Entrega: rama codex/semana9-12-postgresql publicada; pull request en borrador https://github.com/J-Saturno/Alivio-web/pull/1.
