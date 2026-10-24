@@ -3,3 +3,8 @@
 spring.datasource.url=jdbc:postgresql://localhost:5432/alivio_web
 spring.datasource.username=postgres
 spring.datasource.password=
+
+# Acceso a la web administrativa: credenciales distintas de PostgreSQL.
+# Completar ambos valores antes de iniciar; no subir este archivo local a GitHub.
+alivio.admin.username=
+alivio.admin.password=

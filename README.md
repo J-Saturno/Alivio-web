@@ -23,7 +23,9 @@ JPA crea o actualiza las tablas mediante `ddl-auto=update`, igual que el ejemplo
 
 Abrir http://localhost:8080.
 
-Antes de iniciar, configurar `ALIVIO_ADMIN_USERNAME` y `ALIVIO_ADMIN_PASSWORD` como variables de entorno. Son obligatorias para proteger `/admin/**`; no usar credenciales reales en archivos versionados. Para un despliegue público, servir la aplicación mediante HTTPS.
+Antes de iniciar, completar también `alivio.admin.username` y `alivio.admin.password` en `application-local.properties`. Son el usuario y la contraseña para entrar a la web administrativa; son distintos de los de PostgreSQL. Este archivo está ignorado por Git y no se sube al repositorio.
+
+Como alternativa, configurar `ALIVIO_ADMIN_USERNAME` y `ALIVIO_ADMIN_PASSWORD` en el entorno. El acceso administrativo requiere ambas credenciales; no se debe desactivar la protección para resolver un error de arranque. Para un despliegue público, servir la aplicación mediante HTTPS.
 
 La base inicia vacía. Para cargar los tres profesionales y dos solicitudes ficticias, agregar `alivio.demo.enabled=true` al archivo local o definir `ALIVIO_DEMO_ENABLED=true`. Los datos demo solo se agregan cuando ambos registros están vacíos.
 

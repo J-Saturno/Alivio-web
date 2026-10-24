@@ -41,7 +41,7 @@ public class AdminSecurityConfig {
             @Value("${alivio.admin.password:}") String password) {
         if (!enabled) return new InMemoryUserDetailsManager();
         if (username.isBlank() || password.isBlank()) {
-            throw new IllegalStateException("Configura ALIVIO_ADMIN_USERNAME y ALIVIO_ADMIN_PASSWORD para iniciar Alivio");
+            throw new IllegalStateException("Configura alivio.admin.username y alivio.admin.password en application-local.properties, o ALIVIO_ADMIN_USERNAME y ALIVIO_ADMIN_PASSWORD en el entorno, para iniciar Alivio");
         }
         var encoder = new BCryptPasswordEncoder();
         return new InMemoryUserDetailsManager(User.withUsername(username)
