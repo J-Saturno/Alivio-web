@@ -12,10 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@org.springframework.boot.test.context.SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 class ProfesionalServiceTest {
+    @org.springframework.beans.factory.annotation.Autowired
+    ProfesionalService service;
     @Test
     void listaSoloProfesionalesDisponibles() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
         service.registrar(profesional("Ana", true));
         service.registrar(profesional("Rosa", false));
 
@@ -26,7 +29,6 @@ class ProfesionalServiceTest {
 
     @Test
     void rechazaTelefonoInvalido() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
         Profesional profesional = profesional("Ana", true);
         profesional.setTelefono("123");
 
@@ -36,7 +38,6 @@ class ProfesionalServiceTest {
 
     @Test
     void actualizaPorCodigoSinCrearOtroRegistro() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
         String codigo = service.registrar(profesional("Ana", true)).getCodigo();
         Profesional cambios = profesional("Ana Torres", false);
 
@@ -49,7 +50,6 @@ class ProfesionalServiceTest {
 
     @Test
     void alternaDisponibilidad() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
         String codigo = service.registrar(profesional("Ana", true)).getCodigo();
 
         assertFalse(service.cambiarDisponibilidad(codigo).isDisponible());
@@ -58,14 +58,12 @@ class ProfesionalServiceTest {
 
     @Test
     void buscarCodigoInexistenteDaError() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
 
         assertThrows(IllegalArgumentException.class, () -> service.buscarPorCodigo("PRO-999"));
     }
 
     @Test
     void rechazaCamposObligatoriosAusentes() {
-        ProfesionalService service = new ProfesionalService(new ProfesionalRepository());
         Profesional sinNombre = profesional(" ", true);
         Profesional sinZona = profesional("Ana", true);
         sinZona.setZonaCobertura(" ");

@@ -3,6 +3,7 @@ package pe.edu.utp.alivio.controller;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -23,16 +24,17 @@ public class SolicitudPublicaController {
     }
 
     @PostMapping("/solicitudes")
-    public String registrar(@ModelAttribute SolicitudForm form, BindingResult binding,
+    public String registrar(@Valid @ModelAttribute SolicitudForm form, BindingResult binding,
                             RedirectAttributes redirect) {
         if (binding.hasErrors()) {
             Map<String, String> valoresRechazados = new HashMap<>();
             Map<String, String> errores = new LinkedHashMap<>();
             for (FieldError error : binding.getFieldErrors()) {
-                if (error.getRejectedValue() != null) {
+                if (error.isBindingFailure() && error.getRejectedValue() != null) {
                     valoresRechazados.put(error.getField(), error.getRejectedValue().toString());
                 }
-                errores.put(error.getField(), mensajeCampo(error.getField()));
+                errores.putIfAbsent(error.getField(), error.isBindingFailure()
+                    ? mensajeCampo(error.getField()) : error.getDefaultMessage());
             }
             mostrarErrores(redirect, form, errores, valoresRechazados);
             return "redirect:/";

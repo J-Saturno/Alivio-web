@@ -1,35 +1,31 @@
 package pe.edu.utp.alivio.repository;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
-import pe.edu.utp.alivio.model.Profesional;
-import pe.edu.utp.alivio.model.TipoProfesional;
-import pe.edu.utp.alivio.model.TipoServicio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.utp.alivio.model.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@SpringBootTest
+@Transactional
 class ProfesionalRepositoryTest {
+    @Autowired ProfesionalRepository repository;
+    @Autowired EntityManager entityManager;
+
     @Test
-    void devuelveCopiasParaQueLaDisponibilidadNoCambieSinGuardar() {
-        ProfesionalRepository repository = new ProfesionalRepository();
-        Profesional original = repository.save(new Profesional(null, "Ana Torres",
+    void persisteYActualizaSinDuplicarProfesional() {
+        Profesional guardada = repository.saveAndFlush(new Profesional(null, "Ana Torres",
             TipoProfesional.TECNICA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
-
-        original.setDisponible(false);
-        repository.findAll().getFirst().setNombreCompleto("Nombre ajeno");
-        repository.findByCodigo("PRO-001").orElseThrow().setDisponible(false);
-
-        assertEquals(true, repository.findByCodigo("PRO-001").orElseThrow().isDisponible());
-        assertEquals("Ana Torres", repository.findAll().getFirst().getNombreCompleto());
-    }
-
-    @Test
-    void asignaCodigoYPermiteBuscar() {
-        ProfesionalRepository repository = new ProfesionalRepository();
-        Profesional guardada = repository.save(new Profesional(null, "Ana Torres",
-            TipoProfesional.TECNICA, "987654321", "Surco",
-            TipoServicio.ADULTO_MAYOR, true));
-
-        assertEquals("PRO-001", guardada.getCodigo());
-        assertEquals("Ana Torres", repository.findByCodigo("PRO-001").orElseThrow().getNombreCompleto());
+        String codigo = guardada.getCodigo();
+        entityManager.clear();
+        Profesional recargada = repository.findByCodigo(codigo).orElseThrow();
+        recargada.setDisponible(false);
+        repository.saveAndFlush(recargada);
+        entityManager.clear();
+        assertThat(repository.count()).isEqualTo(1);
+        assertThat(repository.findByCodigo(codigo).orElseThrow().isDisponible()).isFalse();
+        assertThat(repository.findByCodigo("PRO-invalido")).isEmpty();
     }
 }

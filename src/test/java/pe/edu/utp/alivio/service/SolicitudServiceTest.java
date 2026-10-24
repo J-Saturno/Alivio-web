@@ -19,15 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@org.springframework.boot.test.context.SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 class SolicitudServiceTest {
+    @org.springframework.beans.factory.annotation.Autowired
     private SolicitudService service;
+    @org.springframework.beans.factory.annotation.Autowired
     private ProfesionalService profesionalService;
 
-    @BeforeEach
-    void setUp() {
-        profesionalService = new ProfesionalService(new ProfesionalRepository());
-        service = new SolicitudService(new SolicitudRepository(), profesionalService);
-    }
 
     @Test
     void creaSolicitudPendienteSinAsignacionAunqueLlegueConEstadoYCodigo() {
@@ -38,7 +37,7 @@ class SolicitudServiceTest {
 
         Solicitud creada = service.crear(solicitud);
 
-        assertEquals("SOL-001", creada.getCodigo());
+        assertTrue(creada.getCodigo().matches("SOL-[0-9]+"));
         assertEquals(EstadoSolicitud.PENDIENTE, creada.getEstado());
         assertNull(creada.getProfesionalAsignado());
     }
@@ -99,11 +98,11 @@ class SolicitudServiceTest {
         Solicitud otra = solicitudValida();
         otra.setNombreContacto("Elena");
         otra.setNombrePaciente("Luis");
-        service.crear(otra);
+        Solicitud segundaFiltrable = service.crear(otra);
 
         assertEquals(1, service.listar(" ROSA ", EstadoSolicitud.PENDIENTE).size());
         assertEquals(1, service.listar("maría", null).size());
-        assertEquals(1, service.listar("SOL-002", null).size());
+        assertEquals(1, service.listar(segundaFiltrable.getCodigo(), null).size());
         assertTrue(service.listar("Rosa", EstadoSolicitud.FINALIZADA).isEmpty());
         assertEquals(2, service.listar(null, null).size());
     }
@@ -212,22 +211,22 @@ class SolicitudServiceTest {
         creada.setEstado(EstadoSolicitud.FINALIZADA);
         creada.setNombreContacto("Intrusa");
 
-        Solicitud almacenada = service.buscarPorCodigo("SOL-001");
+        Solicitud almacenada = service.buscarPorCodigo(creada.getCodigo());
         assertEquals(EstadoSolicitud.PENDIENTE, almacenada.getEstado());
         assertEquals("Rosa", almacenada.getNombreContacto());
         assertThrows(IllegalArgumentException.class,
-            () -> service.actualizarEstado("SOL-001", EstadoSolicitud.FINALIZADA));
+            () -> service.actualizarEstado(creada.getCodigo(), EstadoSolicitud.FINALIZADA));
     }
 
     @Test
     void mutarResultadoDeBuscarOListarNoCambiaEstadoAlmacenado() {
-        service.crear(solicitudValida());
-        Solicitud encontrada = service.buscarPorCodigo("SOL-001");
+        Solicitud creada = service.crear(solicitudValida());
+        Solicitud encontrada = service.buscarPorCodigo(creada.getCodigo());
         Solicitud listada = service.listar(null, null).get(0);
         encontrada.setEstado(EstadoSolicitud.FINALIZADA);
         listada.setNombrePaciente("Cambiada");
 
-        Solicitud almacenada = service.buscarPorCodigo("SOL-001");
+        Solicitud almacenada = service.buscarPorCodigo(creada.getCodigo());
         assertEquals(EstadoSolicitud.PENDIENTE, almacenada.getEstado());
         assertEquals("María", almacenada.getNombrePaciente());
         assertEquals(1, service.listar("María", EstadoSolicitud.PENDIENTE).size());
@@ -241,10 +240,10 @@ class SolicitudServiceTest {
         entrada.setNombreContacto("Cambiada");
         primera.setNombreContacto("Otra");
 
-        assertEquals("SOL-001", primera.getCodigo());
-        assertEquals("SOL-002", segunda.getCodigo());
-        assertEquals("Rosa", service.buscarPorCodigo("SOL-001").getNombreContacto());
-        assertEquals("Rosa", service.buscarPorCodigo("SOL-002").getNombreContacto());
+        assertTrue(primera.getCodigo().matches("SOL-[0-9]+"));
+        org.junit.jupiter.api.Assertions.assertNotEquals(primera.getCodigo(), segunda.getCodigo());
+        assertEquals("Rosa", service.buscarPorCodigo(primera.getCodigo()).getNombreContacto());
+        assertEquals("Rosa", service.buscarPorCodigo(segunda.getCodigo()).getNombreContacto());
         assertEquals(2, service.listar(null, null).size());
     }
 

@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@org.springframework.transaction.annotation.Transactional
 @AutoConfigureMockMvc
 class AdminSolicitudControllerTest {
     @Autowired MockMvc mvc;

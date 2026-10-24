@@ -4,3 +4,5 @@
 /.vscode/
 /.superpowers/
 *.log
+/application-local.properties
+/.env

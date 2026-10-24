@@ -1,0 +1,5 @@
+# Copiar como application-local.properties (ignorado por Git).
+# Crear primero una base nueva llamada alivio_web.
+spring.datasource.url=jdbc:postgresql://localhost:5432/alivio_web
+spring.datasource.username=postgres
+spring.datasource.password=

@@ -5,12 +5,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
+import pe.edu.utp.alivio.model.CodigoRegistro;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.Solicitud;
 import pe.edu.utp.alivio.repository.SolicitudRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class SolicitudService {
     private final SolicitudRepository repository;
     private final ProfesionalService profesionalService;
@@ -20,57 +24,95 @@ public class SolicitudService {
         this.profesionalService = profesionalService;
     }
 
+    @Transactional
     public Solicitud crear(Solicitud solicitud) {
         validar(solicitud);
         Solicitud nueva = new Solicitud(solicitud);
         nueva.setCodigo(null);
         nueva.setEstado(EstadoSolicitud.PENDIENTE);
         nueva.setProfesionalAsignado(null);
-        return repository.save(nueva);
+        return new Solicitud(repository.saveAndFlush(nueva));
     }
 
     public List<Solicitud> listar(String texto, EstadoSolicitud estado) {
         String filtro = texto == null ? "" : texto.toLowerCase().trim();
-        return repository.findAll().stream()
+        return repository.findAll(Sort.by("id")).stream()
             .filter(s -> estado == null || s.getEstado() == estado)
             .filter(s -> filtro.isBlank()
                 || s.getCodigo().toLowerCase().contains(filtro)
                 || s.getNombreContacto().toLowerCase().contains(filtro)
                 || s.getNombrePaciente().toLowerCase().contains(filtro))
-            .toList();
+            .map(Solicitud::new).toList();
     }
 
     public Solicitud buscarPorCodigo(String codigo) {
-        return repository.findByCodigo(codigo)
+        return repository.findByCodigo(codigo).map(Solicitud::new)
             .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada"));
     }
 
+    @Transactional
     public Solicitud asignar(String solicitudCodigo, String profesionalCodigo) {
-        return repository.update(solicitudCodigo, solicitud -> {
-            Profesional profesional = profesionalService.buscarPorCodigo(profesionalCodigo);
-            if (!profesional.isDisponible()) {
-                throw new IllegalArgumentException("Selecciona una profesional disponible");
-            }
-            if (solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
-                throw new IllegalArgumentException("La solicitud debe estar en evaluación antes de asignar");
-            }
-            solicitud.setProfesionalAsignado(profesional);
-            solicitud.setEstado(EstadoSolicitud.ASIGNADA);
-            return solicitud;
-        });
+        Solicitud solicitud = bloquear(solicitudCodigo);
+        Profesional profesional = profesionalService.bloquear(profesionalCodigo);
+        if (!profesional.isDisponible()) {
+            throw new IllegalArgumentException("Selecciona una profesional disponible");
+        }
+        if (solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
+            throw new IllegalArgumentException("La solicitud debe estar en evaluación antes de asignar");
+        }
+        solicitud.setProfesionalAsignado(profesional);
+        solicitud.setEstado(EstadoSolicitud.ASIGNADA);
+        repository.flush();
+        return new Solicitud(solicitud);
     }
 
+    @Transactional
     public Solicitud actualizarEstado(String codigo, EstadoSolicitud nuevoEstado) {
-        return repository.update(codigo, solicitud -> {
-            if (nuevoEstado == EstadoSolicitud.ASIGNADA && solicitud.getProfesionalAsignado() == null) {
-                throw new IllegalArgumentException("Asigna una profesional antes de continuar");
-            }
-            if (!transicionPermitida(solicitud.getEstado(), nuevoEstado)) {
-                throw new IllegalArgumentException("El cambio de estado solicitado no está permitido");
-            }
-            solicitud.setEstado(nuevoEstado);
-            return solicitud;
-        });
+        Solicitud solicitud = bloquear(codigo);
+        if (nuevoEstado == EstadoSolicitud.ASIGNADA && solicitud.getProfesionalAsignado() == null) {
+            throw new IllegalArgumentException("Asigna una profesional antes de continuar");
+        }
+        if (!transicionPermitida(solicitud.getEstado(), nuevoEstado)) {
+            throw new IllegalArgumentException("El cambio de estado solicitado no está permitido");
+        }
+        solicitud.setEstado(nuevoEstado);
+        repository.flush();
+        return new Solicitud(solicitud);
+    }
+
+    private Solicitud bloquear(String codigo) {
+        return CodigoRegistro.id(codigo, "SOL").flatMap(repository::findByIdParaActualizar)
+            .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada"));
+    }
+
+    @Transactional
+    public Solicitud actualizar(String codigo, Solicitud cambios) {
+        Solicitud actual = bloquear(codigo);
+        if (actual.getEstado() != EstadoSolicitud.PENDIENTE && actual.getEstado() != EstadoSolicitud.EN_EVALUACION) {
+            throw new IllegalArgumentException("Solo se pueden editar solicitudes pendientes o en evaluación");
+        }
+        validar(cambios);
+        actual.setNombreContacto(cambios.getNombreContacto());
+        actual.setTelefonoContacto(cambios.getTelefonoContacto());
+        actual.setNombrePaciente(cambios.getNombrePaciente());
+        actual.setEdadPaciente(cambios.getEdadPaciente());
+        actual.setTipoServicio(cambios.getTipoServicio());
+        actual.setDistrito(cambios.getDistrito());
+        actual.setFechaRequerida(cambios.getFechaRequerida());
+        actual.setTurno(cambios.getTurno());
+        actual.setDescripcion(cambios.getDescripcion());
+        repository.flush();
+        return new Solicitud(actual);
+    }
+
+    @Transactional
+    public void eliminar(String codigo) {
+        Solicitud actual = bloquear(codigo);
+        if (actual.getEstado() != EstadoSolicitud.PENDIENTE && actual.getEstado() != EstadoSolicitud.CANCELADA) {
+            throw new IllegalArgumentException("Solo se pueden eliminar solicitudes pendientes o canceladas");
+        }
+        repository.delete(actual);
+        repository.flush();
     }
 
     private boolean transicionPermitida(EstadoSolicitud actual, EstadoSolicitud siguiente) {

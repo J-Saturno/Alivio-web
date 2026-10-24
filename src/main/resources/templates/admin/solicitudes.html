@@ -89,6 +89,12 @@
             <td><button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
                 data-bs-target="#modalSolicitudDetalle"
                 th:attr="data-codigo=${solicitud.codigo},data-contacto=${solicitud.nombreContacto},data-telefono=${solicitud.telefonoContacto},data-paciente=${solicitud.nombrePaciente},data-edad=${solicitud.edadPaciente},data-servicio=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.tipoServicio, '_', ' ')))},data-distrito=${solicitud.distrito},data-fecha=${#temporals.format(solicitud.fechaRequerida, 'dd/MM/yyyy')},data-turno=${#strings.capitalize(#strings.toLowerCase(#strings.replace(solicitud.turno, '_', ' ')))},data-descripcion=${solicitud.descripcion},data-estado=${solicitud.estado},data-profesional=${solicitud.profesionalAsignado != null ? solicitud.profesionalAsignado.nombreCompleto : ''}">Revisar</button>
+              <a class="btn btn-sm btn-outline-secondary"
+                th:if="${solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).PENDIENTE or solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).EN_EVALUACION}"
+                th:href="@{/admin/solicitudes/{codigo}/editar(codigo=${solicitud.codigo})}">Editar</a>
+              <a class="btn btn-sm btn-outline-danger"
+                th:if="${solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).PENDIENTE or solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).CANCELADA}"
+                th:href="@{/admin/solicitudes/{codigo}/eliminar(codigo=${solicitud.codigo})}">Eliminar</a>
             </td>
           </tr>
         </tbody>

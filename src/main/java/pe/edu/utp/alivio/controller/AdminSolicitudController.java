@@ -1,9 +1,14 @@
 package pe.edu.utp.alivio.controller;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Solicitud;
+import pe.edu.utp.alivio.model.TipoServicio;
+import pe.edu.utp.alivio.model.TurnoAtencion;
 import pe.edu.utp.alivio.service.ProfesionalService;
 import pe.edu.utp.alivio.service.SolicitudService;
+import pe.edu.utp.alivio.service.SolicitudValidationException;
+import pe.edu.utp.alivio.web.SolicitudForm;
 
 @Controller
 @RequestMapping("/admin/solicitudes")
@@ -78,6 +87,94 @@ public class AdminSolicitudController {
             redirect.addFlashAttribute("error", mensaje);
         }
         return "redirect:/admin/solicitudes";
+    }
+
+    @GetMapping("/{codigo}/editar")
+    public String editar(@PathVariable String codigo, Model model, RedirectAttributes redirect) {
+        try {
+            Solicitud solicitud = solicitudes.buscarPorCodigo(codigo);
+            if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE
+                    && solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
+                throw new IllegalArgumentException("Solo se pueden editar solicitudes pendientes o en evaluación");
+            }
+            SolicitudForm form = new SolicitudForm();
+            form.setNombreContacto(solicitud.getNombreContacto());
+            form.setTelefonoContacto(solicitud.getTelefonoContacto());
+            form.setNombrePaciente(solicitud.getNombrePaciente());
+            form.setEdadPaciente(solicitud.getEdadPaciente());
+            form.setTipoServicio(solicitud.getTipoServicio());
+            form.setDistrito(solicitud.getDistrito());
+            form.setFechaRequerida(solicitud.getFechaRequerida());
+            form.setTurno(solicitud.getTurno());
+            form.setDescripcion(solicitud.getDescripcion());
+            model.addAttribute("solicitudForm", form);
+            return formulario(codigo, model);
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", error.getMessage());
+            return "redirect:/admin/solicitudes";
+        }
+    }
+
+    @PostMapping("/{codigo}/editar")
+    public String guardarEdicion(@PathVariable String codigo,
+                                @Valid @ModelAttribute("solicitudForm") SolicitudForm form,
+                                BindingResult binding, Model model, RedirectAttributes redirect) {
+        if (!binding.hasErrors()) {
+            try {
+                solicitudes.actualizar(codigo, form.toSolicitud());
+                redirect.addFlashAttribute("mensaje", "Solicitud " + codigo + " actualizada");
+                return "redirect:/admin/solicitudes";
+            } catch (SolicitudValidationException error) {
+                error.getErrores().forEach((campo, mensaje) -> binding.rejectValue(campo, "validacion", mensaje));
+            } catch (IllegalArgumentException error) {
+                model.addAttribute("error", error.getMessage());
+            }
+        }
+        Map<String, String> valoresRechazados = new HashMap<>();
+        binding.getFieldErrors().stream().filter(error -> error.isBindingFailure() && error.getRejectedValue() != null)
+            .forEach(error -> valoresRechazados.put(error.getField(), error.getRejectedValue().toString()));
+        model.addAttribute("valoresRechazados", valoresRechazados);
+        return formulario(codigo, model);
+    }
+
+    @GetMapping("/{codigo}/eliminar")
+    public String confirmarEliminacion(@PathVariable String codigo, Model model, RedirectAttributes redirect) {
+        try {
+            Solicitud solicitud = solicitudes.buscarPorCodigo(codigo);
+            if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE
+                    && solicitud.getEstado() != EstadoSolicitud.CANCELADA) {
+                throw new IllegalArgumentException("Solo se pueden eliminar solicitudes pendientes o canceladas");
+            }
+            model.addAttribute("titulo", "Eliminar solicitud " + codigo);
+            model.addAttribute("detalle", "Se eliminará la solicitud de " + solicitud.getNombrePaciente() + ".");
+            model.addAttribute("postAction", "/admin/solicitudes/" + solicitud.getCodigo() + "/eliminar");
+            model.addAttribute("volver", "/admin/solicitudes");
+            return "admin/confirmar-eliminacion";
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", error.getMessage());
+            return "redirect:/admin/solicitudes";
+        }
+    }
+
+    @PostMapping("/{codigo}/eliminar")
+    public String eliminar(@PathVariable String codigo, RedirectAttributes redirect) {
+        try {
+            solicitudes.eliminar(codigo);
+            redirect.addFlashAttribute("mensaje", "Solicitud " + codigo + " eliminada");
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", error.getMessage());
+        }
+        return "redirect:/admin/solicitudes";
+    }
+
+    private String formulario(String codigo, Model model) {
+        if (!model.containsAttribute("valoresRechazados")) {
+            model.addAttribute("valoresRechazados", Map.of());
+        }
+        model.addAttribute("codigo", codigo);
+        model.addAttribute("tiposServicio", TipoServicio.values());
+        model.addAttribute("turnos", TurnoAtencion.values());
+        return "admin/solicitud-formulario";
     }
 
     private long contar(List<Solicitud> solicitudes, EstadoSolicitud estado) {

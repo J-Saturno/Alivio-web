@@ -2,6 +2,7 @@ package pe.edu.utp.alivio.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,7 +48,7 @@ public class AdminProfesionalController {
     }
 
     @PostMapping
-    public String registrar(@ModelAttribute("nuevoProfesional") ProfesionalForm form,
+    public String registrar(@Valid @ModelAttribute("nuevoProfesional") ProfesionalForm form,
                             BindingResult binding, RedirectAttributes redirect) {
         if (binding.hasErrors()) {
             preservarError(form, binding, redirect, "registro", null, null);
@@ -63,7 +64,7 @@ public class AdminProfesionalController {
     }
 
     @PostMapping("/{codigo}")
-    public String actualizar(@PathVariable String codigo, @ModelAttribute("edicionProfesional") ProfesionalForm form,
+    public String actualizar(@PathVariable String codigo, @Valid @ModelAttribute("edicionProfesional") ProfesionalForm form,
                              BindingResult binding, RedirectAttributes redirect) {
         if (binding.hasErrors()) {
             preservarError(form, binding, redirect, "edicion", codigo, null);
@@ -95,10 +96,11 @@ public class AdminProfesionalController {
         Map<String, String> rechazados = new HashMap<>();
         Map<String, String> errores = new HashMap<>();
         for (FieldError fieldError : binding.getFieldErrors()) {
-            if (fieldError.getRejectedValue() != null) {
+            if (fieldError.isBindingFailure() && fieldError.getRejectedValue() != null) {
                 rechazados.put(fieldError.getField(), fieldError.getRejectedValue().toString());
             }
-            errores.put(fieldError.getField(), mensajeCampo(fieldError.getField()));
+            errores.putIfAbsent(fieldError.getField(), fieldError.isBindingFailure()
+                ? mensajeCampo(fieldError.getField()) : fieldError.getDefaultMessage());
         }
         if (mensajeServicio != null) {
             switch (mensajeServicio) {
@@ -117,8 +119,12 @@ public class AdminProfesionalController {
         if (codigo != null) redirect.addFlashAttribute("codigoEdicion", codigo);
         redirect.addFlashAttribute("valoresRechazados", rechazados);
         redirect.addFlashAttribute("erroresCampo", errores);
-        redirect.addFlashAttribute("error", mensajeServicio == null
-            ? "Revisa los campos señalados e inténtalo de nuevo" : mensajeServicio);
+        String mensaje = mensajeServicio;
+        if (mensaje == null) {
+            mensaje = errores.size() == 1 ? errores.values().iterator().next()
+                : "Revisa los campos señalados e inténtalo de nuevo";
+        }
+        redirect.addFlashAttribute("error", mensaje);
     }
 
     private String mensajeCampo(String campo) {

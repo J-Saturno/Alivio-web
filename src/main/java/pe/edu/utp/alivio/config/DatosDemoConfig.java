@@ -2,6 +2,7 @@ package pe.edu.utp.alivio.config;
 
 import java.time.LocalDate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pe.edu.utp.alivio.model.Profesional;
@@ -13,6 +14,7 @@ import pe.edu.utp.alivio.service.ProfesionalService;
 import pe.edu.utp.alivio.service.SolicitudService;
 
 @Configuration
+@ConditionalOnProperty(name = "alivio.demo.enabled", havingValue = "true")
 public class DatosDemoConfig {
     @Bean
     public CommandLineRunner datosDemo(ProfesionalService profesionales, SolicitudService solicitudes) {

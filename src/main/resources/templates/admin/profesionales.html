@@ -60,6 +60,8 @@
                 <form th:action="@{/admin/profesionales/{codigo}/disponibilidad(codigo=${profesional.codigo})}"
                   method="post"><button class="btn btn-sm btn-outline-secondary" type="submit"
                     th:text="${profesional.disponible} ? 'Marcar no disponible' : 'Marcar disponible'"></button></form>
+                <a class="btn btn-sm btn-outline-danger"
+                  th:href="@{/admin/profesionales/{codigo}/eliminar(codigo=${profesional.codigo})}">Eliminar</a>
               </div>
             </td>
           </tr>
