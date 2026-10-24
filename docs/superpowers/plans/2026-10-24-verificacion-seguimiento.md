@@ -54,7 +54,7 @@
 - [x] Revisar cambios independientemente y resolver hallazgos importantes.
 - [x] Repetir pruebas nuevas sobre PostgreSQL aislado y recorrido en navegador.
 - [x] Actualizar README y evidencia de verificación.
-- [ ] Publicar rama y pull request para revisión; no integrar a main sin autorización expresa.
+- [x] Publicar rama y pull request para revisión; no integrar a main sin autorización expresa.
 
 ## Evidencia final
 
@@ -64,3 +64,5 @@
 - La prueba concurrente falló primero por mezclar CANCELADA con historial PENDIENTE; se corrigió con instantánea REPEATABLE_READ y estado derivado del último evento. Revisión independiente posterior aprobada.
 - Navegador: login, asignación compatible, CV privado, seguimiento con dos estados, revisión incompleta rechazada y revisión ficticia completa registrada con autor y fecha. Anchos 360/768/1280 sin desbordamiento horizontal global en pantallas nuevas.
 - No hay envío automático de mensajes ni cambios automáticos de disponibilidad. Los datos usados fueron ficticios.
+
+- Entrega: rama codex/verificacion-seguimiento publicada; pull request en borrador https://github.com/J-Saturno/Alivio-web/pull/2. Instancia y base temporales detenidas/eliminadas después de verificar.
