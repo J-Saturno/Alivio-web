@@ -19,12 +19,14 @@ public class SolicitudService {
     private final SolicitudRepository repository;
     private final ProfesionalService profesionalService;
     private final CompatibilidadAsignacionService compatibilidad;
+    private final SeguimientoService seguimiento;
 
     public SolicitudService(SolicitudRepository repository, ProfesionalService profesionalService,
-            CompatibilidadAsignacionService compatibilidad) {
+            CompatibilidadAsignacionService compatibilidad, SeguimientoService seguimiento) {
         this.repository = repository;
         this.profesionalService = profesionalService;
         this.compatibilidad = compatibilidad;
+        this.seguimiento = seguimiento;
     }
 
     @Transactional
@@ -34,7 +36,17 @@ public class SolicitudService {
         nueva.setCodigo(null);
         nueva.setEstado(EstadoSolicitud.PENDIENTE);
         nueva.setProfesionalAsignado(null);
-        return new Solicitud(repository.saveAndFlush(nueva));
+        Solicitud guardada = repository.saveAndFlush(nueva);
+        seguimiento.registrarEvento(guardada);
+        return new Solicitud(guardada);
+    }
+
+    public record RegistroSolicitud(Solicitud solicitud, String token) {}
+
+    @Transactional
+    public RegistroSolicitud crearConSeguimiento(Solicitud solicitud) {
+        Solicitud creada = crear(solicitud);
+        return new RegistroSolicitud(creada, seguimiento.emitir(creada.getCodigo()));
     }
 
     public List<Solicitud> listar(String texto, EstadoSolicitud estado) {
@@ -68,6 +80,7 @@ public class SolicitudService {
         solicitud.setProfesionalAsignado(profesional);
         solicitud.setEstado(EstadoSolicitud.ASIGNADA);
         repository.flush();
+        seguimiento.registrarEvento(solicitud);
         return new Solicitud(solicitud);
     }
 
@@ -86,6 +99,7 @@ public class SolicitudService {
         }
         solicitud.setEstado(nuevoEstado);
         repository.flush();
+        seguimiento.registrarEvento(solicitud);
         return new Solicitud(solicitud);
     }
 
@@ -120,6 +134,7 @@ public class SolicitudService {
         if (actual.getEstado() != EstadoSolicitud.PENDIENTE && actual.getEstado() != EstadoSolicitud.CANCELADA) {
             throw new IllegalArgumentException("Solo se pueden eliminar solicitudes pendientes o canceladas");
         }
+        seguimiento.eliminarDatos(actual);
         repository.delete(actual);
         repository.flush();
     }

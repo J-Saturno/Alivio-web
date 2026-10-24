@@ -21,6 +21,12 @@
     </header>
     <div th:if="${mensaje}" class="alert alert-success" role="status" aria-live="polite" th:text="${mensaje}"></div>
     <div th:if="${error}" class="alert alert-danger" role="alert" aria-live="polite" th:text="${error}"></div>
+    <section th:if="${enlaceSeguimiento}" class="alert alert-info" aria-label="Enlace privado de seguimiento">
+      <h2 class="h5">Comparte el enlace con la familia</h2>
+      <p>Este enlace privado vence en 30 días. Se muestra solo al generarlo: usa «Copiar dirección del enlace» y compártelo por el canal de contacto habitual.</p>
+      <p class="text-break"><a th:href="${enlaceSeguimiento}" th:text="${enlaceSeguimiento}" rel="noreferrer"></a></p>
+      <p class="mb-0">Cualquier persona con el enlace podrá consultar los estados. Renovarlo invalida el enlace anterior.</p>
+    </section>
 
     <section aria-label="Resumen de solicitudes" class="row g-3 mb-4">
       <div class="col-12 col-sm-4">
@@ -95,6 +101,16 @@
               <a class="btn btn-sm btn-outline-danger"
                 th:if="${solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).PENDIENTE or solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).CANCELADA}"
                 th:href="@{/admin/solicitudes/{codigo}/eliminar(codigo=${solicitud.codigo})}">Eliminar</a>
+              <details class="mt-2">
+                <summary>Seguimiento familiar</summary>
+                <p class="small mt-2 mb-2">Genera un enlace privado válido por 30 días. Renovarlo invalida el anterior; revocarlo cancela el acceso de la familia.</p>
+                <form th:action="@{/admin/solicitudes/{codigo}/seguimiento/emitir(codigo=${solicitud.codigo})}" method="post" class="mb-2">
+                  <button type="submit" class="btn btn-sm btn-outline-primary">Generar / renovar enlace</button>
+                </form>
+                <form th:action="@{/admin/solicitudes/{codigo}/seguimiento/revocar(codigo=${solicitud.codigo})}" method="post">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Revocar enlace</button>
+                </form>
+              </details>
             </td>
           </tr>
         </tbody>

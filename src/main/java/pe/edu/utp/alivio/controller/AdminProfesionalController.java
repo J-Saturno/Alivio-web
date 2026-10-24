@@ -16,20 +16,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.service.ProfesionalService;
+import pe.edu.utp.alivio.service.VerificacionService;
 import pe.edu.utp.alivio.web.ProfesionalForm;
 
 @Controller
 @RequestMapping("/admin/profesionales")
 public class AdminProfesionalController {
     private final ProfesionalService service;
+    private final VerificacionService verificaciones;
 
-    public AdminProfesionalController(ProfesionalService service) {
+    public AdminProfesionalController(ProfesionalService service, VerificacionService verificaciones) {
         this.service = service;
+        this.verificaciones = verificaciones;
     }
 
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("profesionales", service.listarTodos());
+        model.addAttribute("estadosVerificacion", verificaciones.estadosActuales());
         model.addAttribute("tiposProfesional", TipoProfesional.values());
         model.addAttribute("especialidades", TipoServicio.values());
         if (!model.containsAttribute("nuevoProfesional")) {

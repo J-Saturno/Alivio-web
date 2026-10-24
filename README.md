@@ -43,6 +43,20 @@ La base inicia vacía. Para cargar los tres profesionales y dos solicitudes fict
 - Administración: inicio de sesión en `/admin/ingresar`, revisión privada de postulaciones y descarga del CV como adjunto. Una aceptación crea el registro profesional como no disponible. La decisión requiere nota interna y evita aprobaciones duplicadas.
 - La llamada o el mensaje de aceptación y la incorporación al grupo de WhatsApp son tareas manuales del equipo de Alivio.
 
+## Verificaciones profesionales
+
+Desde el listado de profesionales se puede abrir su historial privado de verificaciones. Cada revisión registra comprobación de identidad, credencial y referencias, experiencia declarada, referencia de credencial, evidencia, resultado, fecha y usuario autenticado. Una aprobación requiere las tres comprobaciones y evidencia escrita. Recibir un CV o aceptar una postulación no marca a la profesional como verificada.
+
+Las revisiones se agregan al historial; no se editan ni se borran desde la aplicación. Registrar una revisión no activa la disponibilidad ni cambia asignaciones. El registro de una profesional con verificaciones no se puede eliminar. Estas anotaciones documentan revisiones humanas, no una consulta automática a registros oficiales.
+
+## Seguimiento para la familia
+
+Al registrar una solicitud se muestra un enlace privado con vigencia de 30 días. La página presenta únicamente código, estado, fechas e historial de estados; no incluye nombres, teléfonos, descripción de atención, CV ni notas administrativas. Solo se guarda el hash del token aleatorio en PostgreSQL.
+
+El coordinador puede generar o renovar el enlace y revocarlo desde la tabla de solicitudes. El enlace se muestra una sola vez; renovarlo invalida el anterior. Para solicitudes antiguas, el historial comienza con el estado conocido al empezar a registrar eventos, sin reconstruir cambios anteriores. No hay avisos automáticos: compartir el enlace y comunicar cambios sigue siendo tarea del equipo.
+
+Las respuestas de seguimiento no se almacenan en caché ni se indexan y no envían referencias de navegación. La página no carga recursos externos. En un despliegue público se debe usar HTTPS, evitar registrar rutas secretas en logs del proxy y compartir los enlaces por un canal privado.
+
 ## Acceso administrativo
 
 Desde la portada seleccionar `Administración` e ingresar con las credenciales configuradas. Las páginas y descargas bajo `/admin/**` requieren sesión. Los CV no se publican como archivos estáticos.
@@ -63,4 +77,6 @@ El Dockerfile compila el ejecutable. Al ejecutar el contenedor, pasar las variab
 
 ### Última verificación
 
-24 de octubre de 2026: 97 pruebas Java sobre H2 y dos pruebas JavaScript aprobadas; paquete ejecutable compilado. Las pruebas nuevas cubren seguridad, postulación con PDF, revisión administrativa, compatibilidad de asignación y dos coordinadores intentando reservar el mismo turno. Estas mejoras todavía no se probaron sobre PostgreSQL real ni se revisaron visualmente en varios tamaños de pantalla. La conexión al PostgreSQL personal requiere completar el archivo local.
+24 de octubre de 2026: Maven package completado con 117 pruebas Java sobre H2 y dos pruebas JavaScript aprobadas. Ocho pruebas nuevas de verificaciones, seguimiento, vencimiento y lectura concurrente también pasaron sobre una base temporal de PostgreSQL 18. Antes de esta ampliación se ejecutaron otras 37 pruebas de persistencia/asignación/concurrencia sobre PostgreSQL.
+
+En navegador, con autenticación y CSRF activos, se comprobaron asignación compatible, postulación con PDF privado, generación del enlace familiar, cambio visible de estado, rechazo de revisión profesional incompleta y registro de una revisión ficticia con autor/fecha. Las dos pantallas nuevas se revisaron a 360, 768 y 1280 px sin desbordamiento horizontal global. Los datos de prueba se mantuvieron en una base temporal separada; no se enviaron mensajes ni se realizaron verificaciones reales de personas.

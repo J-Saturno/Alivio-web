@@ -25,6 +25,31 @@ class AdminSecurityTest {
     @Autowired MockMvc mvc;
 
     @Test
+    void solicitudPublicaGeneraEnlacePrivadoConCsrfActivo() throws Exception {
+        MvcResult pagina = mvc.perform(get("/")).andExpect(status().isOk()).andReturn();
+        CsrfToken token = (CsrfToken) pagina.getRequest().getAttribute("_csrf");
+        MockHttpSession sesion = (MockHttpSession) pagina.getRequest().getSession(false);
+        MvcResult registro = mvc.perform(post("/solicitudes").session(sesion)
+            .param(token.getParameterName(), token.getToken())
+            .param("nombreContacto", "Contacto confidencial")
+            .param("telefonoContacto", "987654321")
+            .param("nombrePaciente", "Paciente confidencial")
+            .param("tipoServicio", "ADULTO_MAYOR")
+            .param("distrito", "Surco")
+            .param("fechaRequerida", java.time.LocalDate.now().plusDays(1).toString())
+            .param("turno", "MANANA").param("descripcion", "Necesidad confidencial"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(flash().attributeExists("solicitudCreada", "enlaceSeguimiento"))
+            .andReturn();
+        String enlace = (String) registro.getFlashMap().get("enlaceSeguimiento");
+        mvc.perform(get(enlace))
+            .andExpect(status().isOk())
+            .andExpect(header().string("Cache-Control", "no-store"))
+            .andExpect(content().string(org.hamcrest.Matchers.not(
+                org.hamcrest.Matchers.containsString("confidencial"))));
+    }
+
+    @Test
     void visitanteDebeIniciarSesionParaVerAdministracion() throws Exception {
         mvc.perform(get("/admin/solicitudes"))
             .andExpect(status().is3xxRedirection())

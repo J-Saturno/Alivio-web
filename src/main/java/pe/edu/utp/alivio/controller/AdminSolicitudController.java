@@ -20,6 +20,7 @@ import pe.edu.utp.alivio.model.Solicitud;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.model.TurnoAtencion;
 import pe.edu.utp.alivio.service.SolicitudService;
+import pe.edu.utp.alivio.service.SeguimientoService;
 import pe.edu.utp.alivio.service.SolicitudValidationException;
 import pe.edu.utp.alivio.web.SolicitudForm;
 
@@ -27,9 +28,11 @@ import pe.edu.utp.alivio.web.SolicitudForm;
 @RequestMapping("/admin/solicitudes")
 public class AdminSolicitudController {
     private final SolicitudService solicitudes;
+    private final SeguimientoService seguimiento;
 
-    public AdminSolicitudController(SolicitudService solicitudes) {
+    public AdminSolicitudController(SolicitudService solicitudes, SeguimientoService seguimiento) {
         this.solicitudes = solicitudes;
+        this.seguimiento = seguimiento;
     }
 
     @GetMapping
@@ -67,6 +70,29 @@ public class AdminSolicitudController {
     }
 
     public record Candidata(String codigo, String nombre, String zonaCobertura) {}
+
+    @PostMapping("/{codigo}/seguimiento/emitir")
+    public String emitirSeguimiento(@PathVariable String codigo, RedirectAttributes redirect) {
+        try {
+            String token = seguimiento.emitir(codigo);
+            redirect.addFlashAttribute("enlaceSeguimiento", "/seguimiento/" + token);
+            redirect.addFlashAttribute("mensaje", "Enlace privado generado para la solicitud " + codigo);
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", "Solicitud no encontrada");
+        }
+        return "redirect:/admin/solicitudes";
+    }
+
+    @PostMapping("/{codigo}/seguimiento/revocar")
+    public String revocarSeguimiento(@PathVariable String codigo, RedirectAttributes redirect) {
+        try {
+            seguimiento.revocar(codigo);
+            redirect.addFlashAttribute("mensaje", "Enlace de seguimiento revocado para la solicitud " + codigo);
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", "Solicitud no encontrada");
+        }
+        return "redirect:/admin/solicitudes";
+    }
 
     @PostMapping("/{codigo}/asignar")
     public String asignar(@PathVariable String codigo,

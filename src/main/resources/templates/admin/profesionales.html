@@ -35,13 +35,14 @@
             <th scope="col">Tipo</th>
             <th scope="col">Zona</th>
             <th scope="col">Especialidad</th>
+            <th scope="col">Verificación</th>
             <th scope="col">Disponibilidad</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr th:if="${#lists.isEmpty(profesionales)}">
-            <td colspan="7">Todavía no hay profesionales registrados.</td>
+            <td colspan="8">Todavía no hay profesionales registrados.</td>
           </tr>
           <tr th:each="profesional : ${profesionales}">
             <td th:text="${profesional.codigo}"></td>
@@ -51,10 +52,11 @@
             </td>
             <td th:text="${profesional.zonaCobertura}"></td>
             <td th:text="${#strings.replace(profesional.especialidad, '_', ' ')}"></td>
+            <td><span class="badge text-bg-light" th:text="${estadosVerificacion[profesional.codigo] ?: 'PENDIENTE'}"></span></td>
             <td><span class="badge" th:classappend="${profesional.disponible} ? 'text-bg-success' : 'text-bg-secondary'"
                 th:text="${profesional.disponible} ? 'Disponible' : 'No disponible'"></span></td>
             <td>
-              <div class="d-flex flex-wrap gap-2"><button class="btn btn-sm btn-outline-primary" type="button"
+              <div class="d-flex flex-wrap gap-2"><a class="btn btn-sm btn-outline-primary" th:href="@{/admin/profesionales/{codigo}/verificaciones(codigo=${profesional.codigo})}">Verificaciones</a><button class="btn btn-sm btn-outline-primary" type="button"
                   data-bs-toggle="modal" data-bs-target="#modalEditarProfesional"
                   th:attr="data-codigo=${profesional.codigo},data-nombre-completo=${profesional.nombreCompleto},data-tipo=${profesional.tipoProfesional},data-telefono=${profesional.telefono},data-zona-cobertura=${profesional.zonaCobertura},data-especialidad=${profesional.especialidad},data-disponible=${profesional.disponible}">Editar</button>
                 <form th:action="@{/admin/profesionales/{codigo}/disponibilidad(codigo=${profesional.codigo})}"
