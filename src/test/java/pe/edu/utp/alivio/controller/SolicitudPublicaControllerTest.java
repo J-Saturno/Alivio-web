@@ -78,7 +78,7 @@ class SolicitudPublicaControllerTest {
     }
 
     @Test
-    void muestraServiciosAprobadosYAccesoDemo() throws Exception {
+    void muestraServiciosAprobadosYEnlacesDeAcceso() throws Exception {
         mvc.perform(get("/"))
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Cuidado del adulto mayor")))
@@ -86,7 +86,8 @@ class SolicitudPublicaControllerTest {
             .andExpect(content().string(containsString("Inyectables y tratamientos indicados")))
             .andExpect(content().string(containsString("Acompañamiento domiciliario")))
             .andExpect(content().string(containsString("Cuidado del adulto mayor</option>")))
-            .andExpect(content().string(containsString("Acceso administrativo - Demo")))
+            .andExpect(content().string(containsString("Trabaja con Alivio")))
+            .andExpect(content().string(containsString("Administración")))
             .andExpect(content().string(containsString("id=\"modalSolicitud\"")));
     }
 

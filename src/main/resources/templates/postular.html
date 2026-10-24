@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Postúlate como profesional de cuidado domiciliario en Alivio.">
+  <title>Trabaja con Alivio | Postulación profesional</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/alivio.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/layout :: navbar}"></header>
+  <main class="container py-5" style="max-width: 48rem">
+    <p class="eyebrow">Únete a Alivio</p>
+    <h1>Postulación profesional</h1>
+    <p>Cuéntanos sobre tu experiencia y envía tu CV. Revisaremos tu información y te contactaremos por llamada o mensaje. Enviar este formulario no significa que ya estés aceptada.</p>
+    <div th:if="${mensaje}" class="alert alert-success" role="status" th:text="${mensaje}"></div>
+    <form th:action="@{/postulaciones}" method="post" enctype="multipart/form-data" th:object="${postulacionForm}">
+      <div class="mb-3"><label for="nombreCompleto" class="form-label">Nombre completo</label>
+        <input id="nombreCompleto" class="form-control" th:field="*{nombreCompleto}" maxlength="100" required th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{nombreCompleto}"></div></div>
+      <div class="mb-3"><label for="tipoProfesional" class="form-label">Tipo profesional</label>
+        <select id="tipoProfesional" class="form-select" th:field="*{tipoProfesional}" required th:errorclass="is-invalid">
+          <option value="">Selecciona</option><option th:each="tipo : ${tiposProfesional}" th:value="${tipo}"
+            th:text="${tipo == T(pe.edu.utp.alivio.model.TipoProfesional).LICENCIADA ? 'Licenciada en enfermería' : 'Técnica en enfermería'}"></option>
+        </select><div class="invalid-feedback" th:errors="*{tipoProfesional}"></div></div>
+      <div class="mb-3"><label for="telefono" class="form-label">Celular</label>
+        <input id="telefono" class="form-control" type="tel" inputmode="numeric" th:field="*{telefono}" pattern="9[0-9]{8}" maxlength="9" required th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{telefono}"></div></div>
+      <div class="mb-3"><label for="zonaCobertura" class="form-label">Distritos donde puedes atender (separados por comas)</label>
+        <input id="zonaCobertura" class="form-control" th:field="*{zonaCobertura}" maxlength="80" required th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{zonaCobertura}"></div></div>
+      <div class="mb-3"><label for="especialidad" class="form-label">Especialidad principal</label>
+        <select id="especialidad" class="form-select" th:field="*{especialidad}" required th:errorclass="is-invalid">
+          <option value="">Selecciona</option><option th:each="servicio : ${especialidades}" th:value="${servicio}"
+            th:text="${#strings.replace(servicio, '_', ' ')}"></option>
+        </select><div class="invalid-feedback" th:errors="*{especialidad}"></div></div>
+      <div class="mb-3"><label for="cv" class="form-label">CV en PDF</label>
+        <input id="cv" name="cv" class="form-control" type="file" accept="application/pdf,.pdf" required th:classappend="${errorCv != null} ? 'is-invalid' : ''">
+        <div class="form-text">Máximo 5 MB. Solo el equipo administrativo puede consultar el archivo.</div>
+        <div class="invalid-feedback" th:if="${errorCv}" th:text="${errorCv}"></div></div>
+      <button class="btn btn-alivio" type="submit">Enviar postulación</button>
+    </form>
+  </main>
+  <footer th:replace="~{fragments/layout :: footer}"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -53,7 +53,39 @@ document
 
     const asignacion = modal.querySelector('[data-form="asignar"]');
     asignacion.hidden = source.dataset.estado !== "EN_EVALUACION";
-    asignacion.querySelector("select").value = "";
+    const seleccion = asignacion.querySelector("select");
+    const botonAsignar = asignacion.querySelector('button[type="submit"]');
+    const ayuda = asignacion.querySelector("#asignacionAyuda");
+    seleccion.length = 1;
+    seleccion.value = "";
+    botonAsignar.disabled = true;
+    modal.dataset.codigoActual = source.dataset.codigo;
+    if (!asignacion.hidden) {
+      ayuda.textContent = "Buscando profesionales compatibles…";
+      fetch(`/admin/solicitudes/${codigo}/candidatas`, { credentials: "same-origin" })
+        .then((respuesta) => {
+          if (!respuesta.ok) throw new Error("No se pudo cargar la lista");
+          return respuesta.json();
+        })
+        .then((candidatas) => {
+          if (modal.dataset.codigoActual !== source.dataset.codigo) return;
+          for (const candidata of candidatas) {
+            const opcion = document.createElement("option");
+            opcion.value = candidata.codigo;
+            opcion.textContent = `${candidata.nombre} · ${candidata.zonaCobertura}`;
+            seleccion.appendChild(opcion);
+          }
+          botonAsignar.disabled = candidatas.length === 0;
+          ayuda.textContent = candidatas.length
+            ? `${candidatas.length} profesional(es) compatible(s) por especialidad, distrito y turno.`
+            : "No hay profesionales compatibles. Revisa la especialidad, la zona y las atenciones del día.";
+        })
+        .catch(() => {
+          if (modal.dataset.codigoActual === source.dataset.codigo) {
+            ayuda.textContent = "No pudimos cargar candidatas. Cierra y vuelve a abrir la solicitud.";
+          }
+        });
+    }
     const transiciones = {
       PENDIENTE: ["EN_EVALUACION", "CANCELADA"],
       EN_EVALUACION: ["CANCELADA"],

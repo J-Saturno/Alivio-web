@@ -18,10 +18,13 @@ import pe.edu.utp.alivio.repository.SolicitudRepository;
 public class SolicitudService {
     private final SolicitudRepository repository;
     private final ProfesionalService profesionalService;
+    private final CompatibilidadAsignacionService compatibilidad;
 
-    public SolicitudService(SolicitudRepository repository, ProfesionalService profesionalService) {
+    public SolicitudService(SolicitudRepository repository, ProfesionalService profesionalService,
+            CompatibilidadAsignacionService compatibilidad) {
         this.repository = repository;
         this.profesionalService = profesionalService;
+        this.compatibilidad = compatibilidad;
     }
 
     @Transactional
@@ -60,10 +63,16 @@ public class SolicitudService {
         if (solicitud.getEstado() != EstadoSolicitud.EN_EVALUACION) {
             throw new IllegalArgumentException("La solicitud debe estar en evaluación antes de asignar");
         }
+        String motivo = compatibilidad.motivoIncompatibilidad(solicitud, profesional);
+        if (motivo != null) throw new IllegalArgumentException(motivo);
         solicitud.setProfesionalAsignado(profesional);
         solicitud.setEstado(EstadoSolicitud.ASIGNADA);
         repository.flush();
         return new Solicitud(solicitud);
+    }
+
+    public List<Profesional> candidatasCompatibles(String codigo) {
+        return compatibilidad.candidatas(buscarPorCodigo(codigo));
     }
 
     @Transactional

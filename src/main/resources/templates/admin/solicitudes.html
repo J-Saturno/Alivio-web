@@ -13,7 +13,7 @@
   <main class="container py-5">
     <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4"><a th:href="@{/}">Inicio</a><a
         th:href="@{/admin/solicitudes}" aria-current="page">Solicitudes</a><a
-        th:href="@{/admin/profesionales}">Profesionales</a></nav>
+        th:href="@{/admin/profesionales}">Profesionales</a><a th:href="@{/admin/postulaciones}">Postulaciones</a></nav>
     <header class="mb-4">
       <p class="eyebrow">Administración</p>
       <h1>Solicitudes de atención</h1>
@@ -139,16 +139,12 @@
           <form data-form="asignar" th:action="@{/admin/solicitudes/{codigo}/asignar(codigo='pendiente')}" method="post"
             class="border-top pt-3 mb-4">
             <h3 class="h5">Asignar profesional</h3>
-            <p class="form-help" id="asignacionAyuda">Disponible cuando la solicitud esté en evaluación.</p><label
-              class="form-label" for="profesionalCodigo">Profesional disponible</label><select id="profesionalCodigo"
+            <p class="form-help" id="asignacionAyuda" aria-live="polite">Buscaremos profesionales compatibles para esta solicitud.</p><label
+              class="form-label" for="profesionalCodigo">Profesional compatible</label><select id="profesionalCodigo"
               name="profesionalCodigo" class="form-select mb-2" aria-describedby="asignacionAyuda" required>
               <option value="">Selecciona una profesional</option>
-              <option th:each="profesional : ${profesionalesDisponibles}" th:value="${profesional.codigo}"
-                th:text="${profesional.nombreCompleto + ' · ' + profesional.zonaCobertura}"></option>
             </select>
-            <p th:if="${#lists.isEmpty(profesionalesDisponibles)}" class="form-help">No hay profesionales disponibles.
-              Actualiza su disponibilidad en el registro de profesionales.</p><button class="btn btn-alivio"
-              type="submit" th:disabled="${#lists.isEmpty(profesionalesDisponibles)}">Asignar</button>
+            <button class="btn btn-alivio" type="submit" disabled>Asignar</button>
           </form>
           <form data-form="estado" th:action="@{/admin/solicitudes/{codigo}/estado(codigo='pendiente')}" method="post"
             class="border-top pt-3">

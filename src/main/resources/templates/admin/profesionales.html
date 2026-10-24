@@ -13,7 +13,7 @@
   <main class="container py-5">
     <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4"><a th:href="@{/}">Inicio</a><a
         th:href="@{/admin/solicitudes}">Solicitudes</a><a th:href="@{/admin/profesionales}"
-        aria-current="page">Profesionales</a></nav>
+        aria-current="page">Profesionales</a><a th:href="@{/admin/postulaciones}">Postulaciones</a></nav>
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
       <div>
         <p class="eyebrow">Administración</p>
@@ -115,7 +115,7 @@
                 th:if="${modalError == 'registro' and erroresCampo['telefono'] != null}"
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
-            <div class="mb-3"><label class="form-label" for="nuevaZona">Distrito o zona de cobertura</label><input
+            <div class="mb-3"><label class="form-label" for="nuevaZona">Distritos de cobertura (separados por comas)</label><input
                 class="form-control" id="nuevaZona" th:field="*{zonaCobertura}"
                 th:attr="aria-describedby=${modalError == 'registro' and erroresCampo['zonaCobertura'] != null ? 'nuevaZonaError' : null}"
                 required>
@@ -203,7 +203,7 @@
                 th:if="${modalError == 'edicion' and erroresCampo['telefono'] != null}"
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
-            <div class="mb-3"><label class="form-label" for="editarZona">Distrito o zona de cobertura</label><input
+            <div class="mb-3"><label class="form-label" for="editarZona">Distritos de cobertura (separados por comas)</label><input
                 class="form-control" id="editarZona" th:field="*{zonaCobertura}"
                 th:attr="aria-describedby=${modalError == 'edicion' and erroresCampo['zonaCobertura'] != null ? 'editarZonaError' : null}"
                 required>
