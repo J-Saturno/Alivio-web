@@ -120,6 +120,71 @@ class SolicitudServiceTest {
     }
 
     @Test
+    void rechazaEspecialidadOZonaQueNoCoincidenAunqueEsteDisponible() {
+        Solicitud solicitud = service.crear(solicitudValida());
+        service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        Profesional otraEspecialidad = profesional(true);
+        otraEspecialidad.setEspecialidad(TipoServicio.INYECTABLES_TRATAMIENTOS);
+        Profesional fueraDeZona = profesional(true);
+        fueraDeZona.setZonaCobertura("Surcon");
+        Profesional p1 = profesionalService.registrar(otraEspecialidad);
+        Profesional p2 = profesionalService.registrar(fueraDeZona);
+
+        assertThrows(IllegalArgumentException.class, () -> service.asignar(solicitud.getCodigo(), p1.getCodigo()));
+        assertThrows(IllegalArgumentException.class, () -> service.asignar(solicitud.getCodigo(), p2.getCodigo()));
+        assertNull(service.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado());
+    }
+
+    @Test
+    void aceptaDistritoCompletoDentroDeVariasZonasConTildes() {
+        Profesional profesional = profesional(true);
+        profesional.setZonaCobertura("San Borja, Súrcó");
+        profesional = profesionalService.registrar(profesional);
+        Solicitud solicitud = service.crear(solicitudValida());
+        service.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+
+        assertEquals(EstadoSolicitud.ASIGNADA,
+            service.asignar(solicitud.getCodigo(), profesional.getCodigo()).getEstado());
+    }
+
+    @Test
+    void evitaDosAtencionesSuperpuestasElMismoDiaPeroPermiteTurnoDistinto() {
+        Profesional profesional = profesionalService.registrar(profesional(true));
+        Solicitud primera = service.crear(solicitudValida());
+        Solicitud segunda = service.crear(solicitudValida());
+        Solicitud tarde = solicitudValida();
+        tarde.setTurno(TurnoAtencion.TARDE);
+        Solicitud tercera = service.crear(tarde);
+        service.actualizarEstado(primera.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        service.actualizarEstado(segunda.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        service.actualizarEstado(tercera.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        service.asignar(primera.getCodigo(), profesional.getCodigo());
+
+        assertThrows(IllegalArgumentException.class,
+            () -> service.asignar(segunda.getCodigo(), profesional.getCodigo()));
+        assertEquals(EstadoSolicitud.ASIGNADA,
+            service.asignar(tercera.getCodigo(), profesional.getCodigo()).getEstado());
+    }
+
+    @Test
+    void turnoLargoBloqueaOtrosTurnosYCancelacionLiberaLaFecha() {
+        Profesional profesional = profesionalService.registrar(profesional(true));
+        Solicitud larga = solicitudValida();
+        larga.setTurno(TurnoAtencion.DOCE_HORAS);
+        Solicitud primera = service.crear(larga);
+        Solicitud segunda = service.crear(solicitudValida());
+        service.actualizarEstado(primera.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        service.actualizarEstado(segunda.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        service.asignar(primera.getCodigo(), profesional.getCodigo());
+
+        assertThrows(IllegalArgumentException.class,
+            () -> service.asignar(segunda.getCodigo(), profesional.getCodigo()));
+        service.actualizarEstado(primera.getCodigo(), EstadoSolicitud.CANCELADA);
+        assertEquals(EstadoSolicitud.ASIGNADA,
+            service.asignar(segunda.getCodigo(), profesional.getCodigo()).getEstado());
+    }
+
+    @Test
     void rechazaAsignacionAntesDeEvaluacionOSiProfesionalNoDisponible() {
         Profesional disponible = profesionalService.registrar(profesional(true));
         Profesional noDisponible = profesionalService.registrar(profesional(false));

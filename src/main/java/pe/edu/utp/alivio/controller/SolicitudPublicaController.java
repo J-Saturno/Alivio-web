@@ -40,8 +40,10 @@ public class SolicitudPublicaController {
             return "redirect:/";
         }
         try {
-            Solicitud creada = service.crear(form.toSolicitud());
+            var registro = service.crearConSeguimiento(form.toSolicitud());
+            Solicitud creada = registro.solicitud();
             redirect.addFlashAttribute("solicitudCreada", creada.getCodigo());
+            redirect.addFlashAttribute("enlaceSeguimiento", "/seguimiento/" + registro.token());
         } catch (SolicitudValidationException error) {
             mostrarErrores(redirect, form, error.getErrores(), Map.of());
         } catch (IllegalArgumentException error) {

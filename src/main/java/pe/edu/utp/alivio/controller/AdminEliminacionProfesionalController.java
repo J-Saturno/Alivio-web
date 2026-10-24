@@ -25,7 +25,7 @@ public class AdminEliminacionProfesionalController {
             Profesional profesional = profesionales.buscarPorCodigo(codigo);
             model.addAttribute("titulo", "Eliminar profesional " + profesional.getCodigo());
             model.addAttribute("detalle", "Se eliminará el registro de " + profesional.getNombreCompleto()
-                + ". Solo se permite si no tiene solicitudes vinculadas.");
+                + ". Solo se permite si no tiene solicitudes vinculadas ni historial de verificaciones.");
             model.addAttribute("postAction", "/admin/profesionales/" + profesional.getCodigo() + "/eliminar");
             model.addAttribute("volver", "/admin/profesionales");
             return "admin/confirmar-eliminacion";

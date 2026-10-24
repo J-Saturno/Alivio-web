@@ -9,16 +9,19 @@ import pe.edu.utp.alivio.model.CodigoRegistro;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.repository.ProfesionalRepository;
 import pe.edu.utp.alivio.repository.SolicitudRepository;
+import pe.edu.utp.alivio.repository.VerificacionRepository;
 
 @Service
 @Transactional(readOnly = true)
 public class ProfesionalService {
     private final ProfesionalRepository repository;
     private final SolicitudRepository solicitudes;
+    private final VerificacionRepository verificaciones;
 
-    public ProfesionalService(ProfesionalRepository repository, SolicitudRepository solicitudes) {
+    public ProfesionalService(ProfesionalRepository repository, SolicitudRepository solicitudes, VerificacionRepository verificaciones) {
         this.repository = repository;
         this.solicitudes = solicitudes;
+        this.verificaciones = verificaciones;
     }
 
     @Transactional
@@ -72,6 +75,9 @@ public class ProfesionalService {
     @Transactional
     public void eliminar(String codigo) {
         Profesional profesional = bloquear(codigo);
+        if (verificaciones.existsByProfesionalId(profesional.getId())) {
+            throw new IllegalArgumentException("No se puede eliminar una profesional con historial de verificaciones");
+        }
         if (solicitudes.existsByProfesionalAsignadoId(profesional.getId())) {
             throw new IllegalArgumentException("No se puede eliminar una profesional vinculada a solicitudes");
         }

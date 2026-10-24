@@ -265,6 +265,8 @@
         <div class="modal-body">
           <p>Gracias por confiar en Alivio. Nos comunicaremos contigo para evaluar y coordinar la atención.</p>
           <p>Tu código es <strong th:text="${solicitudCreada}"></strong>.</p>
+          <p th:if="${enlaceSeguimiento}"><a th:href="@{${enlaceSeguimiento}}" referrerpolicy="no-referrer">Abrir seguimiento privado</a></p>
+          <p th:if="${enlaceSeguimiento}" class="form-text">Guarda el enlace para consultar los estados durante 30 días. Compártelo solo con las personas que acompañan esta solicitud.</p>
         </div>
         <div class="modal-footer"><button class="btn btn-alivio" type="button"
             data-bs-dismiss="modal">Entendido</button></div>

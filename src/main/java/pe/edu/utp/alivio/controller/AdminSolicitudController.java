@@ -6,6 +6,7 @@ import java.util.Map;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,8 +19,8 @@ import pe.edu.utp.alivio.model.EstadoSolicitud;
 import pe.edu.utp.alivio.model.Solicitud;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.model.TurnoAtencion;
-import pe.edu.utp.alivio.service.ProfesionalService;
 import pe.edu.utp.alivio.service.SolicitudService;
+import pe.edu.utp.alivio.service.SeguimientoService;
 import pe.edu.utp.alivio.service.SolicitudValidationException;
 import pe.edu.utp.alivio.web.SolicitudForm;
 
@@ -27,11 +28,11 @@ import pe.edu.utp.alivio.web.SolicitudForm;
 @RequestMapping("/admin/solicitudes")
 public class AdminSolicitudController {
     private final SolicitudService solicitudes;
-    private final ProfesionalService profesionales;
+    private final SeguimientoService seguimiento;
 
-    public AdminSolicitudController(SolicitudService solicitudes, ProfesionalService profesionales) {
+    public AdminSolicitudController(SolicitudService solicitudes, SeguimientoService seguimiento) {
         this.solicitudes = solicitudes;
-        this.profesionales = profesionales;
+        this.seguimiento = seguimiento;
     }
 
     @GetMapping
@@ -47,7 +48,6 @@ public class AdminSolicitudController {
         }
         List<Solicitud> todas = solicitudes.listar("", null);
         model.addAttribute("solicitudes", solicitudes.listar(q, seleccionado));
-        model.addAttribute("profesionalesDisponibles", profesionales.listarDisponibles());
         model.addAttribute("estados", EstadoSolicitud.values());
         model.addAttribute("q", q);
         model.addAttribute("estadoSeleccionado", seleccionado);
@@ -55,6 +55,43 @@ public class AdminSolicitudController {
         model.addAttribute("asignadas", contar(todas, EstadoSolicitud.ASIGNADA));
         model.addAttribute("finalizadas", contar(todas, EstadoSolicitud.FINALIZADA));
         return "admin/solicitudes";
+    }
+
+    @GetMapping("/{codigo}/candidatas")
+    public ResponseEntity<List<Candidata>> candidatas(@PathVariable String codigo) {
+        try {
+            List<Candidata> opciones = solicitudes.candidatasCompatibles(codigo).stream()
+                .map(p -> new Candidata(p.getCodigo(), p.getNombreCompleto(), p.getZonaCobertura()))
+                .toList();
+            return ResponseEntity.ok(opciones);
+        } catch (IllegalArgumentException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public record Candidata(String codigo, String nombre, String zonaCobertura) {}
+
+    @PostMapping("/{codigo}/seguimiento/emitir")
+    public String emitirSeguimiento(@PathVariable String codigo, RedirectAttributes redirect) {
+        try {
+            String token = seguimiento.emitir(codigo);
+            redirect.addFlashAttribute("enlaceSeguimiento", "/seguimiento/" + token);
+            redirect.addFlashAttribute("mensaje", "Enlace privado generado para la solicitud " + codigo);
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", "Solicitud no encontrada");
+        }
+        return "redirect:/admin/solicitudes";
+    }
+
+    @PostMapping("/{codigo}/seguimiento/revocar")
+    public String revocarSeguimiento(@PathVariable String codigo, RedirectAttributes redirect) {
+        try {
+            seguimiento.revocar(codigo);
+            redirect.addFlashAttribute("mensaje", "Enlace de seguimiento revocado para la solicitud " + codigo);
+        } catch (IllegalArgumentException error) {
+            redirect.addFlashAttribute("error", "Solicitud no encontrada");
+        }
+        return "redirect:/admin/solicitudes";
     }
 
     @PostMapping("/{codigo}/asignar")

@@ -40,7 +40,7 @@ class AdminSolicitudControllerTest {
             .andExpect(status().isOk())
             .andExpect(view().name("admin/solicitudes"))
             .andExpect(model().attribute("pendientes", pendientes))
-            .andExpect(model().attributeExists("profesionalesDisponibles", "estados"))
+            .andExpect(model().attributeExists("estados"))
             .andExpect(content().string(org.hamcrest.Matchers.containsString(una.getNombrePaciente())))
             .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString(otra.getNombrePaciente()))));
 
@@ -58,8 +58,7 @@ class AdminSolicitudControllerTest {
 
         mvc.perform(get("/admin/solicitudes").param("q", solicitud.getCodigo()))
             .andExpect(status().isOk())
-            .andExpect(content().string(org.hamcrest.Matchers.containsString(profesional.getCodigo())))
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("Elena Disponible")));
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Profesional compatible")));
 
         mvc.perform(post("/admin/solicitudes/{codigo}/asignar", solicitud.getCodigo())
             .param("profesionalCodigo", profesional.getCodigo()))
@@ -71,6 +70,10 @@ class AdminSolicitudControllerTest {
             .param("estado", "EN_EVALUACION"))
             .andExpect(status().is3xxRedirection())
             .andExpect(flash().attributeExists("mensaje"));
+        mvc.perform(get("/admin/solicitudes/{codigo}/candidatas", solicitud.getCodigo()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(org.hamcrest.Matchers.containsString(profesional.getCodigo())))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Elena Disponible")));
         mvc.perform(post("/admin/solicitudes/{codigo}/asignar", solicitud.getCodigo())
             .param("profesionalCodigo", profesional.getCodigo()))
             .andExpect(status().is3xxRedirection())
@@ -79,6 +82,37 @@ class AdminSolicitudControllerTest {
         assertThat(solicitudes.buscarPorCodigo(solicitud.getCodigo()).getEstado()).isEqualTo(EstadoSolicitud.ASIGNADA);
         assertThat(solicitudes.buscarPorCodigo(solicitud.getCodigo()).getProfesionalAsignado().getCodigo())
             .isEqualTo(profesional.getCodigo());
+    }
+
+    @Test
+    void entregaSoloCandidatasCompatiblesParaLaSolicitudEnEvaluacion() throws Exception {
+        Solicitud solicitud = solicitud("Paciente Selección");
+        solicitudes.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        Profesional compatible = profesionales.registrar(new Profesional(null, "Ana Compatible",
+            TipoProfesional.TECNICA, "987654321", "Surco, Miraflores", TipoServicio.ADULTO_MAYOR, true));
+        profesionales.registrar(new Profesional(null, "Rosa Otra Zona",
+            TipoProfesional.TECNICA, "912345678", "San Borja", TipoServicio.ADULTO_MAYOR, true));
+
+        mvc.perform(get("/admin/solicitudes/{codigo}/candidatas", solicitud.getCodigo()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(org.hamcrest.Matchers.containsString(compatible.getCodigo())))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Ana Compatible")))
+            .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Rosa Otra Zona"))));
+    }
+
+    @Test
+    void postDirectoNoPuedeAsignarProfesionalFueraDeZona() throws Exception {
+        Solicitud solicitud = solicitud("Paciente Zona");
+        solicitudes.actualizarEstado(solicitud.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        Profesional profesional = profesionales.registrar(new Profesional(null, "Ana Lejana",
+            TipoProfesional.TECNICA, "987654321", "San Borja", TipoServicio.ADULTO_MAYOR, true));
+
+        mvc.perform(post("/admin/solicitudes/{codigo}/asignar", solicitud.getCodigo())
+            .param("profesionalCodigo", profesional.getCodigo()))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(flash().attributeExists("error"));
+        assertThat(solicitudes.buscarPorCodigo(solicitud.getCodigo()).getEstado())
+            .isEqualTo(EstadoSolicitud.EN_EVALUACION);
     }
 
     @Test

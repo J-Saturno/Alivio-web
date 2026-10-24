@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Seguimiento privado | Alivio</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #193a3b; background: #eef8f6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.6; }
+    main { max-width: 46rem; margin: 4rem auto; padding: 2rem; background: #fff; border: 1px solid #d7e8e4; border-radius: 1rem; }
+    h1, h2 { line-height: 1.2; }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+    h2 { font-size: 1.3rem; }
+    .eyebrow { font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #105f5b; }
+    .intro, .hint { color: #587174; }
+    dl { padding: 1.25rem; border-radius: .6rem; background: #eef8f6; }
+    dt { font-size: .9rem; color: #587174; }
+    dd { margin: 0 0 1rem; font-weight: 600; overflow-wrap: anywhere; }
+    dd:last-child { margin-bottom: 0; }
+    ol { padding-left: 1.4rem; }
+    li { padding: .5rem 0; }
+    li time { display: block; font-size: .9rem; color: #587174; }
+    footer { border-top: 1px solid #d7e8e4; margin-top: 2rem; padding-top: 1rem; font-size: .9rem; }
+    @media (max-width: 48rem) { main { margin: 1rem; padding: 1.25rem; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Alivio · Seguimiento privado</p>
+    <th:block th:if="${resumen != null}">
+      <h1>Estado de tu solicitud</h1>
+      <p class="intro">Consulta aquí los cambios de estado registrados por el equipo de coordinación.</p>
+      <dl>
+        <dt>Código de solicitud</dt>
+        <dd th:text="${resumen.codigo}"></dd>
+        <dt>Estado actual</dt>
+        <dd th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(resumen.estado, '_', ' ')))}"></dd>
+        <dt>Última actualización</dt>
+        <dd><time th:datetime="${resumen.actualizado}" th:text="${#temporals.format(resumen.actualizado, 'dd/MM/yyyy HH:mm')}"></time></dd>
+      </dl>
+      <section aria-labelledby="tituloHistorial">
+        <h2 id="tituloHistorial">Historial de estados</h2>
+        <p class="hint">Este historial se registra desde el <span th:text="${#temporals.format(resumen.desde, 'dd/MM/yyyy HH:mm')}"></span>. Los cambios anteriores a esa fecha no se muestran.</p>
+        <ol>
+          <li th:each="paso : ${resumen.historial}">
+            <strong th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(paso.estado, '_', ' ')))}"></strong>
+            <time th:datetime="${paso.fecha}" th:text="${#temporals.format(paso.fecha, 'dd/MM/yyyy HH:mm')}"></time>
+          </li>
+        </ol>
+      </section>
+      <footer>Este enlace es privado. Compártelo únicamente con las personas autorizadas de tu familia. Si necesitas ayuda, comunícate con el equipo por el canal habitual.</footer>
+    </th:block>
+    <th:block th:unless="${resumen != null}">
+      <h1>Enlace no disponible</h1>
+      <p>Este enlace de seguimiento no está disponible. Solicita uno nuevo al equipo de coordinación por tu canal de contacto habitual.</p>
+    </th:block>
+  </main>
+</body>
+</html>

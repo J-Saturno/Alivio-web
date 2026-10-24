@@ -17,6 +17,51 @@ class SolicitudServiceConcurrencyTest {
     @Autowired PlatformTransactionManager transactionManager;
 
     @RepeatedTest(3)
+    void dosCoordinadoresNoAsignanLaMismaProfesionalAlMismoTurno() throws Exception {
+        Profesional profesional = profesionales.registrar(new Profesional(null, "Ana",
+            TipoProfesional.TECNICA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
+        Solicitud primera = solicitudes.crear(new Solicitud(null, "Rosa", "987654321", "María", 80,
+            TipoServicio.ADULTO_MAYOR, "Surco", LocalDate.now(), TurnoAtencion.MANANA,
+            "Apoyo", null, null));
+        Solicitud segunda = solicitudes.crear(new Solicitud(null, "Lucía", "987654321", "Elena", 75,
+            TipoServicio.ADULTO_MAYOR, "Surco", LocalDate.now(), TurnoAtencion.MANANA,
+            "Apoyo", null, null));
+        solicitudes.actualizarEstado(primera.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        solicitudes.actualizarEstado(segunda.getCodigo(), EstadoSolicitud.EN_EVALUACION);
+        CountDownLatch inicio = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Boolean> a = executor.submit(() -> intentarAsignar(inicio, primera, profesional));
+            Future<Boolean> b = executor.submit(() -> intentarAsignar(inicio, segunda, profesional));
+            inicio.countDown();
+            assertEquals(1, (a.get(10, TimeUnit.SECONDS) ? 1 : 0)
+                + (b.get(10, TimeUnit.SECONDS) ? 1 : 0));
+            long asignadas = java.util.stream.Stream.of(primera, segunda)
+                .map(s -> solicitudes.buscarPorCodigo(s.getCodigo()))
+                .filter(s -> s.getEstado() == EstadoSolicitud.ASIGNADA).count();
+            assertEquals(1, asignadas);
+        } finally {
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+            solicitudes.actualizarEstado(primera.getCodigo(), EstadoSolicitud.CANCELADA);
+            solicitudes.actualizarEstado(segunda.getCodigo(), EstadoSolicitud.CANCELADA);
+            solicitudes.eliminar(primera.getCodigo());
+            solicitudes.eliminar(segunda.getCodigo());
+            profesionales.eliminar(profesional.getCodigo());
+        }
+    }
+
+    private boolean intentarAsignar(CountDownLatch inicio, Solicitud solicitud, Profesional profesional) throws InterruptedException {
+        inicio.await();
+        try {
+            solicitudes.asignar(solicitud.getCodigo(), profesional.getCodigo());
+            return true;
+        } catch (IllegalArgumentException rechazo) {
+            return false;
+        }
+    }
+
+    @RepeatedTest(3)
     void cancelacionConcurrenteNoPuedeSerSobrescritaPorEvaluacion() throws Exception {
         verificar(false);
     }

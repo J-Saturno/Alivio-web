@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Verificaciones profesionales | Alivio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/alivio.css}">
+</head>
+<body>
+<main class="container py-5">
+  <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4">
+    <a th:href="@{/admin/solicitudes}">Solicitudes</a><a th:href="@{/admin/profesionales}">Profesionales</a>
+    <a th:href="@{/admin/postulaciones}">Postulaciones</a>
+  </nav>
+  <p class="eyebrow">Historial privado</p>
+  <h1>Verificaciones profesionales</h1>
+  <p><strong th:text="${profesional.nombreCompleto}"></strong> · <span th:text="${profesional.codigo}"></span></p>
+  <p>Registrar una revisión conserva el historial. La disponibilidad se gestiona por separado.</p>
+  <div th:if="${mensaje}" class="alert alert-success" role="status" th:text="${mensaje}"></div>
+  <section class="card p-4 mb-4" aria-labelledby="nuevaRevision">
+    <h2 class="h4" id="nuevaRevision">Registrar revisión</h2>
+    <p>Para aprobar, confirma las tres comprobaciones y describe la evidencia revisada. No ingreses DNI ni adjuntes documentos personales.</p>
+    <form method="post" th:action="@{/admin/profesionales/{codigo}/verificaciones(codigo=${profesional.codigo})}" th:object="${verificacionForm}">
+      <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger" role="alert" aria-live="polite">
+        <p>Revisa los campos señalados antes de registrar.</p>
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="mb-0"></p>
+      </div>
+      <div class="mb-3" th:each="campo : ${ {'identidadComprobada', 'credencialComprobada', 'referenciasComprobadas'} }">
+        <div class="form-check" th:unless="${valoresRechazados[campo] != null}">
+          <input class="form-check-input" type="checkbox" th:id="${campo}" th:field="*{__${campo}__}" th:attr="aria-describedby=${erroresCampo[campo] != null ? campo + 'Error' : null}">
+          <label class="form-check-label" th:for="${campo}" th:text="${campo == 'identidadComprobada' ? 'Identidad comprobada' : (campo == 'credencialComprobada' ? 'Credencial comprobada' : 'Referencias comprobadas')}"></label>
+        </div>
+        <div th:if="${valoresRechazados[campo] != null}">
+          <label class="form-label" th:for="${campo}" th:text="${campo == 'identidadComprobada' ? 'Identidad comprobada' : (campo == 'credencialComprobada' ? 'Credencial comprobada' : 'Referencias comprobadas')}"></label>
+          <input class="form-control" type="text" th:id="${campo}" th:name="${campo}" th:value="${valoresRechazados[campo]}" th:attr="aria-describedby=${campo + 'Error'}">
+        </div>
+        <div class="invalid-feedback d-block" th:id="${campo + 'Error'}" th:if="${erroresCampo[campo] != null}" th:text="${erroresCampo[campo]}"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 mb-3">
+          <label class="form-label" for="aniosExperiencia">Años de experiencia (opcional)</label>
+          <input class="form-control" type="text" inputmode="numeric" id="aniosExperiencia" th:field="*{aniosExperiencia}" aria-describedby="experienciaError">
+          <div class="invalid-feedback d-block" id="experienciaError" th:if="${erroresCampo['aniosExperiencia'] != null}" th:text="${erroresCampo['aniosExperiencia']}"></div>
+        </div>
+        <div class="col-md-7 mb-3">
+          <label class="form-label" for="referenciaCredencial">Referencia de credencial (opcional)</label>
+          <input class="form-control" id="referenciaCredencial" th:field="*{referenciaCredencial}" maxlength="100" aria-describedby="credencialError">
+          <div class="invalid-feedback d-block" id="credencialError" th:if="${erroresCampo['referenciaCredencial'] != null}" th:text="${erroresCampo['referenciaCredencial']}"></div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="notaEvidencia">Evidencia revisada</label>
+        <textarea class="form-control" id="notaEvidencia" th:field="*{notaEvidencia}" rows="4" maxlength="1000" aria-describedby="evidenciaAyuda evidenciaError"></textarea>
+        <p class="form-text" id="evidenciaAyuda">Obligatoria para aprobar. Describe qué se comprobó sin copiar datos personales innecesarios.</p>
+        <div class="invalid-feedback d-block" id="evidenciaError" th:if="${erroresCampo['notaEvidencia'] != null}" th:text="${erroresCampo['notaEvidencia']}"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="resultado">Resultado de la revisión</label>
+        <select class="form-select" id="resultado" name="resultado" aria-describedby="resultadoError" required>
+          <option value="">Selecciona un resultado</option>
+          <option th:if="${valoresRechazados['resultado'] != null}" th:value="${valoresRechazados['resultado']}" selected>Valor ingresado no válido</option>
+          <option th:each="resultado : ${resultados}" th:value="${resultado}" th:selected="${verificacionForm.resultado == resultado}" th:text="${resultado}"></option>
+        </select>
+        <div class="invalid-feedback d-block" id="resultadoError" th:if="${erroresCampo['resultado'] != null}" th:text="${erroresCampo['resultado']}"></div>
+      </div>
+      <p class="form-text">La fecha y el usuario que revisa se registran automáticamente. Las revisiones anteriores se conservan.</p>
+      <button class="btn btn-alivio" type="submit">Guardar revisión</button>
+    </form>
+  </section>
+  <section aria-labelledby="historialTitulo">
+    <h2 class="h4" id="historialTitulo">Historial de revisiones</h2>
+    <p th:if="${#lists.isEmpty(historial)}">PENDIENTE: todavía no se ha registrado una revisión.</p>
+    <article class="card p-4 mb-3" th:each="revision : ${historial}">
+      <h3 class="h5" th:text="${revision.resultado}"></h3>
+      <p><time th:text="${#temporals.format(revision.fecha, 'dd/MM/yyyy HH:mm')}"></time> · <span th:text="${revision.revisor}"></span></p>
+      <dl class="row mb-0">
+        <dt class="col-sm-4">Identidad comprobada</dt><dd class="col-sm-8" th:text="${revision.identidadComprobada ? 'Sí' : 'No'}"></dd>
+        <dt class="col-sm-4">Credencial comprobada</dt><dd class="col-sm-8" th:text="${revision.credencialComprobada ? 'Sí' : 'No'}"></dd>
+        <dt class="col-sm-4">Referencias comprobadas</dt><dd class="col-sm-8" th:text="${revision.referenciasComprobadas ? 'Sí' : 'No'}"></dd>
+        <dt class="col-sm-4">Años de experiencia</dt><dd class="col-sm-8" th:text="${revision.aniosExperiencia ?: 'Sin registrar'}"></dd>
+        <dt class="col-sm-4">Referencia de credencial</dt><dd class="col-sm-8" th:text="${#strings.isEmpty(revision.referenciaCredencial) ? 'Sin registrar' : revision.referenciaCredencial}"></dd>
+        <dt class="col-sm-4">Evidencia revisada</dt><dd class="col-sm-8 text-break" style="white-space: pre-wrap" th:text="${#strings.isEmpty(revision.notaEvidencia) ? 'Sin registrar' : revision.notaEvidencia}"></dd>
+      </dl>
+    </article>
+  </section>
+</main>
+</body>
+</html>

@@ -13,7 +13,7 @@
   <main class="container py-5">
     <nav aria-label="Administración" class="d-flex flex-wrap gap-3 mb-4"><a th:href="@{/}">Inicio</a><a
         th:href="@{/admin/solicitudes}" aria-current="page">Solicitudes</a><a
-        th:href="@{/admin/profesionales}">Profesionales</a></nav>
+        th:href="@{/admin/profesionales}">Profesionales</a><a th:href="@{/admin/postulaciones}">Postulaciones</a></nav>
     <header class="mb-4">
       <p class="eyebrow">Administración</p>
       <h1>Solicitudes de atención</h1>
@@ -21,6 +21,12 @@
     </header>
     <div th:if="${mensaje}" class="alert alert-success" role="status" aria-live="polite" th:text="${mensaje}"></div>
     <div th:if="${error}" class="alert alert-danger" role="alert" aria-live="polite" th:text="${error}"></div>
+    <section th:if="${enlaceSeguimiento}" class="alert alert-info" aria-label="Enlace privado de seguimiento">
+      <h2 class="h5">Comparte el enlace con la familia</h2>
+      <p>Este enlace privado vence en 30 días. Se muestra solo al generarlo: usa «Copiar dirección del enlace» y compártelo por el canal de contacto habitual.</p>
+      <p class="text-break"><a th:href="${enlaceSeguimiento}" th:text="${enlaceSeguimiento}" rel="noreferrer"></a></p>
+      <p class="mb-0">Cualquier persona con el enlace podrá consultar los estados. Renovarlo invalida el enlace anterior.</p>
+    </section>
 
     <section aria-label="Resumen de solicitudes" class="row g-3 mb-4">
       <div class="col-12 col-sm-4">
@@ -95,6 +101,16 @@
               <a class="btn btn-sm btn-outline-danger"
                 th:if="${solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).PENDIENTE or solicitud.estado == T(pe.edu.utp.alivio.model.EstadoSolicitud).CANCELADA}"
                 th:href="@{/admin/solicitudes/{codigo}/eliminar(codigo=${solicitud.codigo})}">Eliminar</a>
+              <details class="mt-2">
+                <summary>Seguimiento familiar</summary>
+                <p class="small mt-2 mb-2">Genera un enlace privado válido por 30 días. Renovarlo invalida el anterior; revocarlo cancela el acceso de la familia.</p>
+                <form th:action="@{/admin/solicitudes/{codigo}/seguimiento/emitir(codigo=${solicitud.codigo})}" method="post" class="mb-2">
+                  <button type="submit" class="btn btn-sm btn-outline-primary">Generar / renovar enlace</button>
+                </form>
+                <form th:action="@{/admin/solicitudes/{codigo}/seguimiento/revocar(codigo=${solicitud.codigo})}" method="post">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Revocar enlace</button>
+                </form>
+              </details>
             </td>
           </tr>
         </tbody>
@@ -139,16 +155,12 @@
           <form data-form="asignar" th:action="@{/admin/solicitudes/{codigo}/asignar(codigo='pendiente')}" method="post"
             class="border-top pt-3 mb-4">
             <h3 class="h5">Asignar profesional</h3>
-            <p class="form-help" id="asignacionAyuda">Disponible cuando la solicitud esté en evaluación.</p><label
-              class="form-label" for="profesionalCodigo">Profesional disponible</label><select id="profesionalCodigo"
+            <p class="form-help" id="asignacionAyuda" aria-live="polite">Buscaremos profesionales compatibles para esta solicitud.</p><label
+              class="form-label" for="profesionalCodigo">Profesional compatible</label><select id="profesionalCodigo"
               name="profesionalCodigo" class="form-select mb-2" aria-describedby="asignacionAyuda" required>
               <option value="">Selecciona una profesional</option>
-              <option th:each="profesional : ${profesionalesDisponibles}" th:value="${profesional.codigo}"
-                th:text="${profesional.nombreCompleto + ' · ' + profesional.zonaCobertura}"></option>
             </select>
-            <p th:if="${#lists.isEmpty(profesionalesDisponibles)}" class="form-help">No hay profesionales disponibles.
-              Actualiza su disponibilidad en el registro de profesionales.</p><button class="btn btn-alivio"
-              type="submit" th:disabled="${#lists.isEmpty(profesionalesDisponibles)}">Asignar</button>
+            <button class="btn btn-alivio" type="submit" disabled>Asignar</button>
           </form>
           <form data-form="estado" th:action="@{/admin/solicitudes/{codigo}/estado(codigo='pendiente')}" method="post"
             class="border-top pt-3">
