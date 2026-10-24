@@ -6,3 +6,4 @@
 *.log
 /application-local.properties
 /.env
+/backups/
