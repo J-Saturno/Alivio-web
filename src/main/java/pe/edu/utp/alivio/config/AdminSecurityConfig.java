@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 
 @Configuration
 public class AdminSecurityConfig {
@@ -19,7 +20,10 @@ public class AdminSecurityConfig {
             return http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable()).build();
         }
-        return http.authorizeHttpRequests(auth -> auth
+        var csrfRequestHandler = new XorCsrfTokenRequestAttributeHandler();
+        csrfRequestHandler.setCsrfRequestAttributeName(null);
+        return http.csrf(csrf -> csrf.csrfTokenRequestHandler(csrfRequestHandler))
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/ingresar").permitAll()
                 .requestMatchers("/admin/**").authenticated()
                 .anyRequest().permitAll())
