@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
-import pe.edu.utp.alivio.repository.ProfesionalRepository;
-import pe.edu.utp.alivio.repository.SolicitudRepository;
 import pe.edu.utp.alivio.service.ProfesionalService;
 import pe.edu.utp.alivio.service.SolicitudService;
 

@@ -47,7 +47,8 @@ public class ProfesionalService {
     }
 
     public List<Profesional> listarTodos() {
-        return repository.findAll(Sort.by("id")).stream().map(Profesional::new).toList();
+        return repository.findAll(Sort.sort(Profesional.class).by(Profesional::getId).ascending())
+            .stream().map(Profesional::new).toList();
     }
 
     public List<Profesional> listarDisponibles() {

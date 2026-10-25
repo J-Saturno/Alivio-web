@@ -1,7 +1,6 @@
 package pe.edu.utp.alivio.service;
 
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,8 +10,6 @@ import pe.edu.utp.alivio.model.Solicitud;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
 import pe.edu.utp.alivio.model.TurnoAtencion;
-import pe.edu.utp.alivio.repository.ProfesionalRepository;
-import pe.edu.utp.alivio.repository.SolicitudRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

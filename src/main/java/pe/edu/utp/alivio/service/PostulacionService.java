@@ -48,7 +48,8 @@ public class PostulacionService {
     }
 
     public List<PostulacionProfesional> listar() {
-        return postulaciones.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return postulaciones.findAll(Sort.sort(PostulacionProfesional.class)
+            .by(PostulacionProfesional::getId).descending());
     }
 
     public PostulacionProfesional buscar(Long id) {

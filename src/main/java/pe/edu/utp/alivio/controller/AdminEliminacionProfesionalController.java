@@ -11,7 +11,7 @@ import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.service.ProfesionalService;
 
 @Controller
-@RequestMapping("/admin/profesionales")
+@RequestMapping("/admin/profesionales/{codigo}/eliminar")
 public class AdminEliminacionProfesionalController {
     private final ProfesionalService profesionales;
 
@@ -19,7 +19,7 @@ public class AdminEliminacionProfesionalController {
         this.profesionales = profesionales;
     }
 
-    @GetMapping("/{codigo}/eliminar")
+    @GetMapping
     public String confirmar(@PathVariable String codigo, Model model, RedirectAttributes redirect) {
         try {
             Profesional profesional = profesionales.buscarPorCodigo(codigo);
@@ -35,7 +35,7 @@ public class AdminEliminacionProfesionalController {
         }
     }
 
-    @PostMapping("/{codigo}/eliminar")
+    @PostMapping
     public String eliminar(@PathVariable String codigo, RedirectAttributes redirect) {
         try {
             profesionales.eliminar(codigo);

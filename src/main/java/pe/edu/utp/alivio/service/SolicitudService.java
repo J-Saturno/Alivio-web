@@ -51,7 +51,7 @@ public class SolicitudService {
 
     public List<Solicitud> listar(String texto, EstadoSolicitud estado) {
         String filtro = texto == null ? "" : texto.toLowerCase().trim();
-        return repository.findAll(Sort.by("id")).stream()
+        return repository.findAll(Sort.sort(Solicitud.class).by(Solicitud::getId).ascending()).stream()
             .filter(s -> estado == null || s.getEstado() == estado)
             .filter(s -> filtro.isBlank()
                 || s.getCodigo().toLowerCase().contains(filtro)
