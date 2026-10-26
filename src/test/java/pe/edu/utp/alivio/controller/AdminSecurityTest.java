@@ -1,5 +1,6 @@
 package pe.edu.utp.alivio.controller;
 
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +10,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.transaction.annotation.Transactional;
+import pe.edu.utp.alivio.model.Profesional;
+import pe.edu.utp.alivio.model.TipoProfesional;
+import pe.edu.utp.alivio.model.TipoServicio;
+import pe.edu.utp.alivio.service.ProfesionalService;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -23,6 +30,47 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AdminSecurityTest {
     @Autowired MockMvc mvc;
+    @Autowired ProfesionalService profesionales;
+
+    @Test
+    @Transactional
+    void edicionProfesionalIncluyeTokenYPermiteGuardarConSeguridadActiva() throws Exception {
+        var profesional = profesionales.registrar(new Profesional(null,
+            "Profesional de prueba", TipoProfesional.TECNICA,
+            "987654321", "Ate, Molina, Santa Anita",
+            TipoServicio.ADULTO_MAYOR, false));
+        MvcResult ingreso = mvc.perform(get("/admin/ingresar")).andReturn();
+        CsrfToken token = (CsrfToken) ingreso.getRequest().getAttribute("_csrf");
+        MockHttpSession sesion = (MockHttpSession) ingreso.getRequest().getSession(false);
+        mvc.perform(post("/admin/ingresar").session(sesion)
+            .param(token.getParameterName(), token.getToken())
+            .param("username", "coordinador").param("password", "clave-de-prueba"))
+            .andExpect(status().is3xxRedirection());
+
+        String html = mvc.perform(get("/admin/profesionales").session(sesion))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String modal = html.substring(html.indexOf("id=\"modalEditarProfesional\""));
+        String formulario = modal.substring(modal.indexOf("<form"), modal.indexOf("</form>"));
+        var tokenFormulario = Pattern.compile(
+            "<input[^>]*name=\"_csrf\"[^>]*value=\"([^\"]+)\"").matcher(formulario);
+        assertThat(tokenFormulario.find())
+            .as("El formulario de edición debe incluir su propio token CSRF").isTrue();
+        String ruta = "/admin/profesionales/" + profesional.getCodigo();
+        mvc.perform(post(ruta).session(sesion)).andExpect(status().isForbidden());
+        mvc.perform(post(ruta).session(sesion).param("_csrf", tokenFormulario.group(1))
+            .param("nombreCompleto", "Profesional actualizada")
+            .param("tipoProfesional", "TECNICA").param("telefono", "987654321")
+            .param("zonaCobertura", "Ate, Molina, Santa Anita")
+            .param("especialidad", "ADULTO_MAYOR").param("disponible", "true"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/admin/profesionales"))
+            .andExpect(flash().attribute("mensaje", "Profesional actualizada"));
+        assertThat(profesionales.buscarPorCodigo(profesional.getCodigo()))
+            .satisfies(actual -> {
+                assertThat(actual.isDisponible()).isTrue();
+                assertThat(actual.getNombreCompleto()).isEqualTo("Profesional actualizada");
+            });
+    }
 
     @Test
     void solicitudPublicaGeneraEnlacePrivadoConCsrfActivo() throws Exception {

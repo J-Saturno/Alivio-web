@@ -118,7 +118,7 @@
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
             <div class="mb-3"><label class="form-label" for="nuevaZona">Distritos de cobertura (separados por comas)</label><input
-                class="form-control" id="nuevaZona" th:field="*{zonaCobertura}"
+                class="form-control" id="nuevaZona" th:field="*{zonaCobertura}" placeholder="Ej.: Ate, La Molina, Santa Anita"
                 th:attr="aria-describedby=${modalError == 'registro' and erroresCampo['zonaCobertura'] != null ? 'nuevaZonaError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="nuevaZonaError"
@@ -167,7 +167,7 @@
           <h2 class="modal-title h4" id="tituloModalEditarProfesional">Editar profesional</h2><button type="button"
             class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <form method="post" th:object="${edicionProfesional}">
+        <form th:action="@{/admin/profesionales/{codigo}(codigo=${codigoEdicion ?: 'pendiente'})}" method="post" th:object="${edicionProfesional}">
           <div class="modal-body">
             <div th:if="${modalError == 'edicion'}" class="alert alert-danger" role="alert" aria-live="polite"
               th:text="${error}"></div>
@@ -206,7 +206,7 @@
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
             <div class="mb-3"><label class="form-label" for="editarZona">Distritos de cobertura (separados por comas)</label><input
-                class="form-control" id="editarZona" th:field="*{zonaCobertura}"
+                class="form-control" id="editarZona" th:field="*{zonaCobertura}" placeholder="Ej.: Ate, La Molina, Santa Anita"
                 th:attr="aria-describedby=${modalError == 'edicion' and erroresCampo['zonaCobertura'] != null ? 'editarZonaError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="editarZonaError"
