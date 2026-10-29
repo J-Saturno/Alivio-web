@@ -2,6 +2,7 @@ package pe.edu.utp.alivio.service;
 
 import java.io.IOException;
 import java.util.List;
+import pe.edu.utp.alivio.validacion.Textos;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class PostulacionService {
 
     @Transactional
     public PostulacionProfesional registrar(PostulacionProfesional postulacion, MultipartFile cv) {
+        normalizarYValidar(postulacion);
         if (cv == null || cv.isEmpty() || cv.getSize() > MAX_CV_BYTES
                 || cv.getOriginalFilename() == null
                 || !cv.getOriginalFilename().toLowerCase(java.util.Locale.ROOT).endsWith(".pdf")
@@ -60,6 +62,7 @@ public class PostulacionService {
     @Transactional
     public void aceptar(Long id, String nota) {
         PostulacionProfesional postulacion = pendiente(id);
+        normalizarYValidar(postulacion);
         postulacion.setNotaRevision(validarNota(nota));
         Profesional profesional = new Profesional(null, postulacion.getNombreCompleto(),
             postulacion.getTipoProfesional(), postulacion.getTelefono(),
@@ -88,9 +91,29 @@ public class PostulacionService {
     }
 
     private String validarNota(String nota) {
+        nota = Textos.parrafos(nota);
         if (nota == null || nota.isBlank() || nota.length() > 500) {
             throw new IllegalArgumentException("Registra una nota de revisión de hasta 500 caracteres");
         }
         return nota.trim();
+    }
+
+    private void normalizarYValidar(PostulacionProfesional postulacion) {
+        if (postulacion == null) throw new IllegalArgumentException("La postulación es obligatoria");
+        postulacion.setNombreCompleto(Textos.linea(postulacion.getNombreCompleto()));
+        postulacion.setTelefono(Textos.telefono(postulacion.getTelefono()));
+        postulacion.setZonaCobertura(Textos.cobertura(postulacion.getZonaCobertura()));
+        if (!Textos.nombreValido(postulacion.getNombreCompleto()) || postulacion.getNombreCompleto().length() > 100) {
+            throw new IllegalArgumentException("Revisa el nombre de la postulante: debe contener letras y tener hasta 100 caracteres");
+        }
+        if (postulacion.getTelefono() == null || !postulacion.getTelefono().matches("9[0-9]{8}")) {
+            throw new IllegalArgumentException("Ingresa un celular de nueve dígitos que empiece con 9");
+        }
+        if (!Textos.coberturaValida(postulacion.getZonaCobertura()) || postulacion.getZonaCobertura().length() > 80) {
+            throw new IllegalArgumentException("Revisa los distritos de cobertura: sepáralos por comas y usa hasta 80 caracteres");
+        }
+        if (postulacion.getTipoProfesional() == null || postulacion.getEspecialidad() == null) {
+            throw new IllegalArgumentException("Selecciona tipo profesional y especialidad");
+        }
     }
 }

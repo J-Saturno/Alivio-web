@@ -25,6 +25,7 @@ class AdminCrudControllerTest {
     @Autowired MockMvc mvc;
     @Autowired SolicitudService solicitudes;
     @Autowired ProfesionalService profesionales;
+    @Autowired pe.edu.utp.alivio.repository.ProfesionalRepository profesionalesRepository;
 
     @Test
     void editaSolicitudConservandoCodigoYEstado() throws Exception {
@@ -95,7 +96,8 @@ class AdminCrudControllerTest {
 
     @Test
     void confirmaConTextoEscapadoYCodigosInexistentesSonAmigables() throws Exception {
-        Profesional profesional = profesionales.registrar(new Profesional(null, "<script>alert(1)</script>",
+        // Simula un dato histórico: los formularios nuevos ya rechazan este nombre.
+        Profesional profesional = profesionalesRepository.saveAndFlush(new Profesional(null, "<script>alert(1)</script>",
             TipoProfesional.LICENCIADA, "987654321", "Surco", TipoServicio.ADULTO_MAYOR, true));
         mvc.perform(get("/admin/profesionales/{codigo}/eliminar", profesional.getCodigo()))
             .andExpect(status().isOk())

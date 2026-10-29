@@ -1,6 +1,7 @@
 package pe.edu.utp.alivio.service;
 
 import java.time.LocalDate;
+import pe.edu.utp.alivio.validacion.Textos;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,16 +160,25 @@ public class SolicitudService {
         if (solicitud == null) {
             throw new IllegalArgumentException("La solicitud es obligatoria");
         }
+        solicitud.setNombreContacto(Textos.linea(solicitud.getNombreContacto()));
+        solicitud.setNombrePaciente(Textos.linea(solicitud.getNombrePaciente()));
+        solicitud.setTelefonoContacto(Textos.telefono(solicitud.getTelefonoContacto()));
+        solicitud.setDistrito(Textos.linea(solicitud.getDistrito()));
+        solicitud.setDescripcion(Textos.parrafos(solicitud.getDescripcion()));
         Map<String, String> errores = new LinkedHashMap<>();
         if (solicitud.getNombreContacto() == null || solicitud.getNombreContacto().isBlank()) {
             errores.put("nombreContacto", "Indica el nombre de contacto.");
         } else if (solicitud.getNombreContacto().length() > 100) {
             errores.put("nombreContacto", "El nombre de contacto debe tener como máximo 100 caracteres.");
+        } else if (!Textos.nombreValido(solicitud.getNombreContacto())) {
+            errores.put("nombreContacto", "Ingresa un nombre con letras, espacios, apóstrofes o guiones.");
         }
         if (solicitud.getNombrePaciente() == null || solicitud.getNombrePaciente().isBlank()) {
             errores.put("nombrePaciente", "Indica el nombre del paciente.");
         } else if (solicitud.getNombrePaciente().length() > 100) {
             errores.put("nombrePaciente", "El nombre del paciente debe tener como máximo 100 caracteres.");
+        } else if (!Textos.nombreValido(solicitud.getNombrePaciente())) {
+            errores.put("nombrePaciente", "Ingresa un nombre con letras, espacios, apóstrofes o guiones.");
         }
         if (solicitud.getTelefonoContacto() == null
                 || !solicitud.getTelefonoContacto().matches("9\\d{8}")) {
@@ -185,6 +195,8 @@ public class SolicitudService {
             errores.put("distrito", "Indica el distrito de atención.");
         } else if (solicitud.getDistrito().length() > 80) {
             errores.put("distrito", "El distrito debe tener como máximo 80 caracteres.");
+        } else if (!Textos.distritoValido(solicitud.getDistrito())) {
+            errores.put("distrito", "Ingresa el nombre de un distrito, por ejemplo La Molina.");
         }
         if (solicitud.getFechaRequerida() == null
                 || solicitud.getFechaRequerida().isBefore(LocalDate.now())) {

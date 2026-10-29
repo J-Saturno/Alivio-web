@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import pe.edu.utp.alivio.validacion.Textos;
 import pe.edu.utp.alivio.model.Profesional;
 import pe.edu.utp.alivio.model.TipoProfesional;
 import pe.edu.utp.alivio.model.TipoServicio;
@@ -12,6 +13,7 @@ public class ProfesionalForm {
     private String codigo;
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 100, message = "El nombre debe tener como máximo 100 caracteres.")
+    @Pattern(regexp = Textos.NOMBRE_O_VACIO, message = "Ingresa un nombre con letras, espacios, apóstrofes o guiones.")
     private String nombreCompleto;
     @NotNull(message = "Selecciona un tipo de profesional válido")
     private TipoProfesional tipoProfesional;
@@ -20,6 +22,7 @@ public class ProfesionalForm {
     private String telefono;
     @NotBlank(message = "La zona de cobertura es obligatoria")
     @Size(max = 80, message = "La zona de cobertura debe tener como máximo 80 caracteres.")
+    @Pattern(regexp = Textos.COBERTURA_O_VACIO, message = "Ingresa distritos separados por comas, sin elementos vacíos. Ejemplo: Ate, La Molina.")
     private String zonaCobertura;
     @NotNull(message = "Selecciona una especialidad válida")
     private TipoServicio especialidad;
@@ -43,7 +46,7 @@ public class ProfesionalForm {
     }
 
     public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+        this.nombreCompleto = Textos.linea(nombreCompleto);
     }
 
     public TipoProfesional getTipoProfesional() {
@@ -59,7 +62,7 @@ public class ProfesionalForm {
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono;
+        this.telefono = Textos.telefono(telefono);
     }
 
     public String getZonaCobertura() {
@@ -67,7 +70,7 @@ public class ProfesionalForm {
     }
 
     public void setZonaCobertura(String zonaCobertura) {
-        this.zonaCobertura = zonaCobertura;
+        this.zonaCobertura = Textos.cobertura(zonaCobertura);
     }
 
     public TipoServicio getEspecialidad() {

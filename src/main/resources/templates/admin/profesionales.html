@@ -25,6 +25,11 @@
     <div th:if="${mensaje}" class="alert alert-success" role="status" aria-live="polite" th:text="${mensaje}"></div>
     <div th:if="${error != null and modalError == null}" class="alert alert-danger" role="alert" aria-live="polite"
       th:text="${error}"></div>
+    <div th:if="${advertenciasDuplicados != null and !#lists.isEmpty(advertenciasDuplicados)}"
+      class="alert alert-warning" role="status">
+      <p class="fw-semibold mb-2">Posibles registros duplicados</p>
+      <ul class="mb-0"><li th:each="aviso : ${advertenciasDuplicados}" th:text="${aviso}"></li></ul>
+    </div>
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <caption class="visually-hidden">Profesionales registrados</caption>
@@ -84,7 +89,7 @@
             <div th:if="${modalError == 'registro'}" class="alert alert-danger" role="alert" aria-live="polite"
               th:text="${error}"></div>
             <div class="mb-3"><label class="form-label" for="nuevoNombre">Nombre completo</label><input
-                class="form-control" id="nuevoNombre" th:field="*{nombreCompleto}"
+                class="form-control" id="nuevoNombre" th:field="*{nombreCompleto}" maxlength="100"
                 th:attr="aria-describedby=${modalError == 'registro' and erroresCampo['nombreCompleto'] != null ? 'nuevoNombreError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="nuevoNombreError"
@@ -118,7 +123,7 @@
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
             <div class="mb-3"><label class="form-label" for="nuevaZona">Distritos de cobertura (separados por comas)</label><input
-                class="form-control" id="nuevaZona" th:field="*{zonaCobertura}" placeholder="Ej.: Ate, La Molina, Santa Anita"
+                class="form-control" id="nuevaZona" th:field="*{zonaCobertura}" maxlength="80" placeholder="Ej.: Ate, La Molina, Santa Anita"
                 th:attr="aria-describedby=${modalError == 'registro' and erroresCampo['zonaCobertura'] != null ? 'nuevaZonaError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="nuevaZonaError"
@@ -172,7 +177,7 @@
             <div th:if="${modalError == 'edicion'}" class="alert alert-danger" role="alert" aria-live="polite"
               th:text="${error}"></div>
             <div class="mb-3"><label class="form-label" for="editarNombre">Nombre completo</label><input
-                class="form-control" id="editarNombre" th:field="*{nombreCompleto}"
+                class="form-control" id="editarNombre" th:field="*{nombreCompleto}" maxlength="100"
                 th:attr="aria-describedby=${modalError == 'edicion' and erroresCampo['nombreCompleto'] != null ? 'editarNombreError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="editarNombreError"
@@ -206,7 +211,7 @@
                 th:text="${erroresCampo['telefono']}"></div>
             </div>
             <div class="mb-3"><label class="form-label" for="editarZona">Distritos de cobertura (separados por comas)</label><input
-                class="form-control" id="editarZona" th:field="*{zonaCobertura}" placeholder="Ej.: Ate, La Molina, Santa Anita"
+                class="form-control" id="editarZona" th:field="*{zonaCobertura}" maxlength="80" placeholder="Ej.: Ate, La Molina, Santa Anita"
                 th:attr="aria-describedby=${modalError == 'edicion' and erroresCampo['zonaCobertura'] != null ? 'editarZonaError' : null}"
                 required>
               <div class="invalid-feedback d-block" id="editarZonaError"
@@ -248,6 +253,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script th:src="@{/js/admin.js}" defer></script>
+  <script th:src="@{/js/telefono-pegado.js}"></script>
 </body>
 
 </html>

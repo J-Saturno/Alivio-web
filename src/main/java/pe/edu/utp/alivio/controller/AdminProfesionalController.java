@@ -33,6 +33,7 @@ public class AdminProfesionalController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("profesionales", service.listarTodos());
+        model.addAttribute("advertenciasDuplicados", service.advertenciasDuplicados());
         model.addAttribute("estadosVerificacion", verificaciones.estadosActuales());
         model.addAttribute("tiposProfesional", TipoProfesional.values());
         model.addAttribute("especialidades", TipoServicio.values());
@@ -111,6 +112,8 @@ public class AdminProfesionalController {
                 case "El nombre es obligatorio" -> errores.put("nombreCompleto", mensajeServicio);
                 case "El teléfono debe tener nueve dígitos" -> errores.put("telefono", mensajeServicio);
                 case "La zona de cobertura es obligatoria" -> errores.put("zonaCobertura", mensajeServicio);
+                case "Ingresa un nombre con letras, espacios, apóstrofes o guiones." -> errores.put("nombreCompleto", mensajeServicio);
+                case "Ingresa distritos separados por comas, sin elementos vacíos. Ejemplo: Ate, La Molina." -> errores.put("zonaCobertura", mensajeServicio);
                 case "Selecciona tipo y especialidad" -> {
                     if (form.getTipoProfesional() == null) errores.put("tipoProfesional", "Selecciona un tipo de profesional válido");
                     if (form.getEspecialidad() == null) errores.put("especialidad", "Selecciona una especialidad válida");

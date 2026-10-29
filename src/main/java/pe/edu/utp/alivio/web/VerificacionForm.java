@@ -1,6 +1,7 @@
 package pe.edu.utp.alivio.web;
 
 import jakarta.validation.constraints.*;
+import pe.edu.utp.alivio.validacion.Textos;
 import pe.edu.utp.alivio.model.ResultadoVerificacion;
 
 public class VerificacionForm {
@@ -26,9 +27,9 @@ public class VerificacionForm {
     public Integer getAniosExperiencia() { return aniosExperiencia; }
     public void setAniosExperiencia(Integer valor) { aniosExperiencia = valor; }
     public String getReferenciaCredencial() { return referenciaCredencial; }
-    public void setReferenciaCredencial(String valor) { referenciaCredencial = valor; }
+    public void setReferenciaCredencial(String valor) { referenciaCredencial = Textos.linea(valor); }
     public String getNotaEvidencia() { return notaEvidencia; }
-    public void setNotaEvidencia(String valor) { notaEvidencia = valor; }
+    public void setNotaEvidencia(String valor) { notaEvidencia = Textos.parrafos(valor); }
     public ResultadoVerificacion getResultado() { return resultado; }
     public void setResultado(ResultadoVerificacion valor) { resultado = valor; }
 }

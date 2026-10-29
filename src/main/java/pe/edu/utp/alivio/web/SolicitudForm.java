@@ -1,6 +1,7 @@
 package pe.edu.utp.alivio.web;
 
 import java.time.LocalDate;
+import pe.edu.utp.alivio.validacion.Textos;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -16,12 +17,14 @@ import pe.edu.utp.alivio.model.TurnoAtencion;
 public class SolicitudForm {
     @NotBlank(message = "Indica el nombre de contacto.")
     @Size(max = 100, message = "El nombre de contacto debe tener como máximo 100 caracteres.")
+    @Pattern(regexp = Textos.NOMBRE_O_VACIO, message = "Ingresa un nombre con letras, espacios, apóstrofes o guiones.")
     private String nombreContacto;
     @NotBlank(message = "Ingresa un celular de nueve dígitos que empiece con 9.")
     @Pattern(regexp = "9[0-9]{8}", message = "Ingresa un celular de nueve dígitos que empiece con 9.")
     private String telefonoContacto;
     @NotBlank(message = "Indica el nombre del paciente.")
     @Size(max = 100, message = "El nombre del paciente debe tener como máximo 100 caracteres.")
+    @Pattern(regexp = Textos.NOMBRE_O_VACIO, message = "Ingresa un nombre con letras, espacios, apóstrofes o guiones.")
     private String nombrePaciente;
     @Min(value = 0, message = "Ingresa una edad entre 0 y 120.")
     @Max(value = 120, message = "Ingresa una edad entre 0 y 120.")
@@ -30,6 +33,7 @@ public class SolicitudForm {
     private TipoServicio tipoServicio;
     @NotBlank(message = "Indica el distrito de atención.")
     @Size(max = 80, message = "El distrito debe tener como máximo 80 caracteres.")
+    @Pattern(regexp = Textos.DISTRITO_O_VACIO, message = "Ingresa el nombre de un distrito, por ejemplo La Molina.")
     private String distrito;
     @NotNull(message = "Selecciona hoy o una fecha posterior.")
     @FutureOrPresent(message = "Selecciona hoy o una fecha posterior.")
@@ -60,7 +64,7 @@ public class SolicitudForm {
     }
 
     public void setNombreContacto(String nombreContacto) {
-        this.nombreContacto = nombreContacto;
+        this.nombreContacto = Textos.linea(nombreContacto);
     }
 
     public String getTelefonoContacto() {
@@ -68,7 +72,7 @@ public class SolicitudForm {
     }
 
     public void setTelefonoContacto(String telefonoContacto) {
-        this.telefonoContacto = telefonoContacto;
+        this.telefonoContacto = Textos.telefono(telefonoContacto);
     }
 
     public String getNombrePaciente() {
@@ -76,7 +80,7 @@ public class SolicitudForm {
     }
 
     public void setNombrePaciente(String nombrePaciente) {
-        this.nombrePaciente = nombrePaciente;
+        this.nombrePaciente = Textos.linea(nombrePaciente);
     }
 
     public Integer getEdadPaciente() {
@@ -100,7 +104,7 @@ public class SolicitudForm {
     }
 
     public void setDistrito(String distrito) {
-        this.distrito = distrito;
+        this.distrito = Textos.linea(distrito);
     }
 
     public LocalDate getFechaRequerida() {
@@ -124,6 +128,6 @@ public class SolicitudForm {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion = Textos.parrafos(descripcion);
     }
 }

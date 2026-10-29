@@ -1,6 +1,8 @@
 package pe.edu.utp.alivio.service;
 
 import java.util.List;
+import java.util.ArrayList;
+import pe.edu.utp.alivio.validacion.Textos;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort;
@@ -55,6 +57,29 @@ public class ProfesionalService {
         return listarTodos().stream().filter(Profesional::isDisponible).toList();
     }
 
+    public List<String> advertenciasDuplicados() {
+        List<Profesional> todas = listarTodos();
+        List<String> advertencias = new ArrayList<>();
+        for (int i = 0; i < todas.size(); i++) {
+            for (int j = i + 1; j < todas.size(); j++) {
+                Profesional primera = todas.get(i);
+                Profesional segunda = todas.get(j);
+                String telefono = Textos.telefono(primera.getTelefono());
+                String nombre = Textos.claveNombre(primera.getNombreCompleto());
+                boolean mismoTelefono = telefono != null && !telefono.isBlank()
+                    && telefono.equals(Textos.telefono(segunda.getTelefono()));
+                boolean mismoNombre = !nombre.isBlank()
+                    && nombre.equals(Textos.claveNombre(segunda.getNombreCompleto()));
+                if (mismoTelefono || mismoNombre) {
+                    advertencias.add(primera.getCodigo() + " y " + segunda.getCodigo()
+                        + " coinciden en " + (mismoTelefono && mismoNombre ? "nombre y teléfono"
+                            : mismoTelefono ? "teléfono" : "nombre") + ". Revisa sus datos.");
+                }
+            }
+        }
+        return advertencias;
+    }
+
     public Profesional buscarPorCodigo(String codigo) {
         return repository.findByCodigo(codigo).map(Profesional::new)
             .orElseThrow(() -> new IllegalArgumentException("Profesional no encontrada"));
@@ -92,6 +117,9 @@ public class ProfesionalService {
 
     private void validar(Profesional profesional) {
         if (profesional == null) throw new IllegalArgumentException("La profesional es obligatoria");
+        profesional.setNombreCompleto(Textos.linea(profesional.getNombreCompleto()));
+        profesional.setTelefono(Textos.telefono(profesional.getTelefono()));
+        profesional.setZonaCobertura(Textos.cobertura(profesional.getZonaCobertura()));
         if (profesional.getNombreCompleto() == null || profesional.getNombreCompleto().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
         }
@@ -109,6 +137,12 @@ public class ProfesionalService {
         }
         if (profesional.getZonaCobertura().length() > 80) {
             throw new IllegalArgumentException("La zona de cobertura debe tener como máximo 80 caracteres.");
+        }
+        if (!Textos.nombreValido(profesional.getNombreCompleto())) {
+            throw new IllegalArgumentException("Ingresa un nombre con letras, espacios, apóstrofes o guiones.");
+        }
+        if (!Textos.coberturaValida(profesional.getZonaCobertura())) {
+            throw new IllegalArgumentException("Ingresa distritos separados por comas, sin elementos vacíos. Ejemplo: Ate, La Molina.");
         }
     }
 }

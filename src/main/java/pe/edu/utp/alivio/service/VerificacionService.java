@@ -1,5 +1,7 @@
 package pe.edu.utp.alivio.service;
 
+import pe.edu.utp.alivio.validacion.Textos;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,8 @@ public class VerificacionService {
         if (form == null || form.getResultado() == null) {
             throw new IllegalArgumentException("Selecciona un resultado válido");
         }
+        form.setReferenciaCredencial(Textos.linea(form.getReferenciaCredencial()));
+        form.setNotaEvidencia(Textos.parrafos(form.getNotaEvidencia()));
         if (form.getAniosExperiencia() != null && (form.getAniosExperiencia() < 0 || form.getAniosExperiencia() > 80)) {
             throw new IllegalArgumentException("La experiencia debe estar entre 0 y 80 años");
         }

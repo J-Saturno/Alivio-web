@@ -228,7 +228,8 @@ class SolicitudPublicaControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("data-error-step=\"1\"")))
             .andExpect(content().string(containsString("id=\"distrito\"")))
-            .andExpect(content().string(containsString("value=\" \"")))
+            .andExpect(content().string(org.hamcrest.Matchers.matchesPattern(
+                "(?s).*<input(?=[^>]*id=\"distrito\")(?=[^>]*value=\"\")[^>]*>.*")))
             .andExpect(content().string(containsString("Indica el distrito de atención.")));
     }
 

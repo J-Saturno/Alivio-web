@@ -45,6 +45,14 @@ La base inicia vacía. Para cargar los tres profesionales y dos solicitudes fict
 - Administración: inicio de sesión en `/admin/ingresar`, revisión privada de postulaciones y descarga del CV como adjunto. Una aceptación crea el registro profesional como no disponible. La decisión requiere nota interna y evita aprobaciones duplicadas.
 - La llamada o el mensaje de aceptación y la incorporación al grupo de WhatsApp son tareas manuales del equipo de Alivio.
 
+## Validación y limpieza de textos
+
+Los formularios y los servicios comparten las reglas de `validacion/Textos.java`. Se normalizan espacios Unicode, se retiran caracteres de formato invisibles y se conservan los párrafos de las descripciones y notas. Los nombres requieren letras y admiten tildes, ñ, iniciales, apóstrofes y guiones. Se rechazan nombres numéricos, campos visualmente vacíos y coberturas con elementos vacíos o solo símbolos.
+
+La cobertura se guarda con distritos separados por comas. También se normalizan punto y coma y guiones rodeados de espacios. Esta validación comprueba el formato; todavía no hay un catálogo oficial ni equivalencias entre nombres como `Molina` y `La Molina`. Solicitud y cobertura deben usar el mismo nombre de distrito. La comparación mantiene su tolerancia a tildes y mayúsculas.
+
+Al pegar un celular completo con espacios, el navegador los limpia antes de aplicar el límite del campo. El servidor vuelve a normalizar y exige nueve dígitos que empiecen con 9. El listado administrativo advierte posibles duplicados por nombre normalizado o teléfono, sin bloquear homónimos ni teléfonos compartidos. Los registros existentes no se reescriben ni se fusionan automáticamente.
+
 ## Verificaciones profesionales
 
 Desde el listado de profesionales se puede abrir su historial privado de verificaciones. Cada revisión registra comprobación de identidad, credencial y referencias, experiencia declarada, referencia de credencial, evidencia, resultado, fecha y usuario autenticado. Una aprobación requiere las tres comprobaciones y evidencia escrita. Recibir un CV o aceptar una postulación no marca a la profesional como verificada.
@@ -67,7 +75,7 @@ Desde la portada seleccionar `Administración` e ingresar con las credenciales c
 
 ```powershell
 .\mvnw.cmd test
-node --test src/test/js/admin-focus.test.cjs
+node --test src/test/js/admin-focus.test.cjs src/test/js/telefono-pegado.test.cjs
 .\mvnw.cmd package -DskipTests
 ```
 
